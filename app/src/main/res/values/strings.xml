@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Spacefeed</string>
+    <string name="demo_card_text">Material</string>
+    <string name="image_placeholder_description">Placeholder</string>
+    <string name="username">Username</string>
+    <string name="likes">likes</string>
+</resources>
