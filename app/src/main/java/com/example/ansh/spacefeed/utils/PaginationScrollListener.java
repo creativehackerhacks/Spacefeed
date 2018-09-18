@@ -1,9 +1,14 @@
-package com.example.ansh.spacefeed;
+package com.example.ansh.spacefeed.utils;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.widget.AbsListView;
+
+/**
+ * NOTE: NOT IN USE RIGHT NOW.
+ * This class is used to implement Pagination to the recyclerView.
+ */
 
 public abstract class PaginationScrollListener extends RecyclerView.OnScrollListener {
 
