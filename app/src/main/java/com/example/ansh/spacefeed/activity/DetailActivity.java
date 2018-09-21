@@ -1,7 +1,10 @@
 package com.example.ansh.spacefeed.activity;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
+import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetDialog;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -11,7 +14,13 @@ import android.widget.Toast;
 
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
+import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.Target;
 import com.example.ansh.spacefeed.dialogs.BottomSheetFragment;
 import com.example.ansh.spacefeed.dialogs.BottomSheetFragment.BottomSheetListener;
 import com.example.ansh.spacefeed.R;
@@ -49,8 +58,25 @@ public class DetailActivity extends AppCompatActivity implements BottomSheetList
 
         // Loads the clicked image.
         Glide.with(mContext).load(mUrl)
-                .thumbnail(0.3f)
-                .apply(new RequestOptions().placeholder(android.R.color.black))
+                .thumbnail(0.1f)
+                .apply(new RequestOptions().placeholder(android.R.color.black)
+                        .diskCacheStrategy(DiskCacheStrategy.DATA)
+                        .centerCrop()
+//                        .dontTransform()
+                )
+                .listener(new RequestListener<Drawable>() {
+                    @Override
+                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                        supportPostponeEnterTransition();
+                        return false;
+                    }
+                })
+                .transition(DrawableTransitionOptions.withCrossFade(200))
                 .into(imageView);
 
         // onLongClickListener for the imageView to show the bottom sheet dialog fragment.

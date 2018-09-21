@@ -18,7 +18,7 @@ public class ItemDataSource extends PageKeyedDataSource<Integer, UnSplashRespons
     public static final String CLIENT_ID = "63002cc7718cea591dcf5a661065713e4a353d49090dce8df8c7680af2cb78e4";
 
     //the size of a page that we want
-    public static final int PAGE_SIZE = 10;
+    public static final int PAGE_SIZE = 300;
 
     //we will start from the first page which is 1
     private static int FIRST_PAGE = 1;

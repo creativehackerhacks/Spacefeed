@@ -6,15 +6,19 @@ import android.arch.paging.PagedList;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
-import android.widget.Toast;
+import android.widget.TextView;
 
+import com.example.ansh.spacefeed.ColumnSpaceItemDecoration;
 import com.example.ansh.spacefeed.modal.ItemViewModel;
 import com.example.ansh.spacefeed.adapter.RecyclerViewPagedListAdapter;
 import com.example.ansh.spacefeed.apis.ApiInterface;
@@ -36,7 +40,10 @@ public class MainActivity extends AppCompatActivity {
     private ApiInterface mApiService;
 
     private RecyclerView mRecyclerView;
-    private LinearLayoutManager mLayoutManager;
+
+    private LinearLayoutManager mLinearLayoutManager;
+    private GridLayoutManager mGridLayoutManager;
+
     private UnSplashAdapter mUnSplashAdapter;
 
     ItemViewModel itemViewModel;
@@ -48,26 +55,37 @@ public class MainActivity extends AppCompatActivity {
 
         mToolbar = findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+
         mRecyclerView = findViewById(R.id.mainRecyclerView);
+        int columnSpacingInPixels = 8;
+        mRecyclerView.addItemDecoration(new ColumnSpaceItemDecoration(columnSpacingInPixels));
 
         //OnClickImplementation
         final SimpleOnItemClickListener simpleOnItemClickListener = new SimpleOnItemClickListener() {
             @Override
             public void onClick(View v, int pos) {
-                Toast.makeText(mContext, "FUCK! I got called.", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(mContext, "FUCK! I got called.", Toast.LENGTH_SHORT).show();
 
                 UnSplashResponse splashResponse = itemViewModel.getItemPagedList().getValue().get(pos);
                 Log.i(TAG, "onClick: " + splashResponse);
 
                 Intent intent = new Intent(mContext, DetailActivity.class);
-                intent.putExtra("imageUrl", splashResponse.getUrls().getFullUrl());
+                intent.putExtra("imageUrl", splashResponse.getUrls().getRegularUrl());
 
-                startActivity(intent);
+                ActivityOptionsCompat options = ActivityOptionsCompat.
+                        makeSceneTransitionAnimation(MainActivity.this,
+                                v,
+                                ViewCompat.getTransitionName(v));
+
+                startActivity(intent, options.toBundle());
             }
         };
 
-        mLayoutManager = new LinearLayoutManager(this);
-        mRecyclerView.setLayoutManager(mLayoutManager);
+        mLinearLayoutManager = new LinearLayoutManager(this);
+        mGridLayoutManager = new GridLayoutManager(this, 2);
+
+        mRecyclerView.setLayoutManager(mGridLayoutManager);
         mRecyclerView.setHasFixedSize(true);
 
         // getting our ItemViewModel

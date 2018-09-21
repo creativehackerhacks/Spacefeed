@@ -51,8 +51,13 @@ public class RecyclerViewPagedListAdapter extends PagedListAdapter<UnSplashRespo
             holder.mName.setText(item.getUser().getName());
             holder.mNumOfLikes.setText(String.valueOf(item.getNumOfLikes()));
 
-            Glide.with(mContext).load(item.getUrls().getFullUrl())
-                    .listener(GlidePalette.with(item.getUrls().getFullUrl())
+            Glide.with(mContext).load(item.getUrls().getSmallUrl())
+                    .thumbnail(0.1f)
+                    .apply(new RequestOptions()
+                            .override(400, 400)
+                            .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    )
+                    .listener(GlidePalette.with(item.getUrls().getSmallUrl())
                             .use(Profile.MUTED_DARK)
                             .intoBackground(holder.mLinearLayout)
 
@@ -60,11 +65,6 @@ public class RecyclerViewPagedListAdapter extends PagedListAdapter<UnSplashRespo
                             .intoTextColor(holder.mName, Swatch.BODY_TEXT_COLOR)
                             .intoTextColor(holder.mNumOfLikes, Swatch.BODY_TEXT_COLOR)
                             .crossfade(true)
-                    )
-                    .thumbnail(0.1f)
-                    .apply(new RequestOptions()
-                            .diskCacheStrategy(DiskCacheStrategy.ALL)
-                            .override(800, 800)
                     )
                     .into(holder.mImageView);
         }else{
@@ -98,7 +98,7 @@ public class RecyclerViewPagedListAdapter extends PagedListAdapter<UnSplashRespo
             mName = itemView.findViewById(R.id.user_name);
             mNumOfLikes = itemView.findViewById(R.id.num_of_likes);
 
-            itemView.setOnClickListener(this);
+            mImageView.setOnClickListener(this);
         }
 
         @Override

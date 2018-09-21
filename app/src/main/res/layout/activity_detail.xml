@@ -17,6 +17,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scaleType="centerCrop"
+        android:transitionName="demo_image"
         android:src="@color/colorAccent"/>
 
     <!--This view will overlap the imageView to apply overlaying gradient on the image-->

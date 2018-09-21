@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginLeft="@dimen/card_spacing"
-    android:layout_marginRight="@dimen/card_spacing"
-    android:layout_marginTop="@dimen/card_spacing"
-    android:minHeight="400dp"
+    android:minHeight="240dp"
     android:id="@+id/card_bg"
     app:cardCornerRadius="4dp">
 
@@ -19,33 +17,41 @@
         <ImageView
             android:id="@+id/image"
             android:layout_width="match_parent"
-            android:layout_height="340dp"
+            android:layout_height="200dp"
             android:contentDescription="@string/image_placeholder_description"
             android:scaleType="centerCrop"
+            android:transitionName="demo_image"
             android:src="@drawable/dude" />
 
         <RelativeLayout
             android:id="@+id/bottom_part"
             android:layout_width="match_parent"
-            android:layout_height="60dp">
+            android:gravity="center_vertical"
+            android:layout_height="40dp">
 
             <TextView
                 android:id="@+id/user_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentStart="true"
-                android:layout_margin="@dimen/card_spacing"
                 android:text="@string/username"
-                android:textSize="18sp" />
+                android:paddingLeft="16dp"
+                android:maxLines="1"
+                android:maxLength="10"
+                android:ellipsize="end"
+                android:textSize="16sp" />
 
             <TextView
                 android:id="@+id/num_of_likes"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
-                android:layout_margin="@dimen/card_spacing"
                 android:text="@string/likes"
-                android:textSize="16sp"
+                android:paddingRight="16dp"
+                android:maxLines="1"
+                android:maxLength="10"
+                android:ellipsize="end"
+                android:textSize="14sp"
                 android:textStyle="bold" />
 
         </RelativeLayout>
