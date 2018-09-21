@@ -19,10 +19,15 @@ public class UnSplashResponse {
     @Expose
     private User mUser;
 
-    public UnSplashResponse(Urls urls, Integer numOfLikes, User user) {
+    @SerializedName("id")
+    @Expose
+    private String mId;
+
+    public UnSplashResponse(Urls urls, Integer numOfLikes, User user, String id) {
         mUrls = urls;
         mNumOfLikes = numOfLikes;
         mUser = user;
+        mId = id;
     }
 
     public UnSplashResponse() {
@@ -51,6 +56,23 @@ public class UnSplashResponse {
 
     public void setUser(User user) {
         mUser = user;
+    }
+
+    public String getId() {
+        return mId;
+    }
+
+    public void setId(String id) {
+        mId = id;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if(obj == this) {
+            return true;
+        }
+        UnSplashResponse unSplashResponse = (UnSplashResponse) obj;
+        return unSplashResponse.getId() == this.getId() && unSplashResponse.getUser().getName() == this.getUser().getName();
     }
 
 }

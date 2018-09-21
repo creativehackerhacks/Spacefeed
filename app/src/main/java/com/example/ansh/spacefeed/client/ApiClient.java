@@ -1,5 +1,7 @@
 package com.example.ansh.spacefeed.client;
 
+import com.example.ansh.spacefeed.apis.ApiInterface;
+
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -10,16 +12,25 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class ApiClient {
 
     public static final String BASE_URL = "https://api.unsplash.com/";
-    private static Retrofit mRetrofit = null;
+    private  Retrofit mRetrofit = null;
+    private static ApiClient mApiClient;
 
-    public static Retrofit getClient() {
-        if(mRetrofit == null) {
-            mRetrofit = new Retrofit.Builder()
-                    .baseUrl(BASE_URL)
-                    .addConverterFactory(GsonConverterFactory.create())
-                    .build();
+    private ApiClient() {
+        mRetrofit = new Retrofit.Builder()
+                .baseUrl(BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+    }
+
+    public static synchronized ApiClient getInstance() {
+        if(mApiClient == null) {
+            mApiClient = new ApiClient();
         }
-        return mRetrofit;
+        return mApiClient;
+    }
+
+    public ApiInterface getApi() {
+        return mRetrofit.create(ApiInterface.class);
     }
 
 }

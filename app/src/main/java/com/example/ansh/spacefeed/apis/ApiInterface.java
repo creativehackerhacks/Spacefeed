@@ -21,7 +21,8 @@ public interface ApiInterface {
     @GET("photos")
     Call<List<UnSplashResponse>> getUnSplashResponse(
             @Query("client_id") String apiKey, // api_key
-            @Query("per_page") int itemCount // Number of items to show per page.(Max : 30)
+            @Query("per_page") int itemCount, // Number of items to show per page.(Max : 30)
+            @Query("page") int pageCount
     );
 
 }

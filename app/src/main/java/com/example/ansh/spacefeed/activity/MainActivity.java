@@ -1,15 +1,22 @@
 package com.example.ansh.spacefeed.activity;
 
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
+import android.arch.paging.PagedList;
 import android.content.Context;
 import android.content.Intent;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import com.example.ansh.spacefeed.ItemViewModel;
+import com.example.ansh.spacefeed.adapter.RecyclerViewPagedListAdapter;
 import com.example.ansh.spacefeed.client.ApiClient;
 import com.example.ansh.spacefeed.apis.ApiInterface;
 import com.example.ansh.spacefeed.R;
@@ -39,15 +46,8 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView mRecyclerView;
     private LinearLayoutManager mLayoutManager;
     private UnSplashAdapter mUnSplashAdapter;
-    private List<UnSplashResponse> mUnSplashResponseList = new ArrayList<>();
 
-    // These commented instances are not in use(meant for 'PAGINATION').
-//    private boolean isScrolling = false;
-//    public static final int PAGE_START = 1;
-//    private boolean isLoading = false;
-//    private boolean isLastPage = false;
-//    private int TOTAL_PAGES = 20;
-//    private int currentPage = PAGE_START;
+    ItemViewModel itemViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,124 +58,46 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(mToolbar);
         mRecyclerView = findViewById(R.id.mainRecyclerView);
 
-
         //OnClickImplementation
         final SimpleOnItemClickListener simpleOnItemClickListener = new SimpleOnItemClickListener() {
             @Override
             public void onClick(View v, int pos) {
+                Toast.makeText(mContext, "FUCK! I got called.", Toast.LENGTH_SHORT).show();
 
-                UnSplashResponse responseList = mUnSplashResponseList.get(pos);
+                UnSplashResponse splashResponse = itemViewModel.getItemPagedList().getValue().get(pos);
+                Log.i(TAG, "onClick: " + splashResponse);
 
                 Intent intent = new Intent(mContext, DetailActivity.class);
-                intent.putExtra("imageUrl", responseList.getUrls().getFullUrl());
+                intent.putExtra("imageUrl", splashResponse.getUrls().getFullUrl());
 
                 startActivity(intent);
             }
         };
-        mUnSplashAdapter = new UnSplashAdapter(mUnSplashResponseList, mContext, R.layout.row_item, simpleOnItemClickListener);
 
-
-        mLayoutManager = new LinearLayoutManager(mContext);
+        mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
-        mRecyclerView.setAdapter(mUnSplashAdapter);
+        mRecyclerView.setHasFixedSize(true);
 
-//        mRecyclerView.addOnScrollListener(new PaginationScrollListener(mLayoutManager) {
-//            @Override
-//            protected boolean isLoading() {
-//                return isLoading;
-//            }
-//
-//            @Override
-//            protected boolean isLastPage() {
-//                return isLastPage;
-//            }
-//
-//            @Override
-//            protected void loadMoreItems() {
-//                isLoading = true;
-//                currentPage += 1;
-//
-//                loadNextPage();
-//            }
-//
-//            @Override
-//            protected int getTotalPageCount() {
-//                return TOTAL_PAGES;
-//            }
-//        });
+        // getting our ItemViewModel
+        itemViewModel = ViewModelProviders.of(this).get(ItemViewModel.class);
 
-        if(CLIENT_ID.isEmpty()) {
-            Toast.makeText(mContext, "Please obtain your CLIENT ID", Toast.LENGTH_SHORT).show();
-        }
+        // Creating the Adapter
+        final RecyclerViewPagedListAdapter adapter = new RecyclerViewPagedListAdapter(this, simpleOnItemClickListener);
 
-        mApiService = ApiClient.getClient().create(ApiInterface.class);
-
-//        loadFirstPage();
-
-        Call<List<UnSplashResponse>> call = mApiService.getUnSplashResponse(CLIENT_ID, 30);
-        // Asynchronous Call
-        call.enqueue(new Callback<List<UnSplashResponse>>() {
+        // observing the itemPagedList from view model
+        itemViewModel.itemPagedList.observe(this, new Observer<PagedList<UnSplashResponse>>() {
             @Override
-            public void onResponse(Call<List<UnSplashResponse>> call, Response<List<UnSplashResponse>> response) {
-                List<String> mUser = new ArrayList<>();
-                mUnSplashResponseList = response.body();
-                mRecyclerView.setAdapter(new UnSplashAdapter(mUnSplashResponseList, mContext, R.layout.row_item, simpleOnItemClickListener));
-            }
-
-            @Override
-            public void onFailure(Call<List<UnSplashResponse>> call, Throwable t) {
-                Toast.makeText(mContext, "Something is seriously FUCKED UP!", Toast.LENGTH_SHORT).show();
+            public void onChanged(@Nullable PagedList<UnSplashResponse> unSplashResponses) {
+                // in case of any changes
+                // submitting the items to adapter
+                adapter.submitList(unSplashResponses);
+                Log.i(TAG, "MAIN ACTIVITY: " + unSplashResponses.size());
             }
         });
+
+        // Setting the adapter
+        mRecyclerView.setAdapter(adapter);
+
     }
-
-//    private void loadFirstPage() {
-//        Log.d(TAG, "loadFirsPage: ");
-//
-//        callUnSplashResponseApi().enqueue(new Callback<List<UnSplashResponse>>() {
-//            @Override
-//            public void onResponse(Call<List<UnSplashResponse>> call, Response<List<UnSplashResponse>> response) {
-//                List<UnSplashResponse>  responseList = response.body();
-//                mUnSplashAdapter.addALL(responseList);
-//
-//                if (currentPage <= TOTAL_PAGES) mUnSplashAdapter.addLoadingFooter();
-//                else isLastPage = true;
-//            }
-//
-//            @Override
-//            public void onFailure(Call<List<UnSplashResponse>> call, Throwable t) {
-//                Toast.makeText(mContext, "Something is seriously FUCKED UP!", Toast.LENGTH_SHORT).show();
-//            }
-//        });
-//    }
-
-//    private void loadNextPage() {
-//        Log.d(TAG, "loadNextPage: " + currentPage);
-//
-//        callUnSplashResponseApi().enqueue(new Callback<List<UnSplashResponse>>() {
-//            @Override
-//            public void onResponse(Call<List<UnSplashResponse>> call, Response<List<UnSplashResponse>> response) {
-//                mUnSplashAdapter.removeLoadingFooter();
-//                isLoading = false;
-//
-//                List<UnSplashResponse> responseList = response.body();
-//                mUnSplashAdapter.addALL(responseList);
-//
-//                if (currentPage != TOTAL_PAGES) mUnSplashAdapter.addLoadingFooter();
-//                else isLastPage = true;
-//            }
-//
-//            @Override
-//            public void onFailure(Call<List<UnSplashResponse>> call, Throwable t) {
-//                Toast.makeText(mContext, "Something is seriously FUCKED UP!", Toast.LENGTH_SHORT).show();
-//            }
-//        });
-//    }
-
-//    private Call<List<UnSplashResponse>> callUnSplashResponseApi() {
-//        return mApiService.getUnSplashResponse(
-//          CLIENT_ID, currentPage
-//        );
-//    }
 
 }
