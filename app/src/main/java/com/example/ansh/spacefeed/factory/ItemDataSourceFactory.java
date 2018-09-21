@@ -1,10 +1,11 @@
-package com.example.ansh.spacefeed;
+package com.example.ansh.spacefeed.factory;
 
 
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.paging.DataSource;
 import android.arch.paging.PageKeyedDataSource;
 
+import com.example.ansh.spacefeed.dataSource.ItemDataSource;
 import com.example.ansh.spacefeed.pojos.UnSplashResponse;
 
 public class ItemDataSourceFactory extends DataSource.Factory {

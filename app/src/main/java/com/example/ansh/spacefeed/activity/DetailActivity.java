@@ -49,7 +49,8 @@ public class DetailActivity extends AppCompatActivity implements BottomSheetList
 
         // Loads the clicked image.
         Glide.with(mContext).load(mUrl)
-                .apply(new RequestOptions().placeholder(R.color.colorAccent))
+                .thumbnail(0.3f)
+                .apply(new RequestOptions().placeholder(android.R.color.black))
                 .into(imageView);
 
         // onLongClickListener for the imageView to show the bottom sheet dialog fragment.

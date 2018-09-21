@@ -15,21 +15,13 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
-import com.example.ansh.spacefeed.ItemViewModel;
+import com.example.ansh.spacefeed.modal.ItemViewModel;
 import com.example.ansh.spacefeed.adapter.RecyclerViewPagedListAdapter;
-import com.example.ansh.spacefeed.client.ApiClient;
 import com.example.ansh.spacefeed.apis.ApiInterface;
 import com.example.ansh.spacefeed.R;
 import com.example.ansh.spacefeed.interfaces.SimpleOnItemClickListener;
 import com.example.ansh.spacefeed.adapter.UnSplashAdapter;
 import com.example.ansh.spacefeed.pojos.UnSplashResponse;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
 

@@ -1,12 +1,13 @@
-package com.example.ansh.spacefeed;
+package com.example.ansh.spacefeed.modal;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.ViewModel;
 import android.arch.paging.LivePagedListBuilder;
 import android.arch.paging.PageKeyedDataSource;
 import android.arch.paging.PagedList;
-import android.util.Log;
 
+import com.example.ansh.spacefeed.dataSource.ItemDataSource;
+import com.example.ansh.spacefeed.factory.ItemDataSourceFactory;
 import com.example.ansh.spacefeed.pojos.UnSplashResponse;
 
 public class ItemViewModel extends ViewModel {
