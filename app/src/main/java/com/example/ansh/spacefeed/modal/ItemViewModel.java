@@ -8,13 +8,13 @@ import android.arch.paging.PagedList;
 
 import com.example.ansh.spacefeed.dataSource.ItemDataSource;
 import com.example.ansh.spacefeed.factory.ItemDataSourceFactory;
-import com.example.ansh.spacefeed.pojos.UnSplashResponse;
+import com.example.ansh.spacefeed.pojos.Photo;
 
 public class ItemViewModel extends ViewModel {
 
     //creating livedata for PagedList  and PagedKeyedDataSource
-    public LiveData<PagedList<UnSplashResponse>> itemPagedList;
-    public LiveData<PageKeyedDataSource<Integer, UnSplashResponse>> liveDataSource;
+    public LiveData<PagedList<Photo>> itemPagedList;
+//    public LiveData<PageKeyedDataSource<Integer, Photo>> liveDataSource;
 
     //constructor
     public ItemViewModel() {
@@ -22,20 +22,21 @@ public class ItemViewModel extends ViewModel {
         ItemDataSourceFactory itemDataSourceFactory = new ItemDataSourceFactory();
 
         //getting the live data source from data source factory
-        liveDataSource = itemDataSourceFactory.getItemLiveDataSource();
+//        liveDataSource = itemDataSourceFactory.getItemLiveDataSource();
 
         //Getting PagedList config
         PagedList.Config pagedListConfig =
                 (new PagedList.Config.Builder())
+                        .setPrefetchDistance(10)
                         .setEnablePlaceholders(false)
-                        .setPageSize(ItemDataSource.PAGE_SIZE).build();
+                        .setPageSize(ItemDataSource.ITEM_PER_PAGE).build();
 
         //Building the paged list
         itemPagedList = (new LivePagedListBuilder(itemDataSourceFactory, pagedListConfig))
                 .build();
     }
 
-    public LiveData<PagedList<UnSplashResponse>> getItemPagedList() {
+    public LiveData<PagedList<Photo>> getItemPagedList() {
         return itemPagedList;
     }
 }

@@ -6,8 +6,6 @@ import android.arch.paging.PagedList;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityOptionsCompat;
-import android.support.v4.view.ViewCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
@@ -16,7 +14,6 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
-import android.widget.TextView;
 
 import com.example.ansh.spacefeed.ColumnSpaceItemDecoration;
 import com.example.ansh.spacefeed.modal.ItemViewModel;
@@ -25,7 +22,7 @@ import com.example.ansh.spacefeed.apis.ApiInterface;
 import com.example.ansh.spacefeed.R;
 import com.example.ansh.spacefeed.interfaces.SimpleOnItemClickListener;
 import com.example.ansh.spacefeed.adapter.UnSplashAdapter;
-import com.example.ansh.spacefeed.pojos.UnSplashResponse;
+import com.example.ansh.spacefeed.pojos.Photo;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -67,18 +64,19 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v, int pos) {
 //                Toast.makeText(mContext, "FUCK! I got called.", Toast.LENGTH_SHORT).show();
 
-                UnSplashResponse splashResponse = itemViewModel.getItemPagedList().getValue().get(pos);
+//                Photo splashResponse = itemViewModel.getItemPagedList().getValue().get(pos);
+                Photo splashResponse = itemViewModel.getItemPagedList().getValue().get(pos);
                 Log.i(TAG, "onClick: " + splashResponse);
 
                 Intent intent = new Intent(mContext, DetailActivity.class);
-                intent.putExtra("imageUrl", splashResponse.getUrls().getRegularUrl());
+                intent.putExtra("Photo", splashResponse);
 
-                ActivityOptionsCompat options = ActivityOptionsCompat.
-                        makeSceneTransitionAnimation(MainActivity.this,
-                                v,
-                                ViewCompat.getTransitionName(v));
+//                ActivityOptionsCompat options = ActivityOptionsCompat.
+//                        makeSceneTransitionAnimation(MainActivity.this,
+//                                v,
+//                                ViewCompat.getTransitionName(v));
 
-                startActivity(intent, options.toBundle());
+                startActivity(intent);
             }
         };
 
@@ -95,13 +93,13 @@ public class MainActivity extends AppCompatActivity {
         final RecyclerViewPagedListAdapter adapter = new RecyclerViewPagedListAdapter(this, simpleOnItemClickListener);
 
         // observing the itemPagedList from view model
-        itemViewModel.itemPagedList.observe(this, new Observer<PagedList<UnSplashResponse>>() {
+        itemViewModel.itemPagedList.observe(this, new Observer<PagedList<Photo>>() {
             @Override
-            public void onChanged(@Nullable PagedList<UnSplashResponse> unSplashResponses) {
+            public void onChanged(@Nullable PagedList<Photo> unSplashRespons) {
                 // in case of any changes
                 // submitting the items to adapter
-                adapter.submitList(unSplashResponses);
-                Log.i(TAG, "MAIN ACTIVITY: " + unSplashResponses.size());
+                adapter.submitList(unSplashRespons);
+                Log.i(TAG, "MAIN ACTIVITY: " + unSplashRespons.size());
             }
         });
 

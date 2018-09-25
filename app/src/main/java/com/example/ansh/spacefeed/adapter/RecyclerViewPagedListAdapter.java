@@ -19,12 +19,12 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.ansh.spacefeed.R;
 import com.example.ansh.spacefeed.interfaces.SimpleOnItemClickListener;
-import com.example.ansh.spacefeed.pojos.UnSplashResponse;
+import com.example.ansh.spacefeed.pojos.Photo;
 import com.github.florent37.glidepalette.BitmapPalette.Profile;
 import com.github.florent37.glidepalette.BitmapPalette.Swatch;
 import com.github.florent37.glidepalette.GlidePalette;
 
-public class RecyclerViewPagedListAdapter extends PagedListAdapter<UnSplashResponse, RecyclerViewPagedListAdapter.ItemViewHolder> {
+public class RecyclerViewPagedListAdapter extends PagedListAdapter<Photo, RecyclerViewPagedListAdapter.ItemViewHolder> {
 
     private Context mContext;
 
@@ -45,16 +45,14 @@ public class RecyclerViewPagedListAdapter extends PagedListAdapter<UnSplashRespo
 
     @Override
     public void onBindViewHolder(@NonNull ItemViewHolder holder, int position) {
-        UnSplashResponse item = getItem(position);
+        Photo item = getItem(position);
 
         if (item != null) {
             holder.mName.setText(item.getUser().getName());
             holder.mNumOfLikes.setText(String.valueOf(item.getNumOfLikes()));
 
-            Glide.with(mContext).load(item.getUrls().getSmallUrl())
-                    .thumbnail(0.1f)
+            Glide.with(mContext).load(item.getUrls().getRegularUrl())
                     .apply(new RequestOptions()
-                            .override(400, 400)
                             .diskCacheStrategy(DiskCacheStrategy.ALL)
                     )
                     .listener(GlidePalette.with(item.getUrls().getSmallUrl())
@@ -72,15 +70,15 @@ public class RecyclerViewPagedListAdapter extends PagedListAdapter<UnSplashRespo
         }
     }
 
-    private static DiffUtil.ItemCallback<UnSplashResponse> DIFF_CALLBACK =
-            new DiffUtil.ItemCallback<UnSplashResponse>() {
+    private static DiffUtil.ItemCallback<Photo> DIFF_CALLBACK =
+            new DiffUtil.ItemCallback<Photo>() {
                 @Override
-                public boolean areItemsTheSame(UnSplashResponse oldItem, UnSplashResponse newItem) {
+                public boolean areItemsTheSame(Photo oldItem, Photo newItem) {
                     return oldItem.getId() == newItem.getId();
                 }
 
                 @Override
-                public boolean areContentsTheSame(UnSplashResponse oldItem, UnSplashResponse newItem) {
+                public boolean areContentsTheSame(Photo oldItem, Photo newItem) {
                     return oldItem.equals(newItem);
                 }
             };

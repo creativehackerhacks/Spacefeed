@@ -11,19 +11,33 @@
     android:orientation="vertical"
     tools:context=".activity.DetailActivity">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:id="@+id/detail_root_linear">
+
     <ImageView
         android:id="@+id/cover_image"
         android:contentDescription="@string/full_image"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scaleType="centerCrop"
+        android:layout_height="wrap_content"
+        android:adjustViewBounds="true"
+        android:scaleType="fitXY"
         android:transitionName="demo_image"
         android:src="@color/colorAccent"/>
 
+        <include
+            layout="@layout/merge_detail"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+    </LinearLayout>
+
     <!--This view will overlap the imageView to apply overlaying gradient on the image-->
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@drawable/over_image_gradient"/>
+    <!--<View-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:background="@drawable/over_image_gradient"/>-->
 
 </RelativeLayout>

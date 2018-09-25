@@ -1,29 +1,23 @@
 package com.example.ansh.spacefeed.activity;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
-import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetDialog;
-import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.load.engine.GlideException;
-import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
-import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
-import com.bumptech.glide.request.target.Target;
 import com.example.ansh.spacefeed.dialogs.BottomSheetFragment;
 import com.example.ansh.spacefeed.dialogs.BottomSheetFragment.BottomSheetListener;
 import com.example.ansh.spacefeed.R;
+import com.example.ansh.spacefeed.pojos.Photo;
 
 public class DetailActivity extends AppCompatActivity implements BottomSheetListener {
 
@@ -32,7 +26,11 @@ public class DetailActivity extends AppCompatActivity implements BottomSheetList
 
     private BottomSheetDialog mBottomSheetDialog;
 
-    private String mUrl;
+    private ImageView mCoverImageView;
+    private TextView mBio;
+
+    private String imageUrl;
+    private String bio;
 
 //    private String mFilePath;
 //    private Toolbar mToolbar;
@@ -51,36 +49,47 @@ public class DetailActivity extends AppCompatActivity implements BottomSheetList
 //        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         // getting intent from the MainActivity.
-        mUrl = getIntent().getStringExtra("imageUrl");
-        Log.i(TAG, "onCreate: " + mUrl);
+//        imageUrl = getIntent().getStringExtra("imageUrl");
 
-        ImageView imageView = findViewById(R.id.cover_image);
+        Photo photo = getIntent().getParcelableExtra("Photo");
+        imageUrl = photo.getUrls().getRegularUrl();
+        bio = photo.getUser().getBio();
+        Log.i(TAG, "onCreate: " + imageUrl +" " + bio);
+
+        mCoverImageView = findViewById(R.id.cover_image);
+        mBio = findViewById(R.id.merge_bio_desc);
+
+        if(bio == null) {
+            mBio.setText("There is no bio to show");
+        } else {
+            mBio.setText(bio);
+        }
 
         // Loads the clicked image.
-        Glide.with(mContext).load(mUrl)
-                .thumbnail(0.1f)
-                .apply(new RequestOptions().placeholder(android.R.color.black)
-                        .diskCacheStrategy(DiskCacheStrategy.DATA)
-                        .centerCrop()
-//                        .dontTransform()
+        Glide.with(mContext).load(imageUrl)
+                .apply(new RequestOptions()
+//                        .placeholder(android.R.color.white)
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .dontTransform()
                 )
-                .listener(new RequestListener<Drawable>() {
-                    @Override
-                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                        return false;
-                    }
-
-                    @Override
-                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                        supportPostponeEnterTransition();
-                        return false;
-                    }
-                })
-                .transition(DrawableTransitionOptions.withCrossFade(200))
-                .into(imageView);
+//                .listener(new RequestListener<Drawable>() {
+//                    @Override
+//                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+//                        return false;
+//                    }
+//
+//                    @Override
+//                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+//                        supportPostponeEnterTransition();
+//                        postponeEnterTransition();
+//                        return false;
+//                    }
+//                })
+//                .transition(DrawableTransitionOptions.withCrossFade())
+                .into(mCoverImageView);
 
         // onLongClickListener for the imageView to show the bottom sheet dialog fragment.
-        imageView.setOnLongClickListener(v -> {
+        mCoverImageView.setOnLongClickListener(v -> {
             showBottomSheetDialog();
             return true;
         });

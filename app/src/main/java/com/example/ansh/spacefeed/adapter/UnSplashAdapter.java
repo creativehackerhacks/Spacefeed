@@ -15,7 +15,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.ansh.spacefeed.R;
 import com.example.ansh.spacefeed.interfaces.SimpleOnItemClickListener;
-import com.example.ansh.spacefeed.pojos.UnSplashResponse;
+import com.example.ansh.spacefeed.pojos.Photo;
 import com.github.florent37.glidepalette.BitmapPalette.Profile;
 import com.github.florent37.glidepalette.BitmapPalette.Swatch;
 import com.github.florent37.glidepalette.GlidePalette;
@@ -28,7 +28,7 @@ public class UnSplashAdapter extends RecyclerView.Adapter<UnSplashAdapter.UnSpla
 //    private static final int LOADING = 1;
 //    private boolean isLoadingAdded = false;
 
-    private List<UnSplashResponse> mUnSplashResponseList;
+    private List<Photo> mPhotoList;
     private Context mContext;
     private int rowLayout;
 
@@ -37,13 +37,13 @@ public class UnSplashAdapter extends RecyclerView.Adapter<UnSplashAdapter.UnSpla
 
     /**
      * Key Point : we pass the interface to the constructor to apply clicking events.
-     * @param unSplashResponseList
+     * @param photoList
      * @param context
      * @param rowLayout
      * @param onItemClickListener
      */
-    public UnSplashAdapter(List<UnSplashResponse> unSplashResponseList, Context context, int rowLayout, SimpleOnItemClickListener onItemClickListener) {
-        mUnSplashResponseList = unSplashResponseList;
+    public UnSplashAdapter(List<Photo> photoList, Context context, int rowLayout, SimpleOnItemClickListener onItemClickListener) {
+        mPhotoList = photoList;
         mContext = context;
         this.rowLayout = rowLayout;
         this.mOnItemClickListener = onItemClickListener;
@@ -61,14 +61,14 @@ public class UnSplashAdapter extends RecyclerView.Adapter<UnSplashAdapter.UnSpla
     public void onBindViewHolder(UnSplashViewHolder unSplashViewHolder, int pos) {
 
         // Setting the name and numOfLikes for the items of recyclerView.
-        unSplashViewHolder.mName.setText(mUnSplashResponseList.get(pos).getUser().getName());
-        unSplashViewHolder.mNumOfLikes.setText(String.valueOf(mUnSplashResponseList.get(pos).getNumOfLikes()));
+        unSplashViewHolder.mName.setText(mPhotoList.get(pos).getUser().getName());
+        unSplashViewHolder.mNumOfLikes.setText(String.valueOf(mPhotoList.get(pos).getNumOfLikes()));
 
         /**
          * This was used to load only the image
          */
 //        Glide.with(mContext)
-//                .load(mUnSplashResponseList.get(pos).getUrls().getFullUrl())
+//                .load(mPhotoList.get(pos).getUrls().getFullUrl())
 //                .apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.ALL))
 //                .into(unSplashViewHolder.mImageView);
 
@@ -77,8 +77,8 @@ public class UnSplashAdapter extends RecyclerView.Adapter<UnSplashAdapter.UnSpla
          * Glide Palette library to get the 'Colors' from the images
          * and to apply the 'thumbnail' until image loads.
          * */
-        Glide.with(mContext).load(mUnSplashResponseList.get(pos).getUrls().getFullUrl())
-                .listener(GlidePalette.with(mUnSplashResponseList.get(pos).getUrls().getFullUrl())
+        Glide.with(mContext).load(mPhotoList.get(pos).getUrls().getFullUrl())
+                .listener(GlidePalette.with(mPhotoList.get(pos).getUrls().getFullUrl())
                         .use(Profile.MUTED_DARK)
                         .intoBackground(unSplashViewHolder.mLinearLayout)
 
@@ -99,28 +99,28 @@ public class UnSplashAdapter extends RecyclerView.Adapter<UnSplashAdapter.UnSpla
 
     @Override
     public int getItemCount() {
-        return mUnSplashResponseList.size();
+        return mPhotoList.size();
     }
 
 
 
 //    // --------------------------------------
-//    public void add(UnSplashResponse mUSR) {
-//        mUnSplashResponseList.add(mUSR);
+//    public void add(Photo mUSR) {
+//        mPhotoList.add(mUSR);
 //        // Position - where we should add data
-//        notifyItemInserted(mUnSplashResponseList.size() -1);
+//        notifyItemInserted(mPhotoList.size() -1);
 //    }
 //
-//    public void addALL(List<UnSplashResponse> mUSR) {
-//        for(UnSplashResponse usr : mUSR) {
+//    public void addALL(List<Photo> mUSR) {
+//        for(Photo usr : mUSR) {
 //            add(usr);
 //        }
 //    }
 //
-//    public void remove(UnSplashResponse mUSR) {
-//        int position = mUnSplashResponseList.indexOf(mUSR);
+//    public void remove(Photo mUSR) {
+//        int position = mPhotoList.indexOf(mUSR);
 //        if (position > -1) {
-//            mUnSplashResponseList.remove(position);
+//            mPhotoList.remove(position);
 //            notifyItemRemoved(position);
 //        }
 //    }
@@ -138,23 +138,23 @@ public class UnSplashAdapter extends RecyclerView.Adapter<UnSplashAdapter.UnSpla
 //
 //    public void addLoadingFooter() {
 //        isLoadingAdded = true;
-//        add(new UnSplashResponse());
+//        add(new Photo());
 //    }
 //
 //    public void removeLoadingFooter() {
 //        isLoadingAdded = false;
 //
-//        int position = mUnSplashResponseList.size() - 1;
-//        UnSplashResponse item = getItem(position);
+//        int position = mPhotoList.size() - 1;
+//        Photo item = getItem(position);
 //
 //        if (item != null) {
-//            mUnSplashResponseList.remove(position);
+//            mPhotoList.remove(position);
 //            notifyItemRemoved(position);
 //        }
 //    }
 //
-//    public UnSplashResponse getItem(int position) {
-//        return mUnSplashResponseList.get(position);
+//    public Photo getItem(int position) {
+//        return mPhotoList.get(position);
 //    }
 //
 //    // -------------------------------

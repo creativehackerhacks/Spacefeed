@@ -1,9 +1,12 @@
 package com.example.ansh.spacefeed.pojos;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Urls {
+public class Urls implements Parcelable {
 
     @SerializedName("raw")
     @Expose
@@ -33,6 +36,10 @@ public class Urls {
         mRegularUrl = regularUrl;
         mSmallUrl = smallUrl;
         mThumbUrl = thumbUrl;
+    }
+
+    public Urls() {
+
     }
 
     public String getFullUrl() {
@@ -74,4 +81,40 @@ public class Urls {
     public void setThumbUrl(String thumbUrl) {
         mThumbUrl = thumbUrl;
     }
+
+    public static final Parcelable.Creator<Urls> CREATOR = new Creator<Urls>() {
+
+        @SuppressWarnings({"unchecked"})
+        public Urls createFromParcel(Parcel in) {
+            return new Urls(in);
+        }
+
+        public Urls[] newArray(int size) {
+            return (new Urls[size]);
+        }
+    };
+
+    protected Urls(Parcel in) {
+        this.mRawUrl = ((String) in.readValue((String.class.getClassLoader())));
+        this.mFullUrl = ((String) in.readValue((String.class.getClassLoader())));
+        this.mRegularUrl = ((String) in.readValue((String.class.getClassLoader())));
+        this.mSmallUrl = ((String) in.readValue((String.class.getClassLoader())));
+        this.mThumbUrl = ((String) in.readValue((String.class.getClassLoader())));
+    }
+
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeValue(mRawUrl);
+        parcel.writeValue(mFullUrl);
+        parcel.writeValue(mRegularUrl);
+        parcel.writeValue(mSmallUrl);
+        parcel.writeValue(mThumbUrl);
+    }
+
 }
