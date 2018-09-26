@@ -1,4 +1,4 @@
-package com.example.ansh.spacefeed;
+package com.example.ansh.spacefeed.recyclerViewUtils;
 
 import android.graphics.Rect;
 import android.support.annotation.NonNull;

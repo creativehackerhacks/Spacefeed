@@ -13,20 +13,22 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class ItemDataSource extends PageKeyedDataSource<Integer, Photo> {
+public class PhotoDataSource extends PageKeyedDataSource<Integer, Photo> {
 
+    // API_KEY or CLIENT_ID
     public static final String CLIENT_ID = "63002cc7718cea591dcf5a661065713e4a353d49090dce8df8c7680af2cb78e4";
 
+    /**
+     * Private member variables.
+     */
     //the size of a page that we want
     public static final int PAGE_SIZE = 300;
-
     public static final int ITEM_PER_PAGE = 10;
-
     //we will start from the first page which is 1
     private static int FIRST_PAGE = 1;
-
     //we need to fetch from UnSplash
     private static final String SITE_NAME = "unsplash";
+
 
     @Override
     public void loadInitial(@NonNull LoadInitialParams<Integer> params, @NonNull LoadInitialCallback<Integer, Photo> callback) {

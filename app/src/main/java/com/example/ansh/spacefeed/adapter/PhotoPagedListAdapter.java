@@ -24,13 +24,14 @@ import com.github.florent37.glidepalette.BitmapPalette.Profile;
 import com.github.florent37.glidepalette.BitmapPalette.Swatch;
 import com.github.florent37.glidepalette.GlidePalette;
 
-public class RecyclerViewPagedListAdapter extends PagedListAdapter<Photo, RecyclerViewPagedListAdapter.ItemViewHolder> {
+public class PhotoPagedListAdapter extends PagedListAdapter<Photo, PhotoPagedListAdapter.ItemViewHolder> {
 
+    // Private member variables
     private Context mContext;
-
     private SimpleOnItemClickListener mListener;
 
-    public RecyclerViewPagedListAdapter(Context mCtx, SimpleOnItemClickListener simpleOnItemClickListener) {
+    // Constructor
+    public PhotoPagedListAdapter(Context mCtx, SimpleOnItemClickListener simpleOnItemClickListener) {
         super(DIFF_CALLBACK);
         this.mContext = mCtx;
         this.mListener = simpleOnItemClickListener;
@@ -45,29 +46,8 @@ public class RecyclerViewPagedListAdapter extends PagedListAdapter<Photo, Recycl
 
     @Override
     public void onBindViewHolder(@NonNull ItemViewHolder holder, int position) {
-        Photo item = getItem(position);
-
-        if (item != null) {
-            holder.mName.setText(item.getUser().getName());
-            holder.mNumOfLikes.setText(String.valueOf(item.getNumOfLikes()));
-
-            Glide.with(mContext).load(item.getUrls().getRegularUrl())
-                    .apply(new RequestOptions()
-                            .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    )
-                    .listener(GlidePalette.with(item.getUrls().getSmallUrl())
-                            .use(Profile.MUTED_DARK)
-                            .intoBackground(holder.mLinearLayout)
-
-                            .use(Profile.MUTED_DARK)
-                            .intoTextColor(holder.mName, Swatch.BODY_TEXT_COLOR)
-                            .intoTextColor(holder.mNumOfLikes, Swatch.BODY_TEXT_COLOR)
-                            .crossfade(true)
-                    )
-                    .into(holder.mImageView);
-        }else{
-            Toast.makeText(mContext, "Item is null", Toast.LENGTH_LONG).show();
-        }
+        // Calling bind method.
+        holder.bind(holder, position);
     }
 
     private static DiffUtil.ItemCallback<Photo> DIFF_CALLBACK =
@@ -83,6 +63,7 @@ public class RecyclerViewPagedListAdapter extends PagedListAdapter<Photo, Recycl
                 }
             };
 
+    // Inner ViewHolder class
     class ItemViewHolder extends RecyclerView.ViewHolder implements OnClickListener {
 
         LinearLayout mLinearLayout;
@@ -99,9 +80,37 @@ public class RecyclerViewPagedListAdapter extends PagedListAdapter<Photo, Recycl
             mImageView.setOnClickListener(this);
         }
 
+        // onClick Listener for imageView
         @Override
         public void onClick(View v) {
             mListener.onClick(v, getAdapterPosition());
+        }
+
+        // binding the data to the views
+        public void bind(ItemViewHolder holder, int position) {
+            Photo item = getItem(position);
+
+            if (item != null) {
+                holder.mName.setText(item.getUser().getName());
+                holder.mNumOfLikes.setText(String.valueOf(item.getLikes()));
+
+                Glide.with(mContext).load(item.getUrls().getRegularUrl())
+                        .apply(new RequestOptions()
+                                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                        )
+                        .listener(GlidePalette.with(item.getUrls().getSmallUrl())
+                                .use(Profile.MUTED_LIGHT)
+                                .intoBackground(holder.mLinearLayout)
+
+                                .use(Profile.MUTED_LIGHT)
+                                .intoTextColor(holder.mName, Swatch.BODY_TEXT_COLOR)
+                                .intoTextColor(holder.mNumOfLikes, Swatch.BODY_TEXT_COLOR)
+                                .crossfade(true)
+                        )
+                        .into(holder.mImageView);
+            }else{
+                Toast.makeText(mContext, "Item is null", Toast.LENGTH_LONG).show();
+            }
         }
     }
 

@@ -8,6 +8,7 @@ import com.google.gson.annotations.SerializedName;
 
 public class Urls implements Parcelable {
 
+    //------------------ private member variables --------------//
     @SerializedName("raw")
     @Expose
     private String mRawUrl;
@@ -28,8 +29,11 @@ public class Urls implements Parcelable {
     @Expose
     private String mThumbUrl;
 
-    // Constructor
 
+
+
+
+    //------------------ Constructors --------------//
     public Urls(String rawUrl, String fullUrl, String regularUrl, String smallUrl, String thumbUrl) {
         mRawUrl = rawUrl;
         mFullUrl = fullUrl;
@@ -38,8 +42,21 @@ public class Urls implements Parcelable {
         mThumbUrl = thumbUrl;
     }
 
+    // default Constructor
     public Urls() {
 
+    }
+
+
+
+
+    //------------------ Getters & Setters --------------//
+    public String getRawUrl() {
+        return mRawUrl;
+    }
+
+    public void setRawUrl(String rawUrl) {
+        mRawUrl = rawUrl;
     }
 
     public String getFullUrl() {
@@ -48,14 +65,6 @@ public class Urls implements Parcelable {
 
     public void setFullUrl(String fullUrl) {
         mFullUrl = fullUrl;
-    }
-
-    public String getRawUrl() {
-        return mRawUrl;
-    }
-
-    public void setRawUrl(String rawUrl) {
-        mRawUrl = rawUrl;
     }
 
     public String getRegularUrl() {
@@ -82,6 +91,11 @@ public class Urls implements Parcelable {
         mThumbUrl = thumbUrl;
     }
 
+
+
+
+
+    //------------------ Parcelable METHODS --------------//
     public static final Parcelable.Creator<Urls> CREATOR = new Creator<Urls>() {
 
         @SuppressWarnings({"unchecked"})
@@ -94,6 +108,7 @@ public class Urls implements Parcelable {
         }
     };
 
+    // Parcel Constructor
     protected Urls(Parcel in) {
         this.mRawUrl = ((String) in.readValue((String.class.getClassLoader())));
         this.mFullUrl = ((String) in.readValue((String.class.getClassLoader())));
@@ -102,19 +117,19 @@ public class Urls implements Parcelable {
         this.mThumbUrl = ((String) in.readValue((String.class.getClassLoader())));
     }
 
+    // Parcel write
+    @Override
+    public void writeToParcel(Parcel dest, int i) {
+        dest.writeValue(mRawUrl);
+        dest.writeValue(mFullUrl);
+        dest.writeValue(mRegularUrl);
+        dest.writeValue(mSmallUrl);
+        dest.writeValue(mThumbUrl);
+    }
 
     @Override
     public int describeContents() {
         return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeValue(mRawUrl);
-        parcel.writeValue(mFullUrl);
-        parcel.writeValue(mRegularUrl);
-        parcel.writeValue(mSmallUrl);
-        parcel.writeValue(mThumbUrl);
     }
 
 }

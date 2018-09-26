@@ -11,10 +11,12 @@ import retrofit2.converter.gson.GsonConverterFactory;
  */
 public class ApiClient {
 
-    public static final String BASE_URL = "https://api.unsplash.com/";
+    // Private Member Variables
+    private static final String BASE_URL = "https://api.unsplash.com/";
     private  Retrofit mRetrofit = null;
     private static ApiClient mApiClient;
 
+    // Private constructor which initialize mRetrofit.
     private ApiClient() {
         mRetrofit = new Retrofit.Builder()
                 .baseUrl(BASE_URL)
@@ -22,6 +24,7 @@ public class ApiClient {
                 .build();
     }
 
+    // Singleton --> Used to return ApiClient class instance.
     public static synchronized ApiClient getInstance() {
         if(mApiClient == null) {
             mApiClient = new ApiClient();
@@ -29,6 +32,7 @@ public class ApiClient {
         return mApiClient;
     }
 
+    // This method will return the instance of Retrofit
     public ApiInterface getApi() {
         return mRetrofit.create(ApiInterface.class);
     }

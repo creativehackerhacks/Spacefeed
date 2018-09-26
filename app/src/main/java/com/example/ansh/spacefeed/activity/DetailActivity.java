@@ -1,12 +1,14 @@
 package com.example.ansh.spacefeed.activity;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.design.widget.BottomSheetDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -14,10 +16,13 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.Target;
 import com.example.ansh.spacefeed.dialogs.BottomSheetFragment;
 import com.example.ansh.spacefeed.dialogs.BottomSheetFragment.BottomSheetListener;
 import com.example.ansh.spacefeed.R;
 import com.example.ansh.spacefeed.pojos.Photo;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class DetailActivity extends AppCompatActivity implements BottomSheetListener {
 
@@ -28,6 +33,10 @@ public class DetailActivity extends AppCompatActivity implements BottomSheetList
 
     private ImageView mCoverImageView;
     private TextView mBio;
+    private CircleImageView mProImageView;
+    private TextView mName;
+
+    private LinearLayout mProImageBackground;
 
     private String imageUrl;
     private String bio;
@@ -58,12 +67,20 @@ public class DetailActivity extends AppCompatActivity implements BottomSheetList
 
         mCoverImageView = findViewById(R.id.cover_image);
         mBio = findViewById(R.id.merge_bio_desc);
+        mProImageView = findViewById(R.id.merge_pro_pic);
+        mName = findViewById(R.id.merge_pro_name);
+        mProImageBackground = findViewById(R.id.merge_proPic_layout);
 
+        mName.setText(photo.getUser().getName());
         if(bio == null) {
-            mBio.setText("There is no bio to show");
+            mBio.setText(R.string.default_no_bio);
         } else {
             mBio.setText(bio);
         }
+
+        mProImageBackground.setBackgroundColor(Color.parseColor(photo.getColor()));
+
+        Glide.with(mContext).load(photo.getUser().getProfileImage().getLarge()).into(mProImageView);
 
         // Loads the clicked image.
         Glide.with(mContext).load(imageUrl)

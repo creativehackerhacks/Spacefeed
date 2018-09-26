@@ -62,7 +62,7 @@ public class UnSplashAdapter extends RecyclerView.Adapter<UnSplashAdapter.UnSpla
 
         // Setting the name and numOfLikes for the items of recyclerView.
         unSplashViewHolder.mName.setText(mPhotoList.get(pos).getUser().getName());
-        unSplashViewHolder.mNumOfLikes.setText(String.valueOf(mPhotoList.get(pos).getNumOfLikes()));
+        unSplashViewHolder.mNumOfLikes.setText(String.valueOf(mPhotoList.get(pos).getLikes()));
 
         /**
          * This was used to load only the image

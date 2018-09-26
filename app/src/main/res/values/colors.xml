@@ -4,6 +4,11 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
 
+    <!-- MainActivity Background -->
+    <color name="colorOne">#38375b</color>
+    <color name="colorOneDark">#262738</color>
+    <color name="mainActivityRecyclerView">#38375d</color>
+
     <!-- Background color of bottom sheet dialog -->
     <color name="bottomSheet">#ffffff</color>
 </resources>
