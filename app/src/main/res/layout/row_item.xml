@@ -5,8 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:id="@+id/card_bg"
-    android:minHeight="160dp"
-    android:layout_margin="8dp"
+    android:minHeight="80dp"
     app:cardCornerRadius="6dp">
 
     <LinearLayout
@@ -25,38 +24,38 @@
             android:transitionName="demo_image"
             android:src="@drawable/dude" />
 
-        <RelativeLayout
-            android:id="@+id/bottom_part"
-            android:layout_width="match_parent"
-            android:gravity="center_vertical"
-            android:layout_height="56dp">
+        <!--<RelativeLayout-->
+            <!--android:id="@+id/bottom_part"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:gravity="center_vertical"-->
+            <!--android:layout_height="56dp">-->
 
-            <TextView
-                android:id="@+id/user_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
-                android:text="@string/username"
-                android:paddingLeft="16dp"
-                android:maxLines="1"
-                android:maxLength="10"
-                android:ellipsize="end"
-                android:textSize="16sp" />
+            <!--<TextView-->
+                <!--android:id="@+id/user_name"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_alignParentStart="true"-->
+                <!--android:text="@string/username"-->
+                <!--android:paddingLeft="16dp"-->
+                <!--android:maxLines="1"-->
+                <!--android:maxLength="10"-->
+                <!--android:ellipsize="end"-->
+                <!--android:textSize="16sp" />-->
 
-            <TextView
-                android:id="@+id/num_of_likes"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:text="@string/likes"
-                android:paddingRight="16dp"
-                android:maxLines="1"
-                android:maxLength="10"
-                android:ellipsize="end"
-                android:textSize="14sp"
-                android:textStyle="bold" />
+            <!--<TextView-->
+                <!--android:id="@+id/num_of_likes"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_alignParentEnd="true"-->
+                <!--android:text="@string/likes"-->
+                <!--android:paddingRight="16dp"-->
+                <!--android:maxLines="1"-->
+                <!--android:maxLength="10"-->
+                <!--android:ellipsize="end"-->
+                <!--android:textSize="14sp"-->
+                <!--android:textStyle="bold" />-->
 
-        </RelativeLayout>
+        <!--</RelativeLayout>-->
 
     </LinearLayout>
 

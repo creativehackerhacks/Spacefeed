@@ -45,7 +45,7 @@ public class Photo implements Parcelable {
 
     @SerializedName("links")
     @Expose
-    private Links mLinks;
+    private PhotoLinks mPhotoLinks;
 
     @SerializedName("categories")
     @Expose
@@ -80,7 +80,7 @@ public class Photo implements Parcelable {
 
 
     //------------------ Constructors --------------//
-    public Photo(String id, String createdAt, String updatedAt, Integer width, Integer height, String color, Object description, Urls urls, Links links, List<Object> categories, Boolean sponsored, Integer likes, Boolean likedByUser, List<Object> currentUserCollections, Object slug, User user) {
+    public Photo(String id, String createdAt, String updatedAt, Integer width, Integer height, String color, Object description, Urls urls, PhotoLinks photoLinks, List<Object> categories, Boolean sponsored, Integer likes, Boolean likedByUser, List<Object> currentUserCollections, Object slug, User user) {
         mId = id;
         mCreatedAt = createdAt;
         mUpdatedAt = updatedAt;
@@ -89,7 +89,7 @@ public class Photo implements Parcelable {
         mColor = color;
         mDescription = description;
         mUrls = urls;
-        mLinks = links;
+        mPhotoLinks = photoLinks;
         mCategories = categories;
         mSponsored = sponsored;
         mLikes = likes;
@@ -173,12 +173,12 @@ public class Photo implements Parcelable {
         mUrls = urls;
     }
 
-    public Links getLinks() {
-        return mLinks;
+    public PhotoLinks getPhotoLinks() {
+        return mPhotoLinks;
     }
 
-    public void setLinks(Links links) {
-        mLinks = links;
+    public void setPhotoLinks(PhotoLinks photoLinks) {
+        mPhotoLinks = photoLinks;
     }
 
     public List<Object> getCategories() {
@@ -277,7 +277,7 @@ public class Photo implements Parcelable {
         this.mColor = ((String) in.readValue((String.class.getClassLoader())));
         this.mDescription = ((Object) in.readValue((Object.class.getClassLoader())));
         this.mUrls = ((Urls) in.readValue((Urls.class.getClassLoader())));
-        this.mLinks = ((Links) in.readValue((Links.class.getClassLoader())));
+        this.mPhotoLinks = ((PhotoLinks) in.readValue((PhotoLinks.class.getClassLoader())));
         in.readList(this.mCategories, (Object.class.getClassLoader()));
         this.mSponsored = ((Boolean) in.readValue((Boolean.class.getClassLoader())));
         this.mLikes = ((Integer) in.readValue((Integer.class.getClassLoader())));
@@ -298,7 +298,7 @@ public class Photo implements Parcelable {
         dest.writeValue(mColor);
         dest.writeValue(mDescription);
         dest.writeValue(mUrls);
-        dest.writeValue(mLinks);
+        dest.writeValue(mPhotoLinks);
         dest.writeList(mCategories);
         dest.writeValue(mSponsored);
         dest.writeValue(mLikes);

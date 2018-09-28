@@ -11,4 +11,9 @@
 
     <!-- Background color of bottom sheet dialog -->
     <color name="bottomSheet">#ffffff</color>
+    <color name="linearLayoutBG">#eaeaea</color>
+
+    <!-- Transparent toolbar background -->
+    <color name="black_alpha_40">#66000000</color>
+
 </resources>

@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.example.ansh.spacefeed.client.ApiClient;
+import com.example.ansh.spacefeed.pojos.CollectionPhoto;
 import com.example.ansh.spacefeed.pojos.Photo;
 
 import java.util.List;
@@ -13,7 +14,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class PhotoDataSource extends PageKeyedDataSource<Integer, Photo> {
+public class CollectionDataSource extends PageKeyedDataSource<Integer, CollectionPhoto> {
 
     // API_KEY or CLIENT_ID
     public static final String CLIENT_ID = "63002cc7718cea591dcf5a661065713e4a353d49090dce8df8c7680af2cb78e4";
@@ -30,12 +31,13 @@ public class PhotoDataSource extends PageKeyedDataSource<Integer, Photo> {
     private static final String SITE_NAME = "unsplash";
 
 
+
     @Override
-    public void loadInitial(@NonNull LoadInitialParams<Integer> params, @NonNull LoadInitialCallback<Integer, Photo> callback) {
-        ApiClient.getInstance().getApi().getPhotos(CLIENT_ID, ITEM_PER_PAGE, FIRST_PAGE)
-                .enqueue(new Callback<List<Photo>>() {
+    public void loadInitial(@NonNull LoadInitialParams<Integer> params, @NonNull LoadInitialCallback<Integer, CollectionPhoto> callback) {
+        ApiClient.getInstance().getApi().getCollections(CLIENT_ID, ITEM_PER_PAGE, FIRST_PAGE)
+                .enqueue(new Callback<List<CollectionPhoto>>() {
                     @Override
-                    public void onResponse(Call<List<Photo>> call, Response<List<Photo>> response) {
+                    public void onResponse(Call<List<CollectionPhoto>> call, Response<List<CollectionPhoto>> response) {
                         if(response.body() != null) {
                             callback.onResult(response.body(), null, 2);
                             Log.i("FUCK", "onResponse: Initial " + response);
@@ -44,41 +46,23 @@ public class PhotoDataSource extends PageKeyedDataSource<Integer, Photo> {
                     }
 
                     @Override
-                    public void onFailure(Call<List<Photo>> call, Throwable t) {
+                    public void onFailure(Call<List<CollectionPhoto>> call, Throwable t) {
 
                     }
                 });
     }
 
     @Override
-    public void loadBefore(@NonNull LoadParams<Integer> params, @NonNull LoadCallback<Integer, Photo> callback) {
-//        ApiClient.getInstance().getApi().getPhotos(CLIENT_ID, PAGE_SIZE, FIRST_PAGE)
-//                .enqueue(new Callback<List<Photo>>() {
-//                    @Override
-//                    public void onResponse(Call<List<Photo>> call, Response<List<Photo>> response) {
-//                        //if the current page is greater than one
-//                        //we are decrementing the page number
-//                        //else there is no previous page
-//                        Integer adjacentKey = (params.key > 1) ? params.key -1 : null;
-//                        if(response.body() != null) {
-//                            callback.onResult(response.body(), adjacentKey);
-//                            Log.i("FUCK", "onResponse: Before " + response);
-//                        }
-//                    }
-//
-//                    @Override
-//                    public void onFailure(Call<List<Photo>> call, Throwable t) {
-//
-//                    }
-//                });
+    public void loadBefore(@NonNull LoadParams<Integer> params, @NonNull LoadCallback<Integer, CollectionPhoto> callback) {
+
     }
 
     @Override
-    public void loadAfter(@NonNull LoadParams<Integer> params, @NonNull LoadCallback<Integer, Photo> callback) {
-        ApiClient.getInstance().getApi().getPhotos(CLIENT_ID, ITEM_PER_PAGE, params.key)
-                .enqueue(new Callback<List<Photo>>() {
+    public void loadAfter(@NonNull LoadParams<Integer> params, @NonNull LoadCallback<Integer, CollectionPhoto> callback) {
+        ApiClient.getInstance().getApi().getCollections(CLIENT_ID, ITEM_PER_PAGE, params.key)
+                .enqueue(new Callback<List<CollectionPhoto>>() {
                     @Override
-                    public void onResponse(Call<List<Photo>> call, Response<List<Photo>> response) {
+                    public void onResponse(Call<List<CollectionPhoto>> call, Response<List<CollectionPhoto>> response) {
                         //if the current page is greater than one
                         //we are decrementing the page number
                         //else there is no previous page
@@ -92,7 +76,7 @@ public class PhotoDataSource extends PageKeyedDataSource<Integer, Photo> {
                     }
 
                     @Override
-                    public void onFailure(Call<List<Photo>> call, Throwable t) {
+                    public void onFailure(Call<List<CollectionPhoto>> call, Throwable t) {
 
                     }
                 });

@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 
+ <!--This layout is not in use right now.-->
+<!--This will be used with "DetailFragment" instead of "DetailActivity"-->
+
 <android.support.design.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -16,6 +19,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:orientation="vertical"
             tools:context=".activity.DetailActivity">
 
             <LinearLayout
@@ -35,7 +39,6 @@
                     android:src="@color/colorAccent"/>
 
                 <include
-                    android:id="@+id/detail_merge_views"
                     layout="@layout/merge_detail"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"/>
@@ -48,26 +51,33 @@
             <!--android:layout_height="match_parent"-->
             <!--android:background="@drawable/over_image_gradient"/>-->
 
-            <include layout="@layout/transparent_toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentStart="true"/>
-
-            <android.support.design.widget.FloatingActionButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:fabSize="mini"
-                android:id="@+id/fab"
-                android:src="@drawable/ic_more_white_24dp"
-                android:backgroundTint="@color/colorOneDark"
-                app:borderWidth="0dp"
-                android:layout_marginEnd="16dp"
-                android:layout_marginBottom="48dp"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentBottom="true"/>
-
         </RelativeLayout>
-
     </android.support.v4.widget.NestedScrollView>
+
+
+
+    <!--- FOR FUTURE PERSISTENT BOTTOM SHEET LAYOUT -->
+    <!--<RelativeLayout-->
+    <!--android:id="@+id/design_bottom_sheet"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent"-->
+    <!--android:background="@color/colorAccent"-->
+    <!--android:paddingBottom="@dimen/activity_vertical_margin"-->
+    <!--android:paddingLeft="@dimen/activity_horizontal_margin"-->
+    <!--android:paddingRight="@dimen/activity_horizontal_margin"-->
+    <!--android:paddingTop="@dimen/activity_vertical_margin"-->
+    <!--app:behavior_hideable="true"-->
+    <!--app:behavior_peekHeight="50dp"-->
+    <!--app:elevation="4dp"-->
+    <!--app:layout_behavior="@string/bottom_sheet_behavior">-->
+
+    <!--<TextView-->
+    <!--android:id="@+id/bottomsheet_text"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="match_parent"-->
+    <!--android:text="Introducing Bottom Sheets"-->
+    <!--android:textColor="#FFFFFF"/>-->
+
+    <!--</RelativeLayout>-->
+
 </android.support.design.widget.CoordinatorLayout>

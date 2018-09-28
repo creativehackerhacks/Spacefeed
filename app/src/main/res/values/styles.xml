@@ -4,9 +4,22 @@
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorOne</item>
-        <item name="colorPrimaryDark">@color/colorOneDark</item>
+        <item name="colorPrimaryDark">@color/colorOne</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:windowContentTransitions">true</item>
+    </style>
+
+    <!-- Custom theme for toolbar -->
+    <style name="ToolbarTheme" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+        <item name="android:homeAsUpIndicator">@drawable/ic_backspace_white_24dp</item>
+    </style>
+
+    <style name="TransparentToolbarTheme" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+        <!--<item name="android:background">@null</item>-->
+        <!--<item name="android:windowActionBarOverlay">true</item>-->
+        <!--&lt;!&ndash; Support library compatibility &ndash;&gt;-->
+        <!--<item name="windowActionBarOverlay">true</item>-->
+        <item name="android:homeAsUpIndicator">@drawable/ic_backspace_white_24dp</item>
     </style>
 
     <!-- This theme is to set the background color of the bottom sheet

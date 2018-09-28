@@ -6,7 +6,7 @@ import android.os.Parcelable;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Links_ implements Parcelable{
+public class UserLinks implements Parcelable{
 
     //------------------ private member variables --------------//
     @SerializedName("self")
@@ -42,7 +42,7 @@ public class Links_ implements Parcelable{
 
 
     //------------------ Constructors --------------//
-    public Links_(String self, String html, String photos, String likes, String portfolio, String following, String followers) {
+    public UserLinks(String self, String html, String photos, String likes, String portfolio, String following, String followers) {
         mSelf = self;
         mHtml = html;
         mPhotos = photos;
@@ -53,7 +53,7 @@ public class Links_ implements Parcelable{
     }
 
     // default Constructor
-    public Links_() {
+    public UserLinks() {
 
     }
 
@@ -122,20 +122,20 @@ public class Links_ implements Parcelable{
 
 
     //------------------ Parcelable METHODS --------------//
-    public static final Creator<Links_> CREATOR = new Creator<Links_>() {
+    public static final Creator<UserLinks> CREATOR = new Creator<UserLinks>() {
         @Override
-        public Links_ createFromParcel(Parcel in) {
-            return new Links_(in);
+        public UserLinks createFromParcel(Parcel in) {
+            return new UserLinks(in);
         }
 
         @Override
-        public Links_[] newArray(int size) {
-            return new Links_[size];
+        public UserLinks[] newArray(int size) {
+            return new UserLinks[size];
         }
     };
 
     // Parcel Constructor
-    protected Links_(Parcel in) {
+    protected UserLinks(Parcel in) {
         this.mSelf = ((String) in.readValue((String.class.getClassLoader())));
         this.mHtml = ((String) in.readValue((String.class.getClassLoader())));
         this.mPhotos = ((String) in.readValue((String.class.getClassLoader())));

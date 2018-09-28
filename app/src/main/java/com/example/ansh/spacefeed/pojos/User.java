@@ -51,7 +51,7 @@ public class User implements Parcelable {
 
     @SerializedName("links")
     @Expose
-    private Links_ mLinks_;
+    private UserLinks mUserLinks_;
 
     @SerializedName("profile_image")
     @Expose
@@ -77,7 +77,7 @@ public class User implements Parcelable {
 
 
     //------------------ Constructors --------------//
-    public User(String id, String updatedAt, String username, String name, String firstName, String lastName, String twitterUsername, String portfolioUrl, String bio, String location, Links_ links_, ProfileImage profileImage, String instagramUsername, Integer totalCollections, Integer totalLikes, Integer totalPhotos) {
+    public User(String id, String updatedAt, String username, String name, String firstName, String lastName, String twitterUsername, String portfolioUrl, String bio, String location, UserLinks userLinks_, ProfileImage profileImage, String instagramUsername, Integer totalCollections, Integer totalLikes, Integer totalPhotos) {
         mId = id;
         mUpdatedAt = updatedAt;
         mUsername = username;
@@ -88,7 +88,7 @@ public class User implements Parcelable {
         mPortfolioUrl = portfolioUrl;
         mBio = bio;
         mLocation = location;
-        mLinks_ = links_;
+        mUserLinks_ = userLinks_;
         mProfileImage = profileImage;
         mInstagramUsername = instagramUsername;
         mTotalCollections = totalCollections;
@@ -184,12 +184,12 @@ public class User implements Parcelable {
         mLocation = location;
     }
 
-    public Links_ getLinks_() {
-        return mLinks_;
+    public UserLinks getUserLinks_() {
+        return mUserLinks_;
     }
 
-    public void setLinks_(Links_ links_) {
-        mLinks_ = links_;
+    public void setUserLinks_(UserLinks userLinks_) {
+        mUserLinks_ = userLinks_;
     }
 
     public ProfileImage getProfileImage() {
@@ -260,7 +260,7 @@ public class User implements Parcelable {
         this.mPortfolioUrl = ((String) in.readValue((String.class.getClassLoader())));
         this.mBio = ((String) in.readValue((String.class.getClassLoader())));
         this.mLocation = ((String) in.readValue((String.class.getClassLoader())));
-        this.mLinks_ = ((Links_) in.readValue((Links_.class.getClassLoader())));
+        this.mUserLinks_ = ((UserLinks) in.readValue((UserLinks.class.getClassLoader())));
         this.mProfileImage = ((ProfileImage) in.readValue((ProfileImage.class.getClassLoader())));
         this.mInstagramUsername = ((String) in.readValue((String.class.getClassLoader())));
         this.mTotalCollections = ((Integer) in.readValue((Integer.class.getClassLoader())));
@@ -281,7 +281,7 @@ public class User implements Parcelable {
         dest.writeValue(mPortfolioUrl);
         dest.writeValue(mBio);
         dest.writeValue(mLocation);
-        dest.writeValue(mLinks_);
+        dest.writeValue(mUserLinks_);
         dest.writeValue(mProfileImage);
         dest.writeValue(mInstagramUsername);
         dest.writeValue(mTotalCollections);

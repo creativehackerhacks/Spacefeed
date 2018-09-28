@@ -176,8 +176,8 @@ public class UnSplashAdapter extends RecyclerView.Adapter<UnSplashAdapter.UnSpla
 
             mLinearLayout = itemView.findViewById(R.id.row_content_bg);
             mImageView = itemView.findViewById(R.id.image);
-            mName = itemView.findViewById(R.id.user_name);
-            mNumOfLikes = itemView.findViewById(R.id.num_of_likes);
+//            mName = itemView.findViewById(R.id.user_name);
+//            mNumOfLikes = itemView.findViewById(R.id.num_of_likes);
 
             itemView.setOnClickListener(this);
         }
