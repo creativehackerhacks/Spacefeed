@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <android.support.design.widget.CoordinatorLayout
+    android:id="@+id/detail_root_container"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -8,24 +9,23 @@
     android:layout_height="match_parent"
     tools:context=".activity.DetailActivity">
 
-    <android.support.v4.widget.NestedScrollView
+    <RelativeLayout
+        android:id="@+id/detail_root_relative_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        android:layout_height="match_parent">
 
-        <RelativeLayout
+        <android.support.v4.widget.NestedScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            tools:context=".activity.DetailActivity">
+            android:layout_height="match_parent">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical"
-                android:id="@+id/detail_root_linear">
+                android:id="@+id/detail_nested_linear">
 
                 <ImageView
-                    android:id="@+id/cover_image"
+                    android:id="@+id/detail_photo"
                     android:contentDescription="@string/full_image"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -42,32 +42,26 @@
 
             </LinearLayout>
 
-            <!--This view will overlap the imageView to apply overlaying gradient on the image-->
-            <!--<View-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="match_parent"-->
-            <!--android:background="@drawable/over_image_gradient"/>-->
+        </android.support.v4.widget.NestedScrollView>
+    </RelativeLayout>
 
-            <include layout="@layout/transparent_toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentStart="true"/>
+    <include layout="@layout/transparent_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"/>
 
-            <android.support.design.widget.FloatingActionButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:fabSize="mini"
-                android:id="@+id/fab"
-                android:src="@drawable/ic_more_white_24dp"
-                android:backgroundTint="@color/colorOneDark"
-                app:borderWidth="0dp"
-                android:layout_marginEnd="16dp"
-                android:layout_marginBottom="48dp"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentBottom="true"/>
+    <android.support.design.widget.FloatingActionButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:fabSize="normal"
+        android:id="@+id/fab"
+        android:src="@drawable/ic_more_white_24dp"
+        android:backgroundTint="@color/colorOneDark"
+        app:borderWidth="0dp"
+        app:layout_anchor="@id/detail_root_relative_layout"
+        app:layout_anchorGravity="bottom|end"
+        android:layout_marginBottom="24dp"
+        android:layout_marginRight="24dp"/>
 
-        </RelativeLayout>
-
-    </android.support.v4.widget.NestedScrollView>
 </android.support.design.widget.CoordinatorLayout>

@@ -117,7 +117,7 @@ public class PhotoPagedListAdapter extends PagedListAdapter<Photo, PhotoPagedLis
 //                        .transition(GenericTransitionOptions.with(animationObject))
                         .apply(new RequestOptions()
                                 .diskCacheStrategy(DiskCacheStrategy.ALL)
-                                .override(200, 600)
+                                .override(1080, 1080)
                                 .placeholder(new ColorDrawable(Color.parseColor(item.getColor())))
                         )
 //                        .listener(GlidePalette.with(item.getUrls().getSmallUrl())

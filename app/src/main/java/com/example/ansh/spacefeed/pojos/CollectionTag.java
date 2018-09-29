@@ -6,7 +6,7 @@ import android.os.Parcelable;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Tag implements Parcelable {
+public class CollectionTag implements Parcelable {
 
     //------------------ private member variables --------------//
     @SerializedName("title")
@@ -16,12 +16,12 @@ public class Tag implements Parcelable {
 
 
     //------------------ Constructors --------------//
-    public Tag(String title) {
+    public CollectionTag(String title) {
         mTitle = title;
     }
 
     // Default Constructor
-    public Tag() {
+    public CollectionTag() {
 
     }
 
@@ -39,20 +39,20 @@ public class Tag implements Parcelable {
 
 
     //------------------ Parcelable METHODS --------------//
-    public static final Creator<Tag> CREATOR = new Creator<Tag>() {
+    public static final Creator<CollectionTag> CREATOR = new Creator<CollectionTag>() {
         @Override
-        public Tag createFromParcel(Parcel in) {
-            return new Tag(in);
+        public CollectionTag createFromParcel(Parcel in) {
+            return new CollectionTag(in);
         }
 
         @Override
-        public Tag[] newArray(int size) {
-            return new Tag[size];
+        public CollectionTag[] newArray(int size) {
+            return new CollectionTag[size];
         }
     };
 
     // Parcel Constructor
-    protected Tag(Parcel in) {
+    protected CollectionTag(Parcel in) {
         mTitle = in.readString();
     }
 

@@ -85,8 +85,9 @@ public class PhotosFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_photos, container, false);
 
         mToolbar = view.findViewById(R.id.toolbar);
-        ((AppCompatActivity)getActivity()).setSupportActionBar(mToolbar);
+            ((AppCompatActivity)getActivity()).setSupportActionBar(mToolbar);
         ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayShowTitleEnabled(false);
+//        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("Photos");
 
         mRecyclerView = view.findViewById(R.id.mainRecyclerView);
 
@@ -129,7 +130,7 @@ public class PhotosFragment extends Fragment {
 
         // Creating the Adapter
         mPhotoPagedListAdapter = new PhotoPagedListAdapter(getContext(), simpleOnItemClickListener);
-        // observing the mPhotoPagedList from view model
+        // observing the mCollectionPhotoPagedList from view model
         mPhotoViewModel.mPhotoPagedList.observe(this, new Observer<PagedList<Photo>>() {
             @Override
             public void onChanged(@Nullable PagedList<Photo> unSplashRespons) {
@@ -158,9 +159,9 @@ public class PhotosFragment extends Fragment {
         mRecyclerView.setLayoutManager(mStaggeredGridLayoutManager);
         mRecyclerView.setItemAnimator(null);
 
-        mRecyclerView.setItemViewCacheSize(20);
-        mRecyclerView.setDrawingCacheEnabled(true);
-        mRecyclerView.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
+//        mRecyclerView.setItemViewCacheSize(20);
+//        mRecyclerView.setDrawingCacheEnabled(true);
+//        mRecyclerView.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
     }
 
 }

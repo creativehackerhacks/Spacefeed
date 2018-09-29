@@ -1,6 +1,5 @@
 package com.example.ansh.spacefeed.pojos;
 
-import android.nfc.Tag;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -52,7 +51,7 @@ public class CollectionPhoto implements Parcelable {
 
     @SerializedName("tags")
     @Expose
-    private List<Tag> mTag = null;
+    private List<CollectionTag> mCollectionTags = null;
 
     @SerializedName("cover_photo")
     @Expose
@@ -73,7 +72,7 @@ public class CollectionPhoto implements Parcelable {
 
 
     //------------------ Constructors --------------//
-    public CollectionPhoto(Integer id, String title, Object description, String publishedAt, String updatedAt, Boolean curated, Boolean featured, Integer totalPhotos, Boolean aPrivate, String shareKey, List<Tag> tag, Photo coverPhoto, List<PreviewPhoto> previewPhotos, User user, CollectionLinks links) {
+    public CollectionPhoto(Integer id, String title, Object description, String publishedAt, String updatedAt, Boolean curated, Boolean featured, Integer totalPhotos, Boolean aPrivate, String shareKey, List<CollectionTag> collectionTags, Photo coverPhoto, List<PreviewPhoto> previewPhotos, User user, CollectionLinks links) {
         mId = id;
         mTitle = title;
         mDescription = description;
@@ -84,7 +83,7 @@ public class CollectionPhoto implements Parcelable {
         mTotalPhotos = totalPhotos;
         mPrivate = aPrivate;
         mShareKey = shareKey;
-        mTag = tag;
+        mCollectionTags = collectionTags;
         mCoverPhoto = coverPhoto;
         mPreviewPhotos = previewPhotos;
         mUser = user;
@@ -178,12 +177,12 @@ public class CollectionPhoto implements Parcelable {
         mShareKey = shareKey;
     }
 
-    public List<Tag> getTag() {
-        return mTag;
+    public List<CollectionTag> getCollectionTags() {
+        return mCollectionTags;
     }
 
-    public void setTag(List<Tag> tag) {
-        mTag = tag;
+    public void setCollectionTags(List<CollectionTag> collectionTags) {
+        mCollectionTags = collectionTags;
     }
 
     public Photo getCoverPhoto() {
@@ -254,7 +253,7 @@ public class CollectionPhoto implements Parcelable {
         byte tmpMPrivate = in.readByte();
         mPrivate = tmpMPrivate == 0 ? null : tmpMPrivate == 1;
         mShareKey = in.readString();
-        mTag = in.createTypedArrayList(Tag.CREATOR);
+        mCollectionTags = in.createTypedArrayList(CollectionTag.CREATOR);
         mCoverPhoto = in.readParcelable(Photo.class.getClassLoader());
         mUser = in.readParcelable(User.class.getClassLoader());
     }
@@ -281,7 +280,7 @@ public class CollectionPhoto implements Parcelable {
         }
         dest.writeByte((byte) (mPrivate == null ? 0 : mPrivate ? 1 : 2));
         dest.writeString(mShareKey);
-        dest.writeTypedList(mTag);
+        dest.writeTypedList(mCollectionTags);
         dest.writeParcelable(mCoverPhoto, flags);
         dest.writeParcelable(mUser, flags);
     }

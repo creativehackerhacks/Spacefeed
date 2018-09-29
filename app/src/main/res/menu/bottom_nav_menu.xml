@@ -8,12 +8,12 @@
 
     <item
         android:id="@+id/navigation_trendings"
-        android:icon="@drawable/ic_collections_grey_24dp"
+        android:icon="@drawable/ic_trendings_grey_24dp"
         android:title="Trending"/>
 
     <item
         android:id="@+id/navigation_collections"
-        android:icon="@drawable/ic_trendings_grey_24dp"
+        android:icon="@drawable/ic_collections_grey_24dp"
         android:title="Collections"/>
 
     <item
