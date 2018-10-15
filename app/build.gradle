@@ -48,6 +48,8 @@ dependencies {
     implementation "android.arch.lifecycle:extensions:1.1.1"
     implementation "android.arch.lifecycle:viewmodel:1.1.1"
 
+    implementation 'com.ncapdevi:frag-nav:2.4.0'
+
     //adding paging
     implementation "android.arch.paging:runtime:1.0.1"
 

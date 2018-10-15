@@ -15,20 +15,18 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.transition.ViewPropertyTransition;
 import com.example.ansh.spacefeed.R;
-import com.example.ansh.spacefeed.adapter.CollectionPhotoPagedListAdapter.CollectionPhotoViewHolder;
 import com.example.ansh.spacefeed.interfaces.SimpleOnItemClickListener;
 import com.example.ansh.spacefeed.pojos.CollectionPhoto;
-import com.example.ansh.spacefeed.pojos.Photo;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class CollectionPhotoPagedListAdapter extends PagedListAdapter<Photo, CollectionPhotoViewHolder> {
+public class CollectionsPagedListAdapter extends PagedListAdapter<CollectionPhoto, CollectionsPagedListAdapter.CollectionViewHolder> {
 
     private Context mContext;
     private SimpleOnItemClickListener mSimpleOnItemClickListener;
     ViewPropertyTransition.Animator animationObject;
 
-    public CollectionPhotoPagedListAdapter(Context ctx, SimpleOnItemClickListener simpleOnItemClickListener) {
+    public CollectionsPagedListAdapter(Context ctx, SimpleOnItemClickListener simpleOnItemClickListener) {
         super(DIFF_CALLBACK);
         this.mContext = ctx;
         this.mSimpleOnItemClickListener = simpleOnItemClickListener;
@@ -36,8 +34,8 @@ public class CollectionPhotoPagedListAdapter extends PagedListAdapter<Photo, Col
 
     @NonNull
     @Override
-    public CollectionPhotoViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int pos) {
-        View view = LayoutInflater.from(mContext).inflate(R.layout.row_item, viewGroup, false);
+    public CollectionsPagedListAdapter.CollectionViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int pos) {
+        View view = LayoutInflater.from(mContext).inflate(R.layout.collection_item, viewGroup, false);
 
         animationObject = new ViewPropertyTransition.Animator() {
             @Override
@@ -50,34 +48,34 @@ public class CollectionPhotoPagedListAdapter extends PagedListAdapter<Photo, Col
             }
         };
 
-        return new CollectionPhotoViewHolder(view);
+        return new CollectionViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull CollectionPhotoViewHolder collectionPhotoViewHolder, int pos) {
-        collectionPhotoViewHolder.bind(collectionPhotoViewHolder, pos);
+    public void onBindViewHolder(@NonNull CollectionsPagedListAdapter.CollectionViewHolder collectionViewHolder, int pos) {
+        collectionViewHolder.bind(collectionViewHolder, pos);
     }
 
-    private static DiffUtil.ItemCallback<Photo> DIFF_CALLBACK =
-            new DiffUtil.ItemCallback<Photo>() {
+    private static DiffUtil.ItemCallback<CollectionPhoto> DIFF_CALLBACK =
+            new DiffUtil.ItemCallback<CollectionPhoto>() {
                 @Override
-                public boolean areItemsTheSame(Photo oldItem, Photo newItem) {
+                public boolean areItemsTheSame(CollectionPhoto oldItem, CollectionPhoto newItem) {
                     return oldItem.getId() == newItem.getId();
                 }
 
                 @Override
-                public boolean areContentsTheSame(Photo oldItem, Photo newItem) {
+                public boolean areContentsTheSame(CollectionPhoto oldItem, CollectionPhoto newItem) {
                     return oldItem.equals(newItem);
                 }
             };
 
-    public class CollectionPhotoViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public class CollectionViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         private ImageView mCollectionImage;
         private CircleImageView mCollectionUserImage;
         private TextView mUserName, mNumOfPhotos;
 
-        public CollectionPhotoViewHolder(@NonNull View itemView) {
+        public CollectionViewHolder(@NonNull View itemView) {
             super(itemView);
 
             mCollectionImage = itemView.findViewById(R.id.collection_image);
@@ -93,13 +91,15 @@ public class CollectionPhotoPagedListAdapter extends PagedListAdapter<Photo, Col
             mSimpleOnItemClickListener.onClick(v, getAdapterPosition());
         }
 
-        public void bind(CollectionPhotoViewHolder collectionPhotoViewHolder, int pos) {
-            Photo collectionPhoto = getItem(pos);
+        public void bind(CollectionViewHolder collectionViewHolder, int pos) {
+            CollectionPhoto collectionPhoto = getItem(pos);
 
-            Glide.with(mContext).load(collectionPhoto.getUrls().getRegularUrl())
-                    .into(collectionPhotoViewHolder.mCollectionImage);
+            Glide.with(mContext).load(collectionPhoto.getCoverPhoto().getUrls().getRegularUrl())
+                    .into(collectionViewHolder.mCollectionImage);
             Glide.with(mContext).load(collectionPhoto.getUser().getProfileImage().getMedium()).into(mCollectionUserImage);
+            mUserName.setText(collectionPhoto.getUser().getName());
+            String numOfPhotos = String.valueOf(collectionPhoto.getTotalPhotos());
+            mNumOfPhotos.setText(numOfPhotos);
         }
     }
-
 }

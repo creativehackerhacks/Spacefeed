@@ -1,4 +1,4 @@
-package com.example.ansh.spacefeed.tabFragments;
+package com.example.ansh.spacefeed.fragments;
 
 
 import android.arch.lifecycle.Observer;
@@ -18,26 +18,25 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.example.ansh.spacefeed.R;
 import com.example.ansh.spacefeed.activity.DetailActivity;
 import com.example.ansh.spacefeed.adapter.PhotoPagedListAdapter;
 import com.example.ansh.spacefeed.interfaces.SimpleOnItemClickListener;
 import com.example.ansh.spacefeed.modal.CustomViewModel;
+import com.example.ansh.spacefeed.pojos.CollectionPhoto;
 import com.example.ansh.spacefeed.pojos.Photo;
 import com.example.ansh.spacefeed.recyclerViewUtils.ItemOffsetDecoration;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link PhotosFragment#newInstance} factory method to
+ * Use the {@link CollectionPhotoFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class PhotosFragment extends Fragment {
+public class CollectionPhotoFragment extends Fragment {
 
 
-    /**
-     * Private member variables
-     */
     private Context mContext = getActivity();
     public static final String TAG = "FUCK";
 
@@ -47,15 +46,16 @@ public class PhotosFragment extends Fragment {
     // Private Member Variables
     private RecyclerView mRecyclerView;
     private LinearLayoutManager mLinearLayoutManager;
-//    private GridLayoutManager mGridLayoutManager;
+    //    private GridLayoutManager mGridLayoutManager;
     private StaggeredGridLayoutManager mStaggeredGridLayoutManager;
 
     private PhotoPagedListAdapter mPhotoPagedListAdapter;
     private CustomViewModel mPhotoViewModel;
 
+    private CollectionPhoto mCollectionPhoto;
 
 
-    public PhotosFragment() {
+    public CollectionPhotoFragment() {
         // Required empty public constructor
     }
 
@@ -63,34 +63,40 @@ public class PhotosFragment extends Fragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @return A new instance of fragment PhotosFragment.
+     * @return A new instance of fragment CollectionPhotoFragment.
      */
-    public static PhotosFragment newInstance() {
-        PhotosFragment fragment = new PhotosFragment();
+    // TODO: Rename and change types and number of parameters
+    public static CollectionPhotoFragment newInstance() {
+        CollectionPhotoFragment fragment = new CollectionPhotoFragment();
+        Bundle args = new Bundle();
+        fragment.setArguments(args);
         return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        if (getArguments() != null) {
+            mCollectionPhoto = getArguments().getParcelable("collection");
+        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_photos, container, false);
+        View view = inflater.inflate(R.layout.fragment_collection_photo, container, false);
 
         mToolbar = view.findViewById(R.id.toolbar);
-        ((AppCompatActivity)getActivity()).setSupportActionBar(mToolbar);
-        ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayShowTitleEnabled(true);
-        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("Photos");
+        ((AppCompatActivity) getActivity()).setSupportActionBar(mToolbar);
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowTitleEnabled(false);
+//        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("Photos");
 
-        mRecyclerView = view.findViewById(R.id.mainRecyclerView);
+        mRecyclerView = view.findViewById(R.id.collectionPhotoRecyclerView);
 
         // getting our CustomViewModel
         mPhotoViewModel = ViewModelProviders.of(this).get(CustomViewModel.class);
+        mPhotoViewModel.setCollectionId(mCollectionPhoto.getId());
 
         // SetUp
         setUpRecyclerView();
@@ -99,9 +105,8 @@ public class PhotosFragment extends Fragment {
         final SimpleOnItemClickListener simpleOnItemClickListener = new SimpleOnItemClickListener() {
             @Override
             public void onClick(View v, int pos) {
-//                Toast.makeText(mContext, "FUCK! I got called.", Toast.LENGTH_SHORT).show();
-                Photo splashResponse = mPhotoViewModel.getPhotoPagedList().getValue().get(pos);
-                Log.i(TAG, "onClick: " + splashResponse);
+                Photo splashResponse = mPhotoViewModel.mCollectionPhotoPagedList.getValue().get(pos);
+                Log.i(TAG, "onClick: " + "Chutia");
 
                 Intent intent = new Intent(getContext(), DetailActivity.class);
                 intent.putExtra("Photo", splashResponse);
@@ -110,18 +115,8 @@ public class PhotosFragment extends Fragment {
 //                        makeSceneTransitionAnimation(MainActivity.this,
 //                                v,
 //                                ViewCompat.getTransitionName(v));
-                startActivity(intent);
 
-//                Bundle photosBundle = new Bundle();
-//                photosBundle.putParcelable("Photo", splashResponse);
-//                PhotoDetailFragment simpleFragmentB = PhotoDetailFragment.newInstance();
-//                simpleFragmentB.setArguments(photosBundle);
-//                getFragmentManager()
-//                        .beginTransaction()
-////                        .addSharedElement(imageView, ViewCompat.getTransitionName(imageView))
-//                        .addToBackStack(TAG)
-//                        .replace(R.id.main_frame_layout, simpleFragmentB)
-//                        .commit();
+                startActivity(intent);
 
             }
         };
@@ -129,7 +124,7 @@ public class PhotosFragment extends Fragment {
         // Creating the Adapter
         mPhotoPagedListAdapter = new PhotoPagedListAdapter(getContext(), simpleOnItemClickListener);
         // observing the mCollectionsPagedList from view model
-        mPhotoViewModel.mPhotoPagedList.observe(this, new Observer<PagedList<Photo>>() {
+        mPhotoViewModel.mCollectionPhotoPagedList.observe(this, new Observer<PagedList<Photo>>() {
             @Override
             public void onChanged(@Nullable PagedList<Photo> unSplashRespons) {
                 // in case of any changes submitting the items to adapter

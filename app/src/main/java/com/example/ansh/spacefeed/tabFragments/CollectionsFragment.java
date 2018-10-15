@@ -5,10 +5,10 @@ import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.arch.paging.PagedList;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -20,17 +20,12 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.ansh.spacefeed.R;
-import com.example.ansh.spacefeed.activity.DetailActivity;
-import com.example.ansh.spacefeed.adapter.CollectionPhotoPagedListAdapter;
-import com.example.ansh.spacefeed.fragments.PhotoDetailFragment;
+import com.example.ansh.spacefeed.activity.MainActivity;
+import com.example.ansh.spacefeed.adapter.CollectionsPagedListAdapter;
+import com.example.ansh.spacefeed.fragments.CollectionPhotoFragment;
 import com.example.ansh.spacefeed.interfaces.SimpleOnItemClickListener;
-import com.example.ansh.spacefeed.modal.CollectionPhotoViewModel;
+import com.example.ansh.spacefeed.modal.CustomViewModel;
 import com.example.ansh.spacefeed.pojos.CollectionPhoto;
-import com.example.ansh.spacefeed.pojos.CollectionTag;
-import com.example.ansh.spacefeed.pojos.Photo;
-import com.example.ansh.spacefeed.recyclerViewUtils.ItemOffsetDecoration;
-
-import java.util.ListIterator;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -54,8 +49,10 @@ public class CollectionsFragment extends Fragment {
     //    private GridLayoutManager mGridLayoutManager;
     private StaggeredGridLayoutManager mStaggeredGridLayoutManager;
 
-    private CollectionPhotoPagedListAdapter mCollectionPhotoPagedListAdapter;
-    private CollectionPhotoViewModel mCollectionPhotoViewModel;
+    private CollectionsPagedListAdapter mCollectionsPagedListAdapter;
+    private CustomViewModel mCollectionViewModel;
+
+    Fragment mFragment = CollectionPhotoFragment.newInstance();
 
     public CollectionsFragment() {
         // Required empty public constructor
@@ -93,8 +90,8 @@ public class CollectionsFragment extends Fragment {
         // Initialize views
         mRecyclerView = view.findViewById(R.id.collectionRecyclerView);
 
-        // getting our PhotoViewModel
-        mCollectionPhotoViewModel = ViewModelProviders.of(this).get(CollectionPhotoViewModel.class);
+        // getting our CollectionViewModel
+        mCollectionViewModel = ViewModelProviders.of(this).get(CustomViewModel.class);
 
         // SetUp
         setUpRecyclerView();
@@ -104,28 +101,32 @@ public class CollectionsFragment extends Fragment {
             @Override
             public void onClick(View v, int pos) {
 //                Toast.makeText(mContext, "FUCK! I got called.", Toast.LENGTH_SHORT).show();
-                CollectionPhoto splashResponse = mCollectionPhotoViewModel.getCollectionPhotoPagedList().getValue().get(pos);
-                for(CollectionTag collectionTag : splashResponse.getCollectionTags()) {
-                    Log.i(TAG, "onClick: " + collectionTag.getTitle());
-                }
+                CollectionPhoto splashResponse = mCollectionViewModel.getCollectionsPagedList().getValue().get(pos);
 
+                Bundle bundle = new Bundle();
+                bundle.putParcelable("collection", splashResponse);
+                mFragment.setArguments(bundle);
+                ((MainActivity)getActivity()).pushFragment(mFragment);
+//                FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+////                transaction.addToBackStack(null);
+//                transaction.replace(R.id.main_frame_layout, mFragment).commit();
 
             }
         };
 
         // Creating the Adapter
-        mCollectionPhotoPagedListAdapter = new CollectionPhotoPagedListAdapter(getContext(), simpleOnItemClickListener);
-        // observing the mCollectionPhotoPagedList from view model
-        mCollectionPhotoViewModel.mCollectionPhotoPagedList.observe(this, new Observer<PagedList<CollectionPhoto>>() {
+        mCollectionsPagedListAdapter = new CollectionsPagedListAdapter(getContext(), simpleOnItemClickListener);
+        // observing the mCollectionsPagedList from view model
+        mCollectionViewModel.mCollectionsPagedList.observe(this, new Observer<PagedList<CollectionPhoto>>() {
             @Override
             public void onChanged(@Nullable PagedList<CollectionPhoto> unSplashRespons) {
                 // in case of any changes submitting the items to adapter
-                mCollectionPhotoPagedListAdapter.submitList(unSplashRespons);
+                mCollectionsPagedListAdapter.submitList(unSplashRespons);
                 Log.i(TAG, "LALALA: " + unSplashRespons.size());
             }
         });
         // Setting the adapter
-        mRecyclerView.setAdapter(mCollectionPhotoPagedListAdapter);
+        mRecyclerView.setAdapter(mCollectionsPagedListAdapter);
 
         return view;
     }

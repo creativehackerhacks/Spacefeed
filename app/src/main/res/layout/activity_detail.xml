@@ -9,59 +9,6 @@
     android:layout_height="match_parent"
     tools:context=".activity.DetailActivity">
 
-    <RelativeLayout
-        android:id="@+id/detail_root_relative_layout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <android.support.v4.widget.NestedScrollView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:id="@+id/detail_nested_linear">
-
-                <ImageView
-                    android:id="@+id/detail_photo"
-                    android:contentDescription="@string/full_image"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:adjustViewBounds="true"
-                    android:scaleType="fitXY"
-                    android:transitionName="demo_image"
-                    android:src="@color/colorAccent"/>
-
-                <include
-                    android:id="@+id/detail_merge_views"
-                    layout="@layout/merge_detail"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"/>
-
-            </LinearLayout>
-
-        </android.support.v4.widget.NestedScrollView>
-    </RelativeLayout>
-
-    <include layout="@layout/transparent_toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true"/>
-
-    <android.support.design.widget.FloatingActionButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:fabSize="normal"
-        android:id="@+id/fab"
-        android:src="@drawable/ic_more_white_24dp"
-        android:backgroundTint="@color/colorOneDark"
-        app:borderWidth="0dp"
-        app:layout_anchor="@id/detail_root_relative_layout"
-        app:layout_anchorGravity="bottom|end"
-        android:layout_marginBottom="24dp"
-        android:layout_marginRight="24dp"/>
+    <include layout="@layout/content_main"/>
 
 </android.support.design.widget.CoordinatorLayout>

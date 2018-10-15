@@ -7,6 +7,7 @@ import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
+import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 /**
@@ -28,6 +29,13 @@ public interface ApiInterface {
     Call<List<CollectionPhoto>> getCollections(
             @Query("client_id") String apiKey, // api_key
             @Query("per_page") int itemCount, // Number of items to show per page.(Max : 30)
+            @Query("page") int pageCount
+    );
+
+    @GET("collections/{id}/photos")
+    Call<List<Photo>> getCollectionPhoto(
+            @Path("id") Integer id,
+            @Query("client_id") String apiKey, // api_key
             @Query("page") int pageCount
     );
 
