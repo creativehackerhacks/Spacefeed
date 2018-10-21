@@ -54,15 +54,15 @@ public class UserProfileFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_user_profile, container, false);
 
-        mUserProPic = view.findViewById(R.id.user_profile_pro_pic);
-        mName = view.findViewById(R.id.user_profile_pro_name);
+//        mUserProPic = view.findViewById(R.id.user_profile_pro_pic);
+//        mName = view.findViewById(R.id.user_profile_pro_name);
 
-        String proImageUrl = mPhoto.getUser().getProfileImage().getLarge();
-        String name = mPhoto.getUser().getName();;
-
-        Glide.with(getContext()).load(proImageUrl)
-                .into(mUserProPic);
-        mName.setText(name);
+//        String proImageUrl = mPhoto.getUser().getProfileImage().getLarge();
+//        String name = mPhoto.getUser().getName();;
+//
+//        Glide.with(getContext()).load(proImageUrl)
+//                .into(mUserProPic);
+//        mName.setText(name);
 
         return view;
     }

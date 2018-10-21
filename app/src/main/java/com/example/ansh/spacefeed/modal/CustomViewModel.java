@@ -9,6 +9,7 @@ import com.example.ansh.spacefeed.dataSource.CollectionDataSource;
 import com.example.ansh.spacefeed.factory.CollectionDataSourceFactory;
 import com.example.ansh.spacefeed.factory.CollectionPhotoDataSourceFactory;
 import com.example.ansh.spacefeed.factory.PhotoDataSourceFactory;
+import com.example.ansh.spacefeed.factory.TrendingDataSourceFactory;
 import com.example.ansh.spacefeed.pojos.CollectionPhoto;
 import com.example.ansh.spacefeed.pojos.Photo;
 
@@ -22,6 +23,10 @@ public class CustomViewModel extends ViewModel {
     public LiveData<PagedList<Photo>> mPhotoPagedList;
     private PhotoDataSourceFactory mPhotoDataSourceFactory;
 
+    // For Trending
+    public LiveData<PagedList<Photo>> mTrendingPagedList;
+    private TrendingDataSourceFactory mTrendingDataSourceFactory;
+
     // For CollectionPhotos.
     public LiveData<PagedList<Photo>> mCollectionPhotoPagedList;
     private CollectionPhotoDataSourceFactory mCollectionPhotoDataSourceFactory;
@@ -31,6 +36,7 @@ public class CustomViewModel extends ViewModel {
         //getting our data source factory
         mCollectionsDataSourceFactory = new CollectionDataSourceFactory();
         mPhotoDataSourceFactory = new PhotoDataSourceFactory();
+        mTrendingDataSourceFactory = new TrendingDataSourceFactory();
         mCollectionPhotoDataSourceFactory = new CollectionPhotoDataSourceFactory();
 
         //getting the live data source from data source factory
@@ -50,6 +56,9 @@ public class CustomViewModel extends ViewModel {
         mPhotoPagedList = (new LivePagedListBuilder(mPhotoDataSourceFactory, pagedListConfig))
                 .build();
 
+        mTrendingPagedList = (new LivePagedListBuilder(mTrendingDataSourceFactory, pagedListConfig))
+                .build();
+
         mCollectionPhotoPagedList = (new LivePagedListBuilder(mCollectionPhotoDataSourceFactory, pagedListConfig)).build();
     }
 
@@ -61,8 +70,24 @@ public class CustomViewModel extends ViewModel {
         return mPhotoPagedList;
     }
 
+    public LiveData<PagedList<Photo>> getTrendingPagedList() {
+        return mTrendingPagedList;
+    }
+
+    public void setPhotoSortOrder(String photoSortOrder) {
+        mPhotoDataSourceFactory.setPhotoSortOrder(photoSortOrder);
+    }
+
     public void setCollectionId(int collectionId) {
         mCollectionPhotoDataSourceFactory.setCollectionId(collectionId);
+    }
+
+    public void onPhotoDataSourceRefresh() {
+        mPhotoDataSourceFactory.mPhotoLiveDataSource.getValue().invalidate();
+    }
+
+    public void onTrendingDataSourceRefresh() {
+        mTrendingDataSourceFactory.mTrendingLiveDataSource.getValue().invalidate();
     }
 
 }

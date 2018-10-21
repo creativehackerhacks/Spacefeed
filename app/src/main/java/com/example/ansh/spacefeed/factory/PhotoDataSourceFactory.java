@@ -11,7 +11,9 @@ import com.example.ansh.spacefeed.pojos.Photo;
 public class PhotoDataSourceFactory extends DataSource.Factory {
 
     // Create the mutable live data
-    private MutableLiveData<PageKeyedDataSource<Integer, Photo>> mPhotoLiveDataSource;
+    public MutableLiveData<PageKeyedDataSource<Integer, Photo>> mPhotoLiveDataSource;
+    private PhotoDataSource mPhotoDataSource;
+    private String mPhotoSortOrder;
 
     // Constructor
     public PhotoDataSourceFactory() {
@@ -21,13 +23,17 @@ public class PhotoDataSourceFactory extends DataSource.Factory {
     @Override
     public DataSource<Integer, Photo> create() {
         // getting our data source object
-        PhotoDataSource photoDataSource = new PhotoDataSource();
+         mPhotoDataSource = new PhotoDataSource(mPhotoSortOrder);
 
         // posting the datasource to get the values
-        mPhotoLiveDataSource.postValue(photoDataSource);
+        mPhotoLiveDataSource.postValue(mPhotoDataSource);
 
         // return the datasource
-        return photoDataSource;
+        return mPhotoDataSource;
+    }
+
+    public void setPhotoSortOrder(String photoSortOrder) {
+        mPhotoSortOrder = photoSortOrder;
     }
 
     // getter for mPhotoLiveDataSource

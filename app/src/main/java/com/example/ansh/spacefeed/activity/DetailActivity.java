@@ -62,7 +62,7 @@ public class DetailActivity extends AppCompatActivity implements BottomNavListen
 
     @Override
     public void showHide() {
-       if(isFalse) {
+        if(isFalse) {
             getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                     WindowManager.LayoutParams.FLAG_FULLSCREEN);
         }

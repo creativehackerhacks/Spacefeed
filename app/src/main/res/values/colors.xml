@@ -16,4 +16,6 @@
     <!-- Transparent toolbar background -->
     <color name="black_alpha_40">#66000000</color>
 
+    <color name="bottomColor">#80e4e4e4</color>
+
 </resources>

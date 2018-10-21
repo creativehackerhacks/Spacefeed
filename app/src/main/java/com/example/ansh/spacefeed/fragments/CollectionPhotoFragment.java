@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -18,16 +19,22 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.ansh.spacefeed.R;
 import com.example.ansh.spacefeed.activity.DetailActivity;
+import com.example.ansh.spacefeed.activity.MainActivity;
 import com.example.ansh.spacefeed.adapter.PhotoPagedListAdapter;
 import com.example.ansh.spacefeed.interfaces.SimpleOnItemClickListener;
 import com.example.ansh.spacefeed.modal.CustomViewModel;
 import com.example.ansh.spacefeed.pojos.CollectionPhoto;
 import com.example.ansh.spacefeed.pojos.Photo;
 import com.example.ansh.spacefeed.recyclerViewUtils.ItemOffsetDecoration;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -41,6 +48,7 @@ public class CollectionPhotoFragment extends Fragment {
     public static final String TAG = "FUCK";
 
     // Layout related instances.
+    private CollapsingToolbarLayout mCollapsingToolbarLayout;
     private Toolbar mToolbar;
 
     // Private Member Variables
@@ -53,6 +61,12 @@ public class CollectionPhotoFragment extends Fragment {
     private CustomViewModel mPhotoViewModel;
 
     private CollectionPhoto mCollectionPhoto;
+
+    private ImageView mCollectionCoverPhotoImageView;
+    private CircleImageView mCollectionProfilePhotoImageView;
+    private TextView mCollectionPhotoUserName;
+
+    private Fragment mPhotoDetailFragment;
 
 
     public CollectionPhotoFragment() {
@@ -79,6 +93,8 @@ public class CollectionPhotoFragment extends Fragment {
         if (getArguments() != null) {
             mCollectionPhoto = getArguments().getParcelable("collection");
         }
+
+        mPhotoDetailFragment = PhotoDetailFragment.newInstance();
     }
 
     @Override
@@ -87,12 +103,24 @@ public class CollectionPhotoFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_collection_photo, container, false);
 
-        mToolbar = view.findViewById(R.id.toolbar);
+        mToolbar = view.findViewById(R.id.collection_photo_toolbar);
         ((AppCompatActivity) getActivity()).setSupportActionBar(mToolbar);
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowTitleEnabled(false);
-//        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("Photos");
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+//        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowTitleEnabled(false);
+//        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(mCollectionPhoto.getTitle());
+
+        mCollapsingToolbarLayout = view.findViewById(R.id.f_c_p_collapsing_toolbar);
+        mCollapsingToolbarLayout.setTitle(mCollectionPhoto.getTitle());
 
         mRecyclerView = view.findViewById(R.id.collectionPhotoRecyclerView);
+
+        mCollectionCoverPhotoImageView = view.findViewById(R.id.collection_photo_cover);
+        mCollectionProfilePhotoImageView = view.findViewById(R.id.f_c_p_profile_image);
+        mCollectionPhotoUserName = view.findViewById(R.id.f_c_p_user_name);
+
+        Glide.with(getContext()).load(mCollectionPhoto.getCoverPhoto().getUrls().getRegularUrl()).into(mCollectionCoverPhotoImageView);
+        Glide.with(getContext()).load(mCollectionPhoto.getUser().getProfileImage().getLarge()).into(mCollectionProfilePhotoImageView);
+        mCollectionPhotoUserName.setText(mCollectionPhoto.getUser().getName());
 
         // getting our CustomViewModel
         mPhotoViewModel = ViewModelProviders.of(this).get(CustomViewModel.class);
@@ -108,17 +136,23 @@ public class CollectionPhotoFragment extends Fragment {
                 Photo splashResponse = mPhotoViewModel.mCollectionPhotoPagedList.getValue().get(pos);
                 Log.i(TAG, "onClick: " + "Chutia");
 
-                Intent intent = new Intent(getContext(), DetailActivity.class);
-                intent.putExtra("Photo", splashResponse);
+//                Intent intent = new Intent(getContext(), DetailActivity.class);
+//                intent.putExtra("Photo", splashResponse);
+//
+////                ActivityOptionsCompat options = ActivityOptionsCompat.
+////                        makeSceneTransitionAnimation(MainActivity.this,
+////                                v,
+////                                ViewCompat.getTransitionName(v));
+//
+//                startActivity(intent);
 
-//                ActivityOptionsCompat options = ActivityOptionsCompat.
-//                        makeSceneTransitionAnimation(MainActivity.this,
-//                                v,
-//                                ViewCompat.getTransitionName(v));
-
-                startActivity(intent);
+                Bundle bundle = new Bundle();
+                bundle.putParcelable("Photo", splashResponse);
+                mPhotoDetailFragment.setArguments(bundle);
+                ((MainActivity)getActivity()).pushFragment(mPhotoDetailFragment);
 
             }
+
         };
 
         // Creating the Adapter
@@ -134,6 +168,11 @@ public class CollectionPhotoFragment extends Fragment {
         });
         // Setting the adapter
         mRecyclerView.setAdapter(mPhotoPagedListAdapter);
+
+
+        mToolbar.setNavigationOnClickListener(v->
+                { getActivity().onBackPressed(); }
+        );
 
         return view;
     }

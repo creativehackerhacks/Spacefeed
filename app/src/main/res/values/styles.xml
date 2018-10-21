@@ -9,6 +9,15 @@
         <item name="android:windowContentTransitions">true</item>
     </style>
 
+    <style name="MySimpleToolbarStyle">
+        <item name="android:maxHeight">@dimen/abc_action_bar_default_height_material</item>
+        <item name="android:background">@color/colorPrimary</item>
+        <item name="popupTheme">@style/ThemeOverlay.AppCompat.Light</item>
+        <item name="titleTextAppearance">@style/Theme.AppCompat.DayNight.DarkActionBar</item>
+        <!-- No need for colorPrimary, colorPrimaryDark, colorAccent here
+             this should go to the AppTheme -->
+    </style>
+
     <!-- Custom theme for toolbar -->
     <style name="ToolbarTheme" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
         <item name="android:homeAsUpIndicator">@drawable/ic_backspace_white_24dp</item>

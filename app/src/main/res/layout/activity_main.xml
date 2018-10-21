@@ -8,18 +8,22 @@
     android:layout_height="match_parent"
     tools:context=".activity.MainActivity">
 
-    <include
-        layout="@layout/content_main"/>
-
     <android.support.design.widget.BottomNavigationView
         android:id="@+id/main_navigation"
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:layout_alignParentBottom="true"
-        app:itemBackground="@android:color/white"
+        app:itemBackground="@drawable/bottomnavview_background_color"
         app:labelVisibilityMode="unlabeled"
         app:itemTextColor="@android:color/black"
         android:background="?android:attr/windowBackground"
         app:menu="@menu/bottom_nav_menu" />
+
+    <include
+        layout="@layout/content_main"
+        android:id="@+id/content_main"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/main_navigation"/>
 
 </RelativeLayout>

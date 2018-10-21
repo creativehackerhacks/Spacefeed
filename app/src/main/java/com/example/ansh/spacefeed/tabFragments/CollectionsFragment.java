@@ -7,6 +7,7 @@ import android.arch.paging.PagedList;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
@@ -42,6 +43,7 @@ public class CollectionsFragment extends Fragment {
 
     // Layout related instances.
     private Toolbar mToolbar;
+    private AppBarLayout mAppBarLayout;
 
     // Private Member Variables
     private RecyclerView mRecyclerView;
@@ -82,13 +84,16 @@ public class CollectionsFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_collections, container, false);
 
         // set up toolbar
-        mToolbar = view.findViewById(R.id.toolbar);
+        mToolbar = view.findViewById(R.id.f_c_toolbar);
         ((AppCompatActivity)getActivity()).setSupportActionBar(mToolbar);
-        ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayShowTitleEnabled(false);
-//        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("Collection");
+//        ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayShowTitleEnabled(false);
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("Collection");
 
         // Initialize views
-        mRecyclerView = view.findViewById(R.id.collectionRecyclerView);
+        mAppBarLayout = view.findViewById(R.id.f_c_app_bar_layout);
+        mRecyclerView = view.findViewById(R.id.f_c_recyclerView);
+
+        mAppBarLayout.setExpanded(true, true);
 
         // getting our CollectionViewModel
         mCollectionViewModel = ViewModelProviders.of(this).get(CustomViewModel.class);
@@ -149,6 +154,12 @@ public class CollectionsFragment extends Fragment {
 //        mRecyclerView.setItemViewCacheSize(20);
 //        mRecyclerView.setDrawingCacheEnabled(true);
 //        mRecyclerView.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+//        mAppBarLayout.setExpanded(false, false);
     }
 
 }

@@ -29,10 +29,16 @@ public class PhotoDataSource extends PageKeyedDataSource<Integer, Photo> {
     //we need to fetch from UnSplash
     private static final String SITE_NAME = "unsplash";
 
+    private String mPhotoSortOrder;
+
+    public PhotoDataSource(String photoSortOrder) {
+        mPhotoSortOrder = photoSortOrder;
+    }
+
 
     @Override
     public void loadInitial(@NonNull LoadInitialParams<Integer> params, @NonNull LoadInitialCallback<Integer, Photo> callback) {
-        ApiClient.getInstance().getApi().getPhotos(CLIENT_ID, ITEM_PER_PAGE, FIRST_PAGE)
+        ApiClient.getInstance().getApi().getPhotos(CLIENT_ID, ITEM_PER_PAGE, FIRST_PAGE, mPhotoSortOrder)
                 .enqueue(new Callback<List<Photo>>() {
                     @Override
                     public void onResponse(Call<List<Photo>> call, Response<List<Photo>> response) {
@@ -75,16 +81,16 @@ public class PhotoDataSource extends PageKeyedDataSource<Integer, Photo> {
 
     @Override
     public void loadAfter(@NonNull LoadParams<Integer> params, @NonNull LoadCallback<Integer, Photo> callback) {
-        ApiClient.getInstance().getApi().getPhotos(CLIENT_ID, ITEM_PER_PAGE, params.key)
+        ApiClient.getInstance().getApi().getPhotos(CLIENT_ID, ITEM_PER_PAGE, params.key, mPhotoSortOrder)
                 .enqueue(new Callback<List<Photo>>() {
                     @Override
                     public void onResponse(Call<List<Photo>> call, Response<List<Photo>> response) {
                         //if the current page is greater than one
-                        //we are decrementing the page number
+                        //we are incrementing the page number
                         //else there is no previous page
-                        Integer key = (params.key >= PAGE_SIZE) ? null : params.key + 1;
                         if(response.body() != null) {
-                            callback.onResult(response.body(), key);
+                            int nextKey = (params.key >= PAGE_SIZE) ? null : params.key + 1;
+                            callback.onResult(response.body(), nextKey);
                             Log.i("FUCK", "onResponse: After " + response);
 //                            Log.i("FUCK", "onResponse: After Size " + response.body().size());
                         }
