@@ -50,47 +50,4 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentStart="true"/>
 
-    <!--<android.support.design.widget.FloatingActionButton-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--app:fabSize="normal"-->
-        <!--android:id="@+id/fab"-->
-        <!--android:src="@drawable/ic_more_white_24dp"-->
-        <!--android:backgroundTint="@color/colorOneDark"-->
-        <!--app:borderWidth="0dp"-->
-        <!--app:layout_anchor="@id/detail_fragment_root_relative_layout"-->
-        <!--app:layout_anchorGravity="bottom|end"-->
-        <!--android:layout_marginBottom="24dp"-->
-        <!--android:layout_marginRight="24dp"/>-->
-
-    <com.wangjie.rapidfloatingactionbutton.RapidFloatingActionLayout
-        xmlns:rfal="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/f_d_p_rapid_floating_layout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        rfal:rfal_frame_color="#ffffff"
-        rfal:rfal_frame_alpha="0.7">
-
-        <com.wangjie.rapidfloatingactionbutton.RapidFloatingActionButton
-            xmlns:rfab="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/f_d_p_rapid_floating_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentBottom="true"
-            android:layout_marginRight="15dp"
-            android:layout_marginBottom="15dp"
-            android:padding="8dp"
-            rfab:rfab_size="normal"
-            rfab:rfab_drawable="@drawable/ic_more_white_24dp"
-            rfab:rfab_color_normal="#37474f"
-            rfab:rfab_color_pressed="#263238"
-            rfab:rfab_shadow_radius="7dp"
-            rfab:rfab_shadow_color="#999999"
-            rfab:rfab_shadow_dx="0dp"
-            rfab:rfab_shadow_dy="5dp"
-            />
-
-    </com.wangjie.rapidfloatingactionbutton.RapidFloatingActionLayout>
-
 </android.support.design.widget.CoordinatorLayout>

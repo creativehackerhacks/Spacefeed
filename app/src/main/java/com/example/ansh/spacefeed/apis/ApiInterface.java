@@ -5,6 +5,7 @@ import com.example.ansh.spacefeed.pojos.Photo;
 
 import java.util.List;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
@@ -24,6 +25,11 @@ public interface ApiInterface {
             @Query("per_page") int itemCount, // Number of items to show per page.(Max : 30)
             @Query("page") int pageCount,
             @Query("order_by") String order
+    );
+
+    @GET("photos/{id}/download")
+    Call<ResponseBody> getDownload(
+            @Path("id") String id
     );
 
     @GET("photos/curated")

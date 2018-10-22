@@ -7,9 +7,13 @@ import android.arch.paging.PagedList;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -49,6 +53,7 @@ public class CollectionPhotoFragment extends Fragment {
 
     // Layout related instances.
     private CollapsingToolbarLayout mCollapsingToolbarLayout;
+    private CoordinatorLayout mCoordinatorLayout;
     private Toolbar mToolbar;
 
     // Private Member Variables
@@ -98,6 +103,12 @@ public class CollectionPhotoFragment extends Fragment {
     }
 
     @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        ViewCompat.requestApplyInsets(mCoordinatorLayout);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
@@ -111,6 +122,7 @@ public class CollectionPhotoFragment extends Fragment {
 
         mCollapsingToolbarLayout = view.findViewById(R.id.f_c_p_collapsing_toolbar);
         mCollapsingToolbarLayout.setTitle(mCollectionPhoto.getTitle());
+        mCoordinatorLayout = view.findViewById(R.id.f_c_p_coordinator_layout);
 
         mRecyclerView = view.findViewById(R.id.collectionPhotoRecyclerView);
 

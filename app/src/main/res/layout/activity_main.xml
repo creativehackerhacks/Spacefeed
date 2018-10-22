@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<android.support.design.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -11,13 +11,15 @@
     <android.support.design.widget.BottomNavigationView
         android:id="@+id/main_navigation"
         android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:layout_alignParentBottom="true"
+        android:layout_height="44dp"
+        android:layout_gravity="bottom"
         app:itemBackground="@drawable/bottomnavview_background_color"
         app:labelVisibilityMode="unlabeled"
         app:itemTextColor="@android:color/black"
         android:background="?android:attr/windowBackground"
         app:menu="@menu/bottom_nav_menu" />
+
+    <!-- app:layout_behavior="@string/hide_bottom_view_on_scroll_behavior" -->
 
     <include
         layout="@layout/content_main"
@@ -26,4 +28,4 @@
         android:layout_height="match_parent"
         android:layout_above="@+id/main_navigation"/>
 
-</RelativeLayout>
+</android.support.design.widget.CoordinatorLayout>

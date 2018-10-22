@@ -1,10 +1,14 @@
 package com.example.ansh.spacefeed.fragments;
 
 
+import android.app.DownloadManager;
+import android.app.DownloadManager.Request;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetDialog;
 import android.support.design.widget.FloatingActionButton;
@@ -16,6 +20,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -32,10 +37,12 @@ import com.bumptech.glide.request.target.Target;
 import com.example.ansh.spacefeed.R;
 import com.example.ansh.spacefeed.activity.DetailActivity;
 import com.example.ansh.spacefeed.activity.MainActivity;
+import com.example.ansh.spacefeed.client.ApiClient;
 import com.example.ansh.spacefeed.dialogs.BottomSheetFragment;
 import com.example.ansh.spacefeed.dialogs.BottomSheetFragment.BottomSheetListener;
 import com.example.ansh.spacefeed.pojos.Photo;
 import com.example.ansh.spacefeed.tabFragments.CollectionsFragment;
+import com.example.ansh.spacefeed.utils.ImageSaveTask;
 import com.wangjie.rapidfloatingactionbutton.RapidFloatingActionButton;
 import com.wangjie.rapidfloatingactionbutton.RapidFloatingActionHelper;
 import com.wangjie.rapidfloatingactionbutton.RapidFloatingActionLayout;
@@ -43,17 +50,22 @@ import com.wangjie.rapidfloatingactionbutton.contentimpl.labellist.RFACLabelItem
 import com.wangjie.rapidfloatingactionbutton.contentimpl.labellist.RapidFloatingActionContentLabelList;
 import com.wangjie.rapidfloatingactionbutton.util.RFABTextUtil;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.http.Url;
 
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class PhotoDetailFragment extends Fragment implements
-        RapidFloatingActionContentLabelList.OnRapidFloatingActionContentLabelListListener {
+public class PhotoDetailFragment extends Fragment {
 
     private static final String TAG = PhotoDetailFragment.class.getSimpleName();
     private Toolbar mToolbar;
@@ -64,12 +76,13 @@ public class PhotoDetailFragment extends Fragment implements
     private ImageView mCoverImageView;
     private CircleImageView mProImageView;
     private TextView mName, mBio;
+    private Button mDetailProfileFollowButton;
+    File mFile;
+    String mPath;
 
-    private RapidFloatingActionLayout mRapidFloatingActionLayout;
-    private RapidFloatingActionButton mRapidFloatingActionButton;
-    private RapidFloatingActionContentLabelList mRapidFloatingActionContentLabelList;
-    private List<RFACLabelItem> mRFACLabelItems = new ArrayList<>();
-    private RapidFloatingActionHelper mRapidFloatingActionHelper;
+    private ApiClient mApiClient;
+    public static final String CLIENT_ID = "63002cc7718cea591dcf5a661065713e4a353d49090dce8df8c7680af2cb78e4";
+
 
     private Photo mPhoto;
 
@@ -99,6 +112,9 @@ public class PhotoDetailFragment extends Fragment implements
             Log.i(TAG, "onCreate: " + mPhoto);
         }
 
+        mFile = new File(getContext().getFilesDir(), "space");
+        mPath = mFile.getAbsolutePath() + "/Space";
+
         // This piece of code is used to remove the status bar from the activity.
 //        getActivity().getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
 //                WindowManager.LayoutParams.FLAG_FULLSCREEN);
@@ -122,10 +138,9 @@ public class PhotoDetailFragment extends Fragment implements
         mProImageView = view.findViewById(R.id.merge_pro_pic);
         mName = view.findViewById(R.id.merge_pro_name);
         mBio = view.findViewById(R.id.merge_bio_desc);
+        mDetailProfileFollowButton = view.findViewById(R.id.detail_profile_follow_button);
 
-        mRapidFloatingActionLayout = view.findViewById(R.id.f_d_p_rapid_floating_layout);
-        mRapidFloatingActionButton = view.findViewById(R.id.f_d_p_rapid_floating_button);
-
+        mApiClient = ApiClient.getInstance();
 
         ((AppCompatActivity) getActivity()).setSupportActionBar(mToolbar);
         ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -159,47 +174,38 @@ public class PhotoDetailFragment extends Fragment implements
                 }
         );
 
-        setRapidViews(getContext());
+        mDetailProfileFollowButton.setOnClickListener(v -> {
+            Log.i(TAG, "onCreateView: Profile-- " + mPhoto.getId());
+            mApiClient.getApi().getDownload(mPhoto.getId())
+                    .enqueue(new Callback<ResponseBody>() {
+                        @Override
+                        public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                            Log.i(TAG, "onResponse: Download " + response);
+                            String imageUri = response.toString();
+                            Log.i(TAG, "onResponse: sss " + mFile);
+                        }
+
+                        @Override
+                        public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+                        }
+                    });
+        });
 
         return view;
     }
 
-    private void setRapidViews(Context context) {
-        mRapidFloatingActionContentLabelList = new RapidFloatingActionContentLabelList(context);
-        mRapidFloatingActionContentLabelList.setOnRapidFloatingActionContentLabelListListener(this);
-
-        mRFACLabelItems.add(new RFACLabelItem<Integer>()
-                .setLabel("Name: Spacefeed")
-                .setResId(R.mipmap.ic_launcher)
-                .setIconNormalColor(0xffd84315)
-                .setIconPressedColor(0xffbf360c)
-                .setWrapper(0)
-        );
-
-        mRapidFloatingActionContentLabelList
-                .setItems(mRFACLabelItems)
-                .setIconShadowRadius(RFABTextUtil.dip2px(context, 5))
-                .setIconShadowColor(0xff888888)
-                .setIconShadowDy(RFABTextUtil.dip2px(context, 5));
-
-        mRapidFloatingActionHelper = new RapidFloatingActionHelper(
-                context,
-                mRapidFloatingActionLayout,
-                mRapidFloatingActionButton,
-                mRapidFloatingActionContentLabelList
-        ).build();
-    }
-
 
     @Override
-    public void onRFACItemLabelClick(int position, RFACLabelItem item) {
-
+    public void onResume() {
+        super.onResume();
+//        ((MainActivity) getActivity()).SetNavigationVisibiltity(false);
     }
 
     @Override
-    public void onRFACItemIconClick(int position, RFACLabelItem item) {
-
+    public void onStop() {
+        super.onStop();
+//        ((MainActivity) getActivity()).SetNavigationVisibiltity(true);
     }
-
 
 }

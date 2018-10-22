@@ -234,6 +234,13 @@ public class MainActivity extends AppCompatActivity implements FragNavController
         }
     }
 
+    public void SetNavigationVisibiltity (boolean opt) {
+        if (opt) {
+            mBottomNavigationView.setVisibility(View.VISIBLE);
+        } else {
+            mBottomNavigationView.setVisibility(View.GONE);
+        }
+    }
 
 
 }
