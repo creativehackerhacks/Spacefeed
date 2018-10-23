@@ -77,7 +77,6 @@ public class CollectionDataSource extends PageKeyedDataSource<Integer, Collectio
 
                     @Override
                     public void onFailure(Call<List<CollectionPhoto>> call, Throwable t) {
-
                     }
                 });
     }

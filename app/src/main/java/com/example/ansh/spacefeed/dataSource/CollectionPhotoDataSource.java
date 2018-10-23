@@ -2,6 +2,7 @@ package com.example.ansh.spacefeed.dataSource;
 
 import android.arch.paging.PageKeyedDataSource;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import com.example.ansh.spacefeed.client.ApiClient;
 import com.example.ansh.spacefeed.pojos.Photo;
@@ -40,12 +41,15 @@ public class CollectionPhotoDataSource extends PageKeyedDataSource<Integer, Phot
                     public void onResponse(Call<List<Photo>> call, Response<List<Photo>> response) {
                         if(response.isSuccessful()) {
                             callback.onResult(response.body(), null, 2);
+                            Log.i(TAG, "onResponse: Collection Photo-- " + response);
+                        } else {
+                            Log.i(TAG, "onResponse: SFFSFSFS" + response);
                         }
                     }
 
                     @Override
                     public void onFailure(Call<List<Photo>> call, Throwable t) {
-
+                        Log.i(TAG, "onFailure: Collection Photo-- " + "FUCKED UO");
                     }
                 });
     }

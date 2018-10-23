@@ -59,10 +59,10 @@ public class OneFragment extends Fragment {
         return view;
     }
 
-    private void setUpRecyclerView() {
+    private void setUpRecyclerView(Context context) {
         mStaggeredGridLayoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
         mStaggeredGridLayoutManager.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_MOVE_ITEMS_BETWEEN_SPANS);
-        ItemOffsetDecoration itemDecoration = new ItemOffsetDecoration(getActivity(), R.dimen.item_offset);
+        ItemOffsetDecoration itemDecoration = new ItemOffsetDecoration(context, R.dimen.item_offset);
         mRecyclerView.addItemDecoration(itemDecoration);
 
         mRecyclerView.setLayoutManager(mStaggeredGridLayoutManager);

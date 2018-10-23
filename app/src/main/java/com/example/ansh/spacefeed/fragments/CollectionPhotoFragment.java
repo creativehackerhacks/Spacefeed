@@ -5,14 +5,12 @@ import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.arch.paging.PagedList;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -25,11 +23,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.ansh.spacefeed.R;
-import com.example.ansh.spacefeed.activity.DetailActivity;
 import com.example.ansh.spacefeed.activity.MainActivity;
 import com.example.ansh.spacefeed.adapter.PhotoPagedListAdapter;
 import com.example.ansh.spacefeed.interfaces.SimpleOnItemClickListener;
@@ -48,7 +44,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class CollectionPhotoFragment extends Fragment {
 
 
-    private Context mContext = getActivity();
+//    private Context mContext = getActivity();
     public static final String TAG = "FUCK";
 
     // Layout related instances.
@@ -99,7 +95,9 @@ public class CollectionPhotoFragment extends Fragment {
             mCollectionPhoto = getArguments().getParcelable("collection");
         }
 
-        mPhotoDetailFragment = PhotoDetailFragment.newInstance();
+        Log.i(TAG, "onCreate: " + mCollectionPhoto.getId());
+
+        mPhotoDetailFragment = new PhotoDetailFragment();
     }
 
     @Override
@@ -139,7 +137,7 @@ public class CollectionPhotoFragment extends Fragment {
         mPhotoViewModel.setCollectionId(mCollectionPhoto.getId());
 
         // SetUp
-        setUpRecyclerView();
+        setUpRecyclerView(container.getContext());
 
         //OnClickImplementation
         final SimpleOnItemClickListener simpleOnItemClickListener = new SimpleOnItemClickListener() {
@@ -168,14 +166,15 @@ public class CollectionPhotoFragment extends Fragment {
         };
 
         // Creating the Adapter
-        mPhotoPagedListAdapter = new PhotoPagedListAdapter(getContext(), simpleOnItemClickListener);
+        mPhotoPagedListAdapter = new PhotoPagedListAdapter(simpleOnItemClickListener);
+
         // observing the mCollectionsPagedList from view model
         mPhotoViewModel.mCollectionPhotoPagedList.observe(this, new Observer<PagedList<Photo>>() {
             @Override
-            public void onChanged(@Nullable PagedList<Photo> unSplashRespons) {
+            public void onChanged(@Nullable PagedList<Photo> unSplashResponse) {
                 // in case of any changes submitting the items to adapter
-                mPhotoPagedListAdapter.submitList(unSplashRespons);
-                Log.i(TAG, "MAIN ACTIVITY: " + unSplashRespons.size());
+                mPhotoPagedListAdapter.submitList(unSplashResponse);
+                Log.i(TAG, "MAIN ACTIVITY: " + unSplashResponse.size());
             }
         });
         // Setting the adapter
@@ -189,15 +188,15 @@ public class CollectionPhotoFragment extends Fragment {
         return view;
     }
 
-    private void setUpRecyclerView() {
+    private void setUpRecyclerView(Context context) {
 //        int columnSpacingInPixels = 16;
 //        mRecyclerView.addItemDecoration(new ColumnSpaceItemDecoration(columnSpacingInPixels));
 
-        mLinearLayoutManager = new LinearLayoutManager(getContext());
+        mLinearLayoutManager = new LinearLayoutManager(context);
 //        mGridLayoutManager = new GridLayoutManager(this, 2);
         mStaggeredGridLayoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
         mStaggeredGridLayoutManager.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_MOVE_ITEMS_BETWEEN_SPANS);
-        ItemOffsetDecoration itemDecoration = new ItemOffsetDecoration(getActivity(), R.dimen.item_offset);
+        ItemOffsetDecoration itemDecoration = new ItemOffsetDecoration(context, R.dimen.item_offset);
         mRecyclerView.addItemDecoration(itemDecoration);
 
         mRecyclerView.setLayoutManager(mStaggeredGridLayoutManager);

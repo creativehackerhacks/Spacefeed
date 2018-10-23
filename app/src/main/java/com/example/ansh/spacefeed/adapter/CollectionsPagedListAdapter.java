@@ -26,10 +26,15 @@ public class CollectionsPagedListAdapter extends PagedListAdapter<CollectionPhot
     private SimpleOnItemClickListener mSimpleOnItemClickListener;
     ViewPropertyTransition.Animator animationObject;
 
-    public CollectionsPagedListAdapter(Context ctx, SimpleOnItemClickListener simpleOnItemClickListener) {
+    public CollectionsPagedListAdapter(SimpleOnItemClickListener simpleOnItemClickListener) {
         super(DIFF_CALLBACK);
-        this.mContext = ctx;
         this.mSimpleOnItemClickListener = simpleOnItemClickListener;
+    }
+
+    @Override
+    public void onAttachedToRecyclerView(@NonNull RecyclerView recyclerView) {
+        super.onAttachedToRecyclerView(recyclerView);
+        mContext = recyclerView.getContext();
     }
 
     @NonNull
@@ -98,8 +103,7 @@ public class CollectionsPagedListAdapter extends PagedListAdapter<CollectionPhot
                     .into(collectionViewHolder.mCollectionImage);
             Glide.with(mContext).load(collectionPhoto.getUser().getProfileImage().getMedium()).into(mCollectionUserImage);
             mUserName.setText(collectionPhoto.getUser().getName());
-            String numOfPhotos = String.valueOf(collectionPhoto.getTotalPhotos());
-            mNumOfPhotos.setText(numOfPhotos);
+//            mNumOfPhotos.setText(collectionPhoto.getTotalPhotos());
         }
     }
 }

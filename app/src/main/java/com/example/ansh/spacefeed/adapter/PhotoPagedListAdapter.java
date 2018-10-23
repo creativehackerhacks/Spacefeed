@@ -37,10 +37,16 @@ public class PhotoPagedListAdapter extends PagedListAdapter<Photo, PhotoPagedLis
     ViewPropertyTransition.Animator animationObject;
 
     // Constructor
-    public PhotoPagedListAdapter(Context mCtx, SimpleOnItemClickListener simpleOnItemClickListener) {
+    public PhotoPagedListAdapter(SimpleOnItemClickListener simpleOnItemClickListener) {
         super(DIFF_CALLBACK);
-        this.mContext = mCtx;
+//        this.mContext = mCtx;
         this.mListener = simpleOnItemClickListener;
+    }
+
+    @Override
+    public void onAttachedToRecyclerView(@NonNull RecyclerView recyclerView) {
+        super.onAttachedToRecyclerView(recyclerView);
+        mContext = recyclerView.getContext();
     }
 
     @NonNull
@@ -107,17 +113,12 @@ public class PhotoPagedListAdapter extends PagedListAdapter<Photo, PhotoPagedLis
         // binding the data to the views
         public void bind(ItemViewHolder holder, int position) {
             Photo item = getItem(position);
-            String imageUrl = item.getUrls().getRegularUrl();
 
-            if (item != null) {
-//                holder.mName.setText(item.getUser().getName());
-//                holder.mNumOfLikes.setText(String.valueOf(item.getLikes()));
-
-                Glide.with(mContext).load(imageUrl)
+                Glide.with(mContext).load(item.getUrls().getRegularUrl())
 //                        .transition(GenericTransitionOptions.with(animationObject))
                         .apply(new RequestOptions()
-                                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                                .override(1080, 1080)
+//                                .diskCacheStrategy(DiskCacheStrategy.ALL)
+//                                .override(1080, 1080)
                                 .placeholder(new ColorDrawable(Color.parseColor(item.getColor())))
                         )
 //                        .listener(GlidePalette.with(item.getUrls().getSmallUrl())
@@ -130,9 +131,7 @@ public class PhotoPagedListAdapter extends PagedListAdapter<Photo, PhotoPagedLis
 //                                .crossfade(true)
 //                        )
                         .into(holder.mImageView);
-            }else{
-                Toast.makeText(mContext, "Item is null", Toast.LENGTH_LONG).show();
-            }
+
         }
     }
 

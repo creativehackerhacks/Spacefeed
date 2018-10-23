@@ -44,17 +44,17 @@ import javax.xml.transform.TransformerFactoryConfigurationError;
  * OR Probably I'll shift to TabLayout and implement the code
  * which I starred on Github.
  */
-public class MainActivity extends AppCompatActivity implements FragNavController.TransactionListener, FragNavController.RootFragmentListener {
+public class MainActivity extends AppCompatActivity {
 
-    private static final int INDEX_PHOTOS = 1;
-    private static final int INDEX_TRENDINGS = 2;
-    private static final int INDEX_COLLECTIONS = 3;
-    private static final int INDEX_FAVOURITES = 4;
+//    private static final int INDEX_PHOTOS = 1;
+//    private static final int INDEX_TRENDINGS = 2;
+//    private static final int INDEX_COLLECTIONS = 3;
+//    private static final int INDEX_FAVOURITES = 4;
 
     private String mPhotoSortOrder;
 
 
-    private List<Fragment> mFragmentList = new ArrayList<>();
+    private List<Fragment> mFragmentList;
     private FragNavController.Builder mBuilder;
     private FragNavController mFragNavController;
 
@@ -66,13 +66,15 @@ public class MainActivity extends AppCompatActivity implements FragNavController
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        mFragmentList = new ArrayList<>(4);
+
         mBottomNavigationView = findViewById(R.id.main_navigation);
         mPhotoSortOrder = "latest";
 
         mBuilder = FragNavController
-                .newBuilder(savedInstanceState, getSupportFragmentManager(), R.id.main_frame_layout)
-                .transactionListener(this)
-                .rootFragmentListener(this, 4);
+                .newBuilder(savedInstanceState, getSupportFragmentManager(), R.id.main_frame_layout);
+//                .transactionListener(this),
+//                .rootFragmentListener(this, 4);
 //                .switchController(mFragNavSwitchController);
 
         initializeFragmentList();
@@ -124,17 +126,17 @@ public class MainActivity extends AppCompatActivity implements FragNavController
             new OnNavigationItemReselectedListener() {
                 @Override
                 public void onNavigationItemReselected(@NonNull MenuItem menuItem) {
-                    if (!mFragNavController.isRootFragment()) {
-                        mFragNavController.clearStack();
-                    } else {
-                        Fragment f = mFragNavController.getCurrentFrag();
-                        if (f != null) {
-                            View fragmentView = f.getView();
-                            RecyclerView mRecyclerView = fragmentView.findViewById(R.id.f_p_recyclerView);//mine one is RecyclerView
-                            if (mRecyclerView != null)
-                                mRecyclerView.smoothScrollToPosition(0);
-                        }
-                    }
+//                    if (!mFragNavController.isRootFragment()) {
+//                        mFragNavController.clearStack();
+//                    } else {
+//                        Fragment f = mFragNavController.getCurrentFrag();
+//                        if (f != null) {
+//                            View fragmentView = f.getView();
+//                            RecyclerView mRecyclerView = fragmentView.findViewById(R.id.f_p_recyclerView);//mine one is RecyclerView
+//                            if (mRecyclerView != null)
+//                                mRecyclerView.smoothScrollToPosition(0);
+//                        }
+//                    }
                 }
             };
 
@@ -175,30 +177,30 @@ public class MainActivity extends AppCompatActivity implements FragNavController
         }
     }
 
-    @Override
-    public Fragment getRootFragment(int index) {
-        switch (index) {
-            case INDEX_PHOTOS:
-                return PhotosFragment.newInstance(mPhotoSortOrder);
-            case INDEX_TRENDINGS:
-                return TrendingsFragment.newInstance();
-            case INDEX_COLLECTIONS:
-                return CollectionsFragment.newInstance();
-            case INDEX_FAVOURITES:
-                return FavouritesFragment.newInstance();
-        }
-        throw new IllegalStateException("Need to send an index that we know");
-    }
+//    @Override
+//    public Fragment getRootFragment(int index) {
+//        switch (index) {
+//            case INDEX_PHOTOS:
+//                return PhotosFragment.newInstance(mPhotoSortOrder);
+//            case INDEX_TRENDINGS:
+//                return TrendingsFragment.newInstance();
+//            case INDEX_COLLECTIONS:
+//                return CollectionsFragment.newInstance();
+//            case INDEX_FAVOURITES:
+//                return FavouritesFragment.newInstance();
+//        }
+//        throw new IllegalStateException("Need to send an index that we know");
+//    }
 
-    @Override
-    public void onTabTransaction(@Nullable Fragment fragment, int i) {
-
-    }
-
-    @Override
-    public void onFragmentTransaction(Fragment fragment, TransactionType transactionType) {
-
-    }
+//    @Override
+//    public void onTabTransaction(@Nullable Fragment fragment, int i) {
+//
+//    }
+//
+//    @Override
+//    public void onFragmentTransaction(Fragment fragment, TransactionType transactionType) {
+//
+//    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -212,21 +214,16 @@ public class MainActivity extends AppCompatActivity implements FragNavController
             case R.id.latest:
                 Toast.makeText(this, "Latest Clicked", Toast.LENGTH_SHORT).show();
                 mPhotoSortOrder = "latest";
-//                mFragNavController.pushFragment(PhotosFragment.newInstance(mPhotoSortOrder));
                 mFragNavController.replaceFragment(PhotosFragment.newInstance(mPhotoSortOrder));
                 return true;
             case R.id.oldest:
                 Toast.makeText(this, "Oldest Clicked", Toast.LENGTH_SHORT).show();
                 mPhotoSortOrder = "oldest";
-                mFragNavController.clearStack();
-//                mFragNavController.pushFragment(PhotosFragment.newInstance(mPhotoSortOrder));
                 mFragNavController.replaceFragment(PhotosFragment.newInstance(mPhotoSortOrder));
                 return true;
             case R.id.popular:
                 Toast.makeText(this, "Popular Clicked", Toast.LENGTH_SHORT).show();
                 mPhotoSortOrder = "popular";
-                mFragNavController.clearStack();
-//                mFragNavController.pushFragment(PhotosFragment.newInstance(mPhotoSortOrder));
                 mFragNavController.replaceFragment(PhotosFragment.newInstance(mPhotoSortOrder));
                 return true;
             default:

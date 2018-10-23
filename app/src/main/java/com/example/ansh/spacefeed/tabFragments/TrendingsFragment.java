@@ -40,13 +40,13 @@ public class TrendingsFragment extends Fragment {
     /**
      * Private member variables
      */
-    private Context mContext = getActivity();
+//    private Context mContext = getActivity();
     public static final String TAG = "FUCK";
 
     // Layout related instances.
     private Toolbar mToolbar;
     private CollapsingToolbarLayout mCollapsingToolbarLayout;
-    private SwipeRefreshLayout mSwipeRefreshLayout;
+//    private SwipeRefreshLayout mSwipeRefreshLayout;
 
     // Private Member Variables
     public RecyclerView mRecyclerView;
@@ -78,7 +78,7 @@ public class TrendingsFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mPhotoDetailFragment = PhotoDetailFragment.newInstance();
+        mPhotoDetailFragment = new PhotoDetailFragment();
 
     }
 
@@ -100,13 +100,13 @@ public class TrendingsFragment extends Fragment {
 //        mCollapsingToolbarLayout.setTitle("Photos");
 
         mRecyclerView = view.findViewById(R.id.f_p_recyclerView);
-        mSwipeRefreshLayout = view.findViewById(R.id.f_p_swipe_refresh_layout);
+//        mSwipeRefreshLayout = view.findViewById(R.id.f_p_swipe_refresh_layout);
 
         // getting our CustomViewModel
         mPhotoViewModel = ViewModelProviders.of(this).get(CustomViewModel.class);
 
         // SetUp
-        setUpRecyclerView();
+        setUpRecyclerView(container.getContext());
 
         //OnClickImplementation
         final SimpleOnItemClickListener simpleOnItemClickListener = new SimpleOnItemClickListener() {
@@ -142,40 +142,40 @@ public class TrendingsFragment extends Fragment {
         };
 
         // Creating the Adapter
-        mPhotoPagedListAdapter = new PhotoPagedListAdapter(getContext(), simpleOnItemClickListener);
+        mPhotoPagedListAdapter = new PhotoPagedListAdapter(simpleOnItemClickListener);
         // observing the mCollectionsPagedList from view model
         mPhotoViewModel.mTrendingPagedList.observe(this, new Observer<PagedList<Photo>>() {
             @Override
             public void onChanged(@Nullable PagedList<Photo> unSplashRespons) {
                 // in case of any changes submitting the items to adapter
                 mPhotoPagedListAdapter.submitList(unSplashRespons);
-                mSwipeRefreshLayout.setRefreshing(false);
+//                mSwipeRefreshLayout.setRefreshing(false);
                 Log.i(TAG, "MAIN ACTIVITY: " + unSplashRespons.size());
             }
         });
         // Setting the adapter
         mRecyclerView.setAdapter(mPhotoPagedListAdapter);
 
-        mSwipeRefreshLayout.setOnRefreshListener(new OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                mPhotoViewModel.onTrendingDataSourceRefresh();
-            }
-        });
+//        mSwipeRefreshLayout.setOnRefreshListener(new OnRefreshListener() {
+//            @Override
+//            public void onRefresh() {
+//                mPhotoViewModel.onTrendingDataSourceRefresh();
+//            }
+//        });
 
         return view;
     }
 
 
-    private void setUpRecyclerView() {
+    private void setUpRecyclerView(Context context) {
 //        int columnSpacingInPixels = 16;
 //        mRecyclerView.addItemDecoration(new ColumnSpaceItemDecoration(columnSpacingInPixels));
 
-        mLinearLayoutManager = new LinearLayoutManager(getContext());
+        mLinearLayoutManager = new LinearLayoutManager(context);
 //        mGridLayoutManager = new GridLayoutManager(this, 2);
         mStaggeredGridLayoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
         mStaggeredGridLayoutManager.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_MOVE_ITEMS_BETWEEN_SPANS);
-        ItemOffsetDecoration itemDecoration = new ItemOffsetDecoration(getActivity(), R.dimen.item_offset);
+        ItemOffsetDecoration itemDecoration = new ItemOffsetDecoration(context, R.dimen.item_offset);
         mRecyclerView.addItemDecoration(itemDecoration);
 
         mRecyclerView.setLayoutManager(mStaggeredGridLayoutManager);

@@ -25,7 +25,7 @@ public class ApiClient {
     }
 
     // Singleton --> Used to return ApiClient class instance.
-    public static synchronized ApiClient getInstance() {
+    public static ApiClient getInstance() {
         if(mApiClient == null) {
             mApiClient = new ApiClient();
         }

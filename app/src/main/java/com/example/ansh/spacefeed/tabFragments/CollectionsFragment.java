@@ -99,7 +99,7 @@ public class CollectionsFragment extends Fragment {
         mCollectionViewModel = ViewModelProviders.of(this).get(CustomViewModel.class);
 
         // SetUp
-        setUpRecyclerView();
+        setUpRecyclerView(container.getContext());
 
         //OnClickImplementation
         final SimpleOnItemClickListener simpleOnItemClickListener = new SimpleOnItemClickListener() {
@@ -120,7 +120,7 @@ public class CollectionsFragment extends Fragment {
         };
 
         // Creating the Adapter
-        mCollectionsPagedListAdapter = new CollectionsPagedListAdapter(getContext(), simpleOnItemClickListener);
+        mCollectionsPagedListAdapter = new CollectionsPagedListAdapter(simpleOnItemClickListener);
         // observing the mCollectionsPagedList from view model
         mCollectionViewModel.mCollectionsPagedList.observe(this, new Observer<PagedList<CollectionPhoto>>() {
             @Override
@@ -136,11 +136,11 @@ public class CollectionsFragment extends Fragment {
         return view;
     }
 
-    private void setUpRecyclerView() {
+    private void setUpRecyclerView(Context context) {
 //        int columnSpacingInPixels = 16;
 //        mRecyclerView.addItemDecoration(new ColumnSpaceItemDecoration(columnSpacingInPixels));
 
-        mLinearLayoutManager = new LinearLayoutManager(getContext());
+        mLinearLayoutManager = new LinearLayoutManager(context);
         mLinearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
 //        mGridLayoutManager = new GridLayoutManager(this, 2);
 //        mStaggeredGridLayoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);

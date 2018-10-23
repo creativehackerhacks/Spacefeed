@@ -4,6 +4,7 @@ import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.ViewModel;
 import android.arch.paging.LivePagedListBuilder;
 import android.arch.paging.PagedList;
+import android.content.ClipData.Item;
 
 import com.example.ansh.spacefeed.dataSource.CollectionDataSource;
 import com.example.ansh.spacefeed.factory.CollectionDataSourceFactory;
@@ -89,5 +90,6 @@ public class CustomViewModel extends ViewModel {
     public void onTrendingDataSourceRefresh() {
         mTrendingDataSourceFactory.mTrendingLiveDataSource.getValue().invalidate();
     }
+
 
 }
