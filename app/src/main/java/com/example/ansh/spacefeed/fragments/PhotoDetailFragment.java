@@ -154,7 +154,7 @@ public class PhotoDetailFragment extends Fragment {
                         public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                             Log.i(TAG, "onResponse: Download " + response);
                             String imageUri = response.toString();
-//                            Log.i(TAG, "onResponse: sss " + mFile);
+//                            Log.i(TAG_PHOTO_FRAGMENT, "onResponse: sss " + mFile);
                         }
 
                         @Override

@@ -18,10 +18,14 @@ import com.example.ansh.spacefeed.R;
 import com.example.ansh.spacefeed.interfaces.SimpleOnItemClickListener;
 import com.example.ansh.spacefeed.pojos.CollectionPhoto;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class CollectionsPagedListAdapter extends PagedListAdapter<CollectionPhoto, CollectionsPagedListAdapter.CollectionViewHolder> {
 
+    /* Private member variables */
     private Context mContext;
     private SimpleOnItemClickListener mSimpleOnItemClickListener;
     ViewPropertyTransition.Animator animationObject;
@@ -47,8 +51,8 @@ public class CollectionsPagedListAdapter extends PagedListAdapter<CollectionPhot
             public void animate(View view) {
                 view.setAlpha(0f);
 
-                ObjectAnimator fadeAnim = ObjectAnimator.ofFloat(view, "alpha", 0f, 1f);
-                fadeAnim.setDuration(2500);
+                ObjectAnimator fadeAnim = ObjectAnimator.ofFloat(view, "alpha", 0.4f, 1f);
+                fadeAnim.setDuration(500);
                 fadeAnim.start();
             }
         };
@@ -74,24 +78,20 @@ public class CollectionsPagedListAdapter extends PagedListAdapter<CollectionPhot
                 }
             };
 
-    public class CollectionViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public class CollectionViewHolder extends RecyclerView.ViewHolder {
 
-        private ImageView mCollectionImage;
-        private CircleImageView mCollectionUserImage;
-        private TextView mUserName, mNumOfPhotos;
+        @BindView(R.id.collection_image) ImageView mCollectionImage;
+        @BindView(R.id.collection_user_image) CircleImageView mCollectionUserImage;
+        @BindView(R.id.collection_user_name) TextView mUserName;
+//        private TextView mNumOfPhotos;
 
         public CollectionViewHolder(@NonNull View itemView) {
             super(itemView);
-
-            mCollectionImage = itemView.findViewById(R.id.collection_image);
-            mCollectionUserImage = itemView.findViewById(R.id.collection_user_image);
-            mUserName = itemView.findViewById(R.id.collection_user_name);
-            mNumOfPhotos = itemView.findViewById(R.id.collection_numOfPhotos);
-
-            mCollectionImage.setOnClickListener(this);
+            ButterKnife.bind(this, itemView);
+//            mNumOfPhotos = itemView.findViewById(R.id.collection_numOfPhotos);
         }
 
-        @Override
+        @OnClick(R.id.collection_image)
         public void onClick(View v) {
             mSimpleOnItemClickListener.onClick(v, getAdapterPosition());
         }

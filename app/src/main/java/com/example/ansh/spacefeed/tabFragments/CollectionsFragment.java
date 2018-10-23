@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -28,6 +27,10 @@ import com.example.ansh.spacefeed.interfaces.SimpleOnItemClickListener;
 import com.example.ansh.spacefeed.modal.CustomViewModel;
 import com.example.ansh.spacefeed.pojos.CollectionPhoto;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
+
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link CollectionsFragment#newInstance} factory method to
@@ -35,37 +38,28 @@ import com.example.ansh.spacefeed.pojos.CollectionPhoto;
  */
 public class CollectionsFragment extends Fragment {
 
-    /**
-     * Private member variables
-     */
-    private Context mContext = getActivity();
-    public static final String TAG = "FUCK";
+    /* Private member variables */
+    public static final String TAG_COLLECTION_FRAGMENT = CollectionsFragment.class.getSimpleName();
 
     // Layout related instances.
-    private Toolbar mToolbar;
-    private AppBarLayout mAppBarLayout;
+    @BindView(R.id.f_c_toolbar) Toolbar mToolbar;
 
     // Private Member Variables
-    private RecyclerView mRecyclerView;
+    @BindView(R.id.f_c_recyclerView) RecyclerView mRecyclerView;
+
     private LinearLayoutManager mLinearLayoutManager;
-    //    private GridLayoutManager mGridLayoutManager;
-    private StaggeredGridLayoutManager mStaggeredGridLayoutManager;
 
     private CollectionsPagedListAdapter mCollectionsPagedListAdapter;
     private CustomViewModel mCollectionViewModel;
 
-    Fragment mFragment = CollectionPhotoFragment.newInstance();
+    private Fragment mCollectionPhotoFragment;
+
+    private Unbinder mUnbinder;
 
     public CollectionsFragment() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @return A new instance of fragment CollectionsFragment.
-     */
     public static CollectionsFragment newInstance() {
         CollectionsFragment fragment = new CollectionsFragment();
         return fragment;
@@ -75,28 +69,23 @@ public class CollectionsFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        // getting our CollectionViewModel
+        mCollectionViewModel = ViewModelProviders.of(this).get(CustomViewModel.class);
+
+        Log.i(TAG_COLLECTION_FRAGMENT, "onCreate: called");
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_collections, container, false);
 
-        // set up toolbar
-        mToolbar = view.findViewById(R.id.f_c_toolbar);
+        mUnbinder = ButterKnife.bind(this, view);
+
         ((AppCompatActivity)getActivity()).setSupportActionBar(mToolbar);
-//        ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayShowTitleEnabled(false);
         ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("Collection");
 
-        // Initialize views
-        mAppBarLayout = view.findViewById(R.id.f_c_app_bar_layout);
-        mRecyclerView = view.findViewById(R.id.f_c_recyclerView);
-
-        mAppBarLayout.setExpanded(true, true);
-
-        // getting our CollectionViewModel
-        mCollectionViewModel = ViewModelProviders.of(this).get(CustomViewModel.class);
+        Log.i(TAG_COLLECTION_FRAGMENT, "onCreateView: called");
 
         // SetUp
         setUpRecyclerView(container.getContext());
@@ -105,17 +94,13 @@ public class CollectionsFragment extends Fragment {
         final SimpleOnItemClickListener simpleOnItemClickListener = new SimpleOnItemClickListener() {
             @Override
             public void onClick(View v, int pos) {
-//                Toast.makeText(mContext, "FUCK! I got called.", Toast.LENGTH_SHORT).show();
                 CollectionPhoto splashResponse = mCollectionViewModel.getCollectionsPagedList().getValue().get(pos);
+                mCollectionPhotoFragment = new CollectionPhotoFragment();
 
                 Bundle bundle = new Bundle();
-                bundle.putParcelable("collection", splashResponse);
-                mFragment.setArguments(bundle);
-                ((MainActivity)getActivity()).pushFragment(mFragment);
-//                FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-////                transaction.addToBackStack(null);
-//                transaction.replace(R.id.main_frame_layout, mFragment).commit();
-
+                bundle.putParcelable("collections", splashResponse);
+                mCollectionPhotoFragment.setArguments(bundle);
+                ((MainActivity)getActivity()).pushFragment(mCollectionPhotoFragment);
             }
         };
 
@@ -124,10 +109,10 @@ public class CollectionsFragment extends Fragment {
         // observing the mCollectionsPagedList from view model
         mCollectionViewModel.mCollectionsPagedList.observe(this, new Observer<PagedList<CollectionPhoto>>() {
             @Override
-            public void onChanged(@Nullable PagedList<CollectionPhoto> unSplashRespons) {
+            public void onChanged(@Nullable PagedList<CollectionPhoto> unSplashResponse) {
                 // in case of any changes submitting the items to adapter
-                mCollectionsPagedListAdapter.submitList(unSplashRespons);
-                Log.i(TAG, "LALALA: " + unSplashRespons.size());
+                mCollectionsPagedListAdapter.submitList(unSplashResponse);
+                Log.i(TAG_COLLECTION_FRAGMENT, "onChanged: called " + unSplashResponse.size());
             }
         });
         // Setting the adapter
@@ -137,29 +122,21 @@ public class CollectionsFragment extends Fragment {
     }
 
     private void setUpRecyclerView(Context context) {
-//        int columnSpacingInPixels = 16;
-//        mRecyclerView.addItemDecoration(new ColumnSpaceItemDecoration(columnSpacingInPixels));
-
         mLinearLayoutManager = new LinearLayoutManager(context);
         mLinearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-//        mGridLayoutManager = new GridLayoutManager(this, 2);
-//        mStaggeredGridLayoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
-//        mStaggeredGridLayoutManager.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_MOVE_ITEMS_BETWEEN_SPANS);
-//        ItemOffsetDecoration itemDecoration = new ItemOffsetDecoration(getActivity(), R.dimen.item_offset);
-//        mRecyclerView.addItemDecoration(itemDecoration);
-
         mRecyclerView.setLayoutManager(mLinearLayoutManager);
         mRecyclerView.setItemAnimator(null);
-
-//        mRecyclerView.setItemViewCacheSize(20);
-//        mRecyclerView.setDrawingCacheEnabled(true);
-//        mRecyclerView.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-//        mAppBarLayout.setExpanded(false, false);
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        Log.i(TAG_COLLECTION_FRAGMENT, "onActivityCreated: called");
     }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        mUnbinder.unbind();
+    }
 }

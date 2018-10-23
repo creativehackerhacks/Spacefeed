@@ -34,6 +34,9 @@ import com.example.ansh.spacefeed.pojos.CollectionPhoto;
 import com.example.ansh.spacefeed.pojos.Photo;
 import com.example.ansh.spacefeed.recyclerViewUtils.ItemOffsetDecoration;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
@@ -45,17 +48,16 @@ public class CollectionPhotoFragment extends Fragment {
 
 
 //    private Context mContext = getActivity();
-    public static final String TAG = "FUCK";
+    public static final String TAG_COLLECTION_PHOTO_FRAGMENT = CollectionPhotoFragment.class.getSimpleName();
 
     // Layout related instances.
-    private CollapsingToolbarLayout mCollapsingToolbarLayout;
-    private CoordinatorLayout mCoordinatorLayout;
-    private Toolbar mToolbar;
+    @BindView(R.id.f_c_p_collapsing_toolbar) CollapsingToolbarLayout mCollapsingToolbarLayout;
+    @BindView(R.id.f_c_p_coordinator_layout) CoordinatorLayout mCoordinatorLayout;
+
+    @BindView(R.id.collection_photo_toolbar) Toolbar mToolbar;
 
     // Private Member Variables
-    private RecyclerView mRecyclerView;
-    private LinearLayoutManager mLinearLayoutManager;
-    //    private GridLayoutManager mGridLayoutManager;
+    @BindView(R.id.collection_photo_recyclerView) RecyclerView mRecyclerView;
     private StaggeredGridLayoutManager mStaggeredGridLayoutManager;
 
     private PhotoPagedListAdapter mPhotoPagedListAdapter;
@@ -63,24 +65,20 @@ public class CollectionPhotoFragment extends Fragment {
 
     private CollectionPhoto mCollectionPhoto;
 
-    private ImageView mCollectionCoverPhotoImageView;
-    private CircleImageView mCollectionProfilePhotoImageView;
-    private TextView mCollectionPhotoUserName;
+    @BindView(R.id.collection_photo_cover) ImageView mCollectionCoverPhotoImageView;
+    @BindView(R.id.f_c_p_profile_image) CircleImageView mCollectionProfilePhotoImageView;
+    @BindView(R.id.f_c_p_user_name) TextView mCollectionPhotoUserName;
 
     private Fragment mPhotoDetailFragment;
+
+    private Unbinder mUnbinder;
 
 
     public CollectionPhotoFragment() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @return A new instance of fragment CollectionPhotoFragment.
-     */
-    // TODO: Rename and change types and number of parameters
+
     public static CollectionPhotoFragment newInstance() {
         CollectionPhotoFragment fragment = new CollectionPhotoFragment();
         Bundle args = new Bundle();
@@ -92,10 +90,14 @@ public class CollectionPhotoFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mCollectionPhoto = getArguments().getParcelable("collection");
+            mCollectionPhoto = getArguments().getParcelable("collections");
         }
 
-        Log.i(TAG, "onCreate: " + mCollectionPhoto.getId());
+        // getting our CustomViewModel
+        mPhotoViewModel = ViewModelProviders.of(this).get(CustomViewModel.class);
+        mPhotoViewModel.setCollectionId(mCollectionPhoto.getId());
+
+        Log.i(TAG_COLLECTION_PHOTO_FRAGMENT, "onCreate: " + mCollectionPhoto.getId());
 
         mPhotoDetailFragment = new PhotoDetailFragment();
     }
@@ -112,29 +114,18 @@ public class CollectionPhotoFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_collection_photo, container, false);
 
-        mToolbar = view.findViewById(R.id.collection_photo_toolbar);
+        mUnbinder = ButterKnife.bind(this, view);
+
         ((AppCompatActivity) getActivity()).setSupportActionBar(mToolbar);
         ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-//        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowTitleEnabled(false);
-//        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(mCollectionPhoto.getTitle());
 
-        mCollapsingToolbarLayout = view.findViewById(R.id.f_c_p_collapsing_toolbar);
+        Log.i(TAG_COLLECTION_PHOTO_FRAGMENT, "onCreateView: called");
+
         mCollapsingToolbarLayout.setTitle(mCollectionPhoto.getTitle());
-        mCoordinatorLayout = view.findViewById(R.id.f_c_p_coordinator_layout);
-
-        mRecyclerView = view.findViewById(R.id.collectionPhotoRecyclerView);
-
-        mCollectionCoverPhotoImageView = view.findViewById(R.id.collection_photo_cover);
-        mCollectionProfilePhotoImageView = view.findViewById(R.id.f_c_p_profile_image);
-        mCollectionPhotoUserName = view.findViewById(R.id.f_c_p_user_name);
 
         Glide.with(getContext()).load(mCollectionPhoto.getCoverPhoto().getUrls().getRegularUrl()).into(mCollectionCoverPhotoImageView);
         Glide.with(getContext()).load(mCollectionPhoto.getUser().getProfileImage().getLarge()).into(mCollectionProfilePhotoImageView);
         mCollectionPhotoUserName.setText(mCollectionPhoto.getUser().getName());
-
-        // getting our CustomViewModel
-        mPhotoViewModel = ViewModelProviders.of(this).get(CustomViewModel.class);
-        mPhotoViewModel.setCollectionId(mCollectionPhoto.getId());
 
         // SetUp
         setUpRecyclerView(container.getContext());
@@ -144,17 +135,7 @@ public class CollectionPhotoFragment extends Fragment {
             @Override
             public void onClick(View v, int pos) {
                 Photo splashResponse = mPhotoViewModel.mCollectionPhotoPagedList.getValue().get(pos);
-                Log.i(TAG, "onClick: " + "Chutia");
-
-//                Intent intent = new Intent(getContext(), DetailActivity.class);
-//                intent.putExtra("Photo", splashResponse);
-//
-////                ActivityOptionsCompat options = ActivityOptionsCompat.
-////                        makeSceneTransitionAnimation(MainActivity.this,
-////                                v,
-////                                ViewCompat.getTransitionName(v));
-//
-//                startActivity(intent);
+                Log.i(TAG_COLLECTION_PHOTO_FRAGMENT, "onClick: " + "Chutiya");
 
                 Bundle bundle = new Bundle();
                 bundle.putParcelable("Photo", splashResponse);
@@ -174,7 +155,7 @@ public class CollectionPhotoFragment extends Fragment {
             public void onChanged(@Nullable PagedList<Photo> unSplashResponse) {
                 // in case of any changes submitting the items to adapter
                 mPhotoPagedListAdapter.submitList(unSplashResponse);
-                Log.i(TAG, "MAIN ACTIVITY: " + unSplashResponse.size());
+                Log.i(TAG_COLLECTION_PHOTO_FRAGMENT, "onChanged: " + unSplashResponse.size());
             }
         });
         // Setting the adapter
@@ -189,11 +170,6 @@ public class CollectionPhotoFragment extends Fragment {
     }
 
     private void setUpRecyclerView(Context context) {
-//        int columnSpacingInPixels = 16;
-//        mRecyclerView.addItemDecoration(new ColumnSpaceItemDecoration(columnSpacingInPixels));
-
-        mLinearLayoutManager = new LinearLayoutManager(context);
-//        mGridLayoutManager = new GridLayoutManager(this, 2);
         mStaggeredGridLayoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
         mStaggeredGridLayoutManager.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_MOVE_ITEMS_BETWEEN_SPANS);
         ItemOffsetDecoration itemDecoration = new ItemOffsetDecoration(context, R.dimen.item_offset);
@@ -201,10 +177,17 @@ public class CollectionPhotoFragment extends Fragment {
 
         mRecyclerView.setLayoutManager(mStaggeredGridLayoutManager);
         mRecyclerView.setItemAnimator(null);
-
-//        mRecyclerView.setItemViewCacheSize(20);
-//        mRecyclerView.setDrawingCacheEnabled(true);
-//        mRecyclerView.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
     }
 
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        Log.i(TAG_COLLECTION_PHOTO_FRAGMENT, "onActivityCreated: called");
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        mUnbinder.unbind();
+    }
 }

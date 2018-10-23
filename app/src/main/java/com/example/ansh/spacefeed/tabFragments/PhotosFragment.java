@@ -7,12 +7,8 @@ import android.arch.paging.PagedList;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
@@ -32,6 +28,10 @@ import com.example.ansh.spacefeed.modal.CustomViewModel;
 import com.example.ansh.spacefeed.pojos.Photo;
 import com.example.ansh.spacefeed.recyclerViewUtils.ItemOffsetDecoration;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
+
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link PhotosFragment#newInstance} factory method to
@@ -39,21 +39,16 @@ import com.example.ansh.spacefeed.recyclerViewUtils.ItemOffsetDecoration;
  */
 public class PhotosFragment extends Fragment {
 
-
     /**
      * Private member variables
      */
-    //private Context mContext = getActivity().getApplicationContext();
-    public static final String TAG = "FUCK";
+    public static final String TAG_PHOTO_FRAGMENT = PhotosFragment.class.getSimpleName();
 
     // Layout related instances.
-    private Toolbar mToolbar;
-    private CollapsingToolbarLayout mCollapsingToolbarLayout;
-//    private SwipeRefreshLayout mSwipeRefreshLayout;
+    @BindView(R.id.f_p_toolbar) Toolbar mToolbar;
 
     // Private Member Variables
-    private RecyclerView mRecyclerView;
-    private LinearLayoutManager mLinearLayoutManager;
+    @BindView(R.id.f_p_recyclerView) RecyclerView mRecyclerView;
     //    private GridLayoutManager mGridLayoutManager;
     private StaggeredGridLayoutManager mStaggeredGridLayoutManager;
 
@@ -64,17 +59,13 @@ public class PhotosFragment extends Fragment {
 
     private String mSort;
 
+    private Unbinder mUnbinder;
+
 
     public PhotosFragment() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @return A new instance of fragment PhotosFragment.
-     */
     public static PhotosFragment newInstance(String sort) {
         PhotosFragment fragment = new PhotosFragment();
         Bundle args = new Bundle();
@@ -86,110 +77,68 @@ public class PhotosFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         mPhotoDetailFragment = new PhotoDetailFragment();
-
         mSort = getArguments().getString("sort", "latest");
-
         setHasOptionsMenu(true);
-
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_photos, container, false);
-
-        mToolbar = view.findViewById(R.id.f_p_toolbar);
-//        mCollapsingToolbarLayout = view.findViewById(R.id.f_p_collapsing_toolbar);
-
-        ((AppCompatActivity)getActivity()).setSupportActionBar(mToolbar);
-//        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("LOL");
-//        ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayShowTitleEnabled(true);
-        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("Photos");
-
-//        mCollapsingToolbarLayout.setTitle("Photos");
-
-        mRecyclerView = view.findViewById(R.id.f_p_recyclerView);
-//        mSwipeRefreshLayout = view.findViewById(R.id.f_p_swipe_refresh_layout);
 
         // getting our CustomViewModel
         mPhotoViewModel = ViewModelProviders.of(this).get(CustomViewModel.class);
         mPhotoViewModel.setPhotoSortOrder(mSort);
 
-        // SetUp
+        Log.i(TAG_PHOTO_FRAGMENT, "onCreate: called");
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_photos, container, false);
+
+        mUnbinder = ButterKnife.bind(this, view);
+
+        ((AppCompatActivity)getActivity()).setSupportActionBar(mToolbar);
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayShowTitleEnabled(true);
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("Photos");
+
+        Log.i(TAG_PHOTO_FRAGMENT, "onCreateView: called");
+
+        // SetUp RecyclerView
         setUpRecyclerView(container.getContext());
 
         //OnClickImplementation
         final SimpleOnItemClickListener simpleOnItemClickListener = new SimpleOnItemClickListener() {
             @Override
             public void onClick(View v, int pos) {
-//                Toast.makeText(mContext, "FUCK! I got called.", Toast.LENGTH_SHORT).show();
                 Photo splashResponse = mPhotoViewModel.getPhotoPagedList().getValue().get(pos);
-                Log.i(TAG, "onClick: " + splashResponse);
-
-//                Intent intent = new Intent(getContext(), DetailActivity.class);
-//                intent.putExtra("Photo", splashResponse);
-//
-////                ActivityOptionsCompat options = ActivityOptionsCompat.
-////                        makeSceneTransitionAnimation(MainActivity.this,
-////                                v,
-////                                ViewCompat.getTransitionName(v));
-//                startActivity(intent);
+                Log.i(TAG_PHOTO_FRAGMENT, "onClick: " + splashResponse);
 
                 Bundle bundle = new Bundle();
                 bundle.putParcelable("Photo", splashResponse);
                 mPhotoDetailFragment.setArguments(bundle);
                 ((MainActivity)getActivity()).pushFragment(mPhotoDetailFragment);
-//                ((MainActivity)getActivity()).pushFragment(mPhotoDetailFragment,
-//                        FragNavTransactionOptions.newBuilder()
-//                                .customAnimations(R.anim.activity_from_right_to_left, R.anim.activity_from_left_to_right).build()
-//                        );
-
-//                simpleFragmentB.setArguments(photosBundle);
-//                getFragmentManager()
-//                        .beginTransaction()
-////                        .addSharedElement(imageView, ViewCompat.getTransitionName(imageView))
-//                        .addToBackStack(TAG)
-//                        .replace(R.id.main_frame_layout, simpleFragmentB)
-//                        .commit();
-
             }
         };
 
         // Creating the Adapter
         mPhotoPagedListAdapter = new PhotoPagedListAdapter(simpleOnItemClickListener);
+
         // observing the mCollectionsPagedList from view model
         mPhotoViewModel.mPhotoPagedList.observe(this, new Observer<PagedList<Photo>>() {
             @Override
-            public void onChanged(@Nullable PagedList<Photo> unSplashRespons) {
+            public void onChanged(@Nullable PagedList<Photo> unSplashResponse) {
                 // in case of any changes submitting the items to adapter
-                mPhotoPagedListAdapter.submitList(unSplashRespons);
-//                mSwipeRefreshLayout.setRefreshing(false);
-                Log.i(TAG, "MAIN ACTIVITY: " + unSplashRespons.size());
+                mPhotoPagedListAdapter.submitList(unSplashResponse);
+                Log.i(TAG_PHOTO_FRAGMENT, "onChanged: called " + unSplashResponse.size());
             }
         });
+
         // Setting the adapter
         mRecyclerView.setAdapter(mPhotoPagedListAdapter);
-
-//        mSwipeRefreshLayout.setOnRefreshListener(new OnRefreshListener() {
-//            @Override
-//            public void onRefresh() {
-//                mPhotoViewModel.onPhotoDataSourceRefresh();
-//            }
-//        });
 
         return view;
     }
 
     private void setUpRecyclerView(Context context) {
-//        int columnSpacingInPixels = 16;
-//        mRecyclerView.addItemDecoration(new ColumnSpaceItemDecoration(columnSpacingInPixels));
 
-        mLinearLayoutManager = new LinearLayoutManager(context);
-//        mGridLayoutManager = new GridLayoutManager(this, 2);
         mStaggeredGridLayoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
         mStaggeredGridLayoutManager.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_MOVE_ITEMS_BETWEEN_SPANS);
         ItemOffsetDecoration itemDecoration = new ItemOffsetDecoration(context, R.dimen.item_offset);
@@ -197,10 +146,6 @@ public class PhotosFragment extends Fragment {
 
         mRecyclerView.setLayoutManager(mStaggeredGridLayoutManager);
         mRecyclerView.setItemAnimator(null);
-
-//        mRecyclerView.setItemViewCacheSize(20);
-//        mRecyclerView.setDrawingCacheEnabled(true);
-//        mRecyclerView.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
     }
 
     @Override
@@ -209,4 +154,15 @@ public class PhotosFragment extends Fragment {
         super.onCreateOptionsMenu(menu, inflater);
     }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        mUnbinder.unbind();
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        Log.i(TAG_PHOTO_FRAGMENT, "onActivityCreated: called");
+    }
 }

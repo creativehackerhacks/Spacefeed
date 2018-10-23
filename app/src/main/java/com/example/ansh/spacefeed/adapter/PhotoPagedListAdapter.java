@@ -15,31 +15,29 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.GenericTransitionOptions;
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.transition.ViewPropertyTransition;
 import com.example.ansh.spacefeed.R;
 import com.example.ansh.spacefeed.interfaces.SimpleOnItemClickListener;
 import com.example.ansh.spacefeed.pojos.Photo;
-import com.github.florent37.glidepalette.BitmapPalette.Profile;
-import com.github.florent37.glidepalette.BitmapPalette.Swatch;
-import com.github.florent37.glidepalette.GlidePalette;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class PhotoPagedListAdapter extends PagedListAdapter<Photo, PhotoPagedListAdapter.ItemViewHolder> {
 
-    // Private member variables
+    /* Private member variables */
     private Context mContext;
     private SimpleOnItemClickListener mListener;
     ViewPropertyTransition.Animator animationObject;
 
-    // Constructor
+    /* Constructor */
     public PhotoPagedListAdapter(SimpleOnItemClickListener simpleOnItemClickListener) {
         super(DIFF_CALLBACK);
-//        this.mContext = mCtx;
         this.mListener = simpleOnItemClickListener;
     }
 
@@ -59,8 +57,8 @@ public class PhotoPagedListAdapter extends PagedListAdapter<Photo, PhotoPagedLis
             public void animate(View view) {
                 view.setAlpha(0f);
 
-                ObjectAnimator fadeAnim = ObjectAnimator.ofFloat(view, "alpha", 0f, 1f);
-                fadeAnim.setDuration(2500);
+                ObjectAnimator fadeAnim = ObjectAnimator.ofFloat(view, "alpha", 0.4f, 1f);
+                fadeAnim.setDuration(500);
                 fadeAnim.start();
             }
         };
@@ -70,7 +68,6 @@ public class PhotoPagedListAdapter extends PagedListAdapter<Photo, PhotoPagedLis
 
     @Override
     public void onBindViewHolder(@NonNull ItemViewHolder holder, int position) {
-        // Calling bind method.
         holder.bind(holder, position);
     }
 
@@ -88,24 +85,17 @@ public class PhotoPagedListAdapter extends PagedListAdapter<Photo, PhotoPagedLis
             };
 
     // Inner ViewHolder class
-    class ItemViewHolder extends RecyclerView.ViewHolder implements OnClickListener {
+    class ItemViewHolder extends RecyclerView.ViewHolder {
 
-        LinearLayout mLinearLayout;
-        ImageView mImageView;
-        TextView mName, mNumOfLikes;
+        @BindView(R.id.row_content_bg) LinearLayout mLinearLayout;
+        @BindView(R.id.row_image) ImageView mImageView;
 
         public ItemViewHolder(View itemView) {
             super(itemView);
-            mLinearLayout = itemView.findViewById(R.id.row_content_bg);
-            mImageView = itemView.findViewById(R.id.image);
-//            mName = itemView.findViewById(R.id.user_name);
-//            mNumOfLikes = itemView.findViewById(R.id.num_of_likes);
-
-            mImageView.setOnClickListener(this);
+            ButterKnife.bind(this, itemView);
         }
 
-        // onClick Listener for imageView
-        @Override
+        @OnClick(R.id.row_image)
         public void onClick(View v) {
             mListener.onClick(v, getAdapterPosition());
         }
@@ -113,23 +103,11 @@ public class PhotoPagedListAdapter extends PagedListAdapter<Photo, PhotoPagedLis
         // binding the data to the views
         public void bind(ItemViewHolder holder, int position) {
             Photo item = getItem(position);
-
                 Glide.with(mContext).load(item.getUrls().getRegularUrl())
-//                        .transition(GenericTransitionOptions.with(animationObject))
+                        .transition(GenericTransitionOptions.with(animationObject))
                         .apply(new RequestOptions()
-//                                .diskCacheStrategy(DiskCacheStrategy.ALL)
-//                                .override(1080, 1080)
                                 .placeholder(new ColorDrawable(Color.parseColor(item.getColor())))
                         )
-//                        .listener(GlidePalette.with(item.getUrls().getSmallUrl())
-//                                .use(Profile.VIBRANT_DARK)
-//                                .intoBackground(holder.mLinearLayout)
-//
-//                                .use(Profile.VIBRANT_DARK)
-//                                .intoTextColor(holder.mName, Swatch.BODY_TEXT_COLOR)
-//                                .intoTextColor(holder.mNumOfLikes, Swatch.BODY_TEXT_COLOR)
-//                                .crossfade(true)
-//                        )
                         .into(holder.mImageView);
 
         }
