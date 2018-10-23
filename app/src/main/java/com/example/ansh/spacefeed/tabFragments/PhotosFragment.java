@@ -9,7 +9,11 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearSnapHelper;
+import android.support.v7.widget.PagerSnapHelper;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.RecyclerView.OnFlingListener;
+import android.support.v7.widget.SnapHelper;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -27,6 +31,7 @@ import com.example.ansh.spacefeed.interfaces.SimpleOnItemClickListener;
 import com.example.ansh.spacefeed.modal.CustomViewModel;
 import com.example.ansh.spacefeed.pojos.Photo;
 import com.example.ansh.spacefeed.recyclerViewUtils.ItemOffsetDecoration;
+import com.example.ansh.spacefeed.utils.NetworkState;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -51,6 +56,7 @@ public class PhotosFragment extends Fragment {
     @BindView(R.id.f_p_recyclerView) RecyclerView mRecyclerView;
     //    private GridLayoutManager mGridLayoutManager;
     private StaggeredGridLayoutManager mStaggeredGridLayoutManager;
+    private SnapHelper mSnapHelper;
 
     private PhotoPagedListAdapter mPhotoPagedListAdapter;
     private CustomViewModel mPhotoViewModel;
@@ -131,6 +137,14 @@ public class PhotosFragment extends Fragment {
             }
         });
 
+        mPhotoViewModel.mNetworkStateLiveData.observe(this, new Observer<NetworkState>() {
+            @Override
+            public void onChanged(@Nullable NetworkState networkState) {
+                mPhotoPagedListAdapter.setNetworkState(networkState);
+                Log.i(TAG_PHOTO_FRAGMENT, "onChanged: " + "Network State Changed");
+            }
+        });
+
         // Setting the adapter
         mRecyclerView.setAdapter(mPhotoPagedListAdapter);
 
@@ -138,7 +152,7 @@ public class PhotosFragment extends Fragment {
     }
 
     private void setUpRecyclerView(Context context) {
-
+        mRecyclerView.onScrolled(0, 1);
         mStaggeredGridLayoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
         mStaggeredGridLayoutManager.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_MOVE_ITEMS_BETWEEN_SPANS);
         ItemOffsetDecoration itemDecoration = new ItemOffsetDecoration(context, R.dimen.item_offset);
@@ -165,4 +179,6 @@ public class PhotosFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         Log.i(TAG_PHOTO_FRAGMENT, "onActivityCreated: called");
     }
+
+
 }

@@ -18,82 +18,62 @@ public class TrendingDataSource extends PageKeyedDataSource<Integer, Photo> {
     // API_KEY or CLIENT_ID
     public static final String CLIENT_ID = "63002cc7718cea591dcf5a661065713e4a353d49090dce8df8c7680af2cb78e4";
 
-    /**
-     * Private member variables.
-     */
-    //the size of a page that we want
-    public static final int PAGE_SIZE = 300;
+    public static final String TAG_TRENDING_DATA_SOURCE = TrendingDataSource.class.getSimpleName();
     public static final int ITEM_PER_PAGE = 10;
-    //we will start from the first page which is 1
     private static int FIRST_PAGE = 1;
-    //we need to fetch from UnSplash
-    private static final String SITE_NAME = "unsplash";
 
 
     @Override
     public void loadInitial(@NonNull PageKeyedDataSource.LoadInitialParams<Integer> params, @NonNull LoadInitialCallback<Integer, Photo> callback) {
-        ApiClient.getInstance().getApi().getTrendingPhotos(CLIENT_ID, ITEM_PER_PAGE, FIRST_PAGE)
+        ApiClient.getInstance().getApi().getTrendingPhotos(CLIENT_ID, params.requestedLoadSize, FIRST_PAGE)
                 .enqueue(new Callback<List<Photo>>() {
                     @Override
                     public void onResponse(Call<List<Photo>> call, Response<List<Photo>> response) {
-                        if (response.body() != null) {
-                            callback.onResult(response.body(), null, 2);
-                            Log.i("FUCK", "onResponse: Initial " + response);
-//                            Log.i("FUCK", "onResponse: Initial Size " + response.body().size());
+                        if (response.body() != null && response.code() == 200) {
+                            callback.onResult(response.body(), null, 4);
+                            Log.i(TAG_TRENDING_DATA_SOURCE, "onResponse: Trending (Initial)--- " + response);
+                            Log.i(TAG_TRENDING_DATA_SOURCE, "onResponse: Trending (Initial Size)--- " + response.body().size());
+                        } else {
+                            Log.i(TAG_TRENDING_DATA_SOURCE, "Trending API (Initial Code)--- " + response.code() + " and MESSAGE:: " + response.message());
                         }
                     }
 
                     @Override
                     public void onFailure(Call<List<Photo>> call, Throwable t) {
-
+                        String errorMessage = t.getMessage();
+                        if(t == null) {
+                            errorMessage = "error";
+                        }
                     }
                 });
     }
 
     @Override
     public void loadBefore(@NonNull LoadParams<Integer> params, @NonNull LoadCallback<Integer, Photo> callback) {
-//        ApiClient.getInstance().getApi().getPhotos(CLIENT_ID, PAGE_SIZE, FIRST_PAGE)
-//                .enqueue(new Callback<List<Photo>>() {
-//                    @Override
-//                    public void onResponse(Call<List<Photo>> call, Response<List<Photo>> response) {
-//                        //if the current page is greater than one
-//                        //we are decrementing the page number
-//                        //else there is no previous page
-//                        Integer adjacentKey = (params.key > 1) ? params.key -1 : null;
-//                        if(response.body() != null) {
-//                            callback.onResult(response.body(), adjacentKey);
-//                            Log.i("FUCK", "onResponse: Before " + response);
-//                        }
-//                    }
-//
-//                    @Override
-//                    public void onFailure(Call<List<Photo>> call, Throwable t) {
-//
-//                    }
-//                });
     }
 
     @Override
     public void loadAfter(@NonNull LoadParams<Integer> params, @NonNull LoadCallback<Integer, Photo> callback) {
-        ApiClient.getInstance().getApi().getTrendingPhotos(CLIENT_ID, ITEM_PER_PAGE, params.key)
+        ApiClient.getInstance().getApi().getTrendingPhotos(CLIENT_ID, params.requestedLoadSize, params.key)
                 .enqueue(new Callback<List<Photo>>() {
                     @Override
                     public void onResponse(Call<List<Photo>> call, Response<List<Photo>> response) {
-                        //if the current page is greater than one
-                        //we are decrementing the page number
-                        //else there is no previous page
-                        Integer key = (params.key >= PAGE_SIZE) ? null : params.key + 1;
-                        if (response.body() != null) {
-                            callback.onResult(response.body(), key);
-                            Log.i("FUCK", "onResponse: After " + response);
-//                            Log.i("FUCK", "onResponse: After Size " + response.body().size());
+                        if (response.body() != null && response.code() == 200) {
+                            callback.onResult(response.body(), params.key+1);
+                            Log.i(TAG_TRENDING_DATA_SOURCE, "onResponse: Trending (Initial)--- " + response);
+                            Log.i(TAG_TRENDING_DATA_SOURCE, "onResponse: Trending (Initial Size)--- " + response.body().size());
+                        } else {
+                            Log.i(TAG_TRENDING_DATA_SOURCE, "Trending API (After Code)--- " + response.code() + " and MESSAGE:: " + response.message());
                         }
 
                     }
 
                     @Override
                     public void onFailure(Call<List<Photo>> call, Throwable t) {
-
+                        String errorMessage = t.getMessage();
+                        if(t == null) {
+                            errorMessage = "error";
+                        }
                     }
                 });
     }

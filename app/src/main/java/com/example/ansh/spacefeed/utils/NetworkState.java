@@ -2,18 +2,12 @@ package com.example.ansh.spacefeed.utils;
 
 public class NetworkState {
 
-    public enum Status{
-        RUNNING,
-        SUCCESS,
-        FAILED
-    }
-
-
     private final Status status;
     private final String msg;
 
     public static final NetworkState LOADED;
     public static final NetworkState LOADING;
+    public static final NetworkState MAXPAGE;
 
     public NetworkState(Status status, String msg) {
         this.status = status;
@@ -23,6 +17,7 @@ public class NetworkState {
     static {
         LOADED=new NetworkState(Status.SUCCESS,"Success");
         LOADING=new NetworkState(Status.RUNNING,"Running");
+        MAXPAGE=new NetworkState(Status.MAX,"No More page");
     }
 
     public Status getStatus() {

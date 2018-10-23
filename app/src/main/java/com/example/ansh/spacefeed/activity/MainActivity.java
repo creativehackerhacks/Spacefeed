@@ -126,9 +126,9 @@ public class MainActivity extends AppCompatActivity {
             new OnNavigationItemReselectedListener() {
                 @Override
                 public void onNavigationItemReselected(@NonNull MenuItem menuItem) {
-//                    if (!mFragNavController.isRootFragment()) {
-//                        mFragNavController.clearStack();
-//                    } else {
+                    if (!mFragNavController.isRootFragment()) {
+                        mFragNavController.clearStack();
+                    } else {
 //                        Fragment f = mFragNavController.getCurrentFrag();
 //                        if (f != null) {
 //                            View fragmentView = f.getView();
@@ -136,7 +136,7 @@ public class MainActivity extends AppCompatActivity {
 //                            if (mRecyclerView != null)
 //                                mRecyclerView.smoothScrollToPosition(0);
 //                        }
-//                    }
+                    }
                 }
             };
 
@@ -190,16 +190,6 @@ public class MainActivity extends AppCompatActivity {
 //                return FavouritesFragment.newInstance();
 //        }
 //        throw new IllegalStateException("Need to send an index that we know");
-//    }
-
-//    @Override
-//    public void onTabTransaction(@Nullable Fragment fragment, int i) {
-//
-//    }
-//
-//    @Override
-//    public void onFragmentTransaction(Fragment fragment, TransactionType transactionType) {
-//
 //    }
 
     @Override

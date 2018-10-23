@@ -2,6 +2,7 @@ package com.example.ansh.spacefeed.pojos;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.v7.util.DiffUtil;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -239,6 +240,18 @@ public class Photo implements Parcelable {
 
 
 
+    public static DiffUtil.ItemCallback<Photo> DIFF_CALLBACK =
+            new DiffUtil.ItemCallback<Photo>() {
+                @Override
+                public boolean areItemsTheSame(Photo oldItem, Photo newItem) {
+                    return oldItem.getId() == newItem.getId();
+                }
+
+                @Override
+                public boolean areContentsTheSame(Photo oldItem, Photo newItem) {
+                    return oldItem.equals(newItem);
+                }
+            };
 
 
     //------------------ Overridden equals() method for adapter class --------------//

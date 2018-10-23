@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.transition.ViewPropertyTransition;
 import com.example.ansh.spacefeed.R;
 import com.example.ansh.spacefeed.interfaces.SimpleOnItemClickListener;
@@ -100,6 +101,9 @@ public class CollectionsPagedListAdapter extends PagedListAdapter<CollectionPhot
             CollectionPhoto collectionPhoto = getItem(pos);
 
             Glide.with(mContext).load(collectionPhoto.getCoverPhoto().getUrls().getRegularUrl())
+                    .apply(new RequestOptions()
+                            .dontAnimate()
+                    )
                     .into(collectionViewHolder.mCollectionImage);
             Glide.with(mContext).load(collectionPhoto.getUser().getProfileImage().getMedium()).into(mCollectionUserImage);
             mUserName.setText(collectionPhoto.getUser().getName());

@@ -8,22 +8,26 @@ import android.arch.paging.PageKeyedDataSource;
 import com.example.ansh.spacefeed.dataSource.PhotoDataSource;
 import com.example.ansh.spacefeed.pojos.Photo;
 
-public class PhotoDataSourceFactory extends DataSource.Factory {
+import java.util.concurrent.Executor;
+
+public class PhotoDataSourceFactory extends DataSource.Factory<Integer, Photo> {
 
     // Create the mutable live data
-    public MutableLiveData<PageKeyedDataSource<Integer, Photo>> mPhotoLiveDataSource;
+    public MutableLiveData<PhotoDataSource> mPhotoLiveDataSource;
     private PhotoDataSource mPhotoDataSource;
+    private Executor mExecutor;
     private String mPhotoSortOrder;
 
     // Constructor
-    public PhotoDataSourceFactory() {
-        mPhotoLiveDataSource = new MutableLiveData<>();
+    public PhotoDataSourceFactory(Executor executor) {
+        this.mExecutor = executor;
+        this.mPhotoLiveDataSource = new MutableLiveData();
     }
 
     @Override
     public DataSource<Integer, Photo> create() {
         // getting our data source object
-         mPhotoDataSource = new PhotoDataSource(mPhotoSortOrder);
+         mPhotoDataSource = new PhotoDataSource(mExecutor, mPhotoSortOrder);
 
         // posting the datasource to get the values
         mPhotoLiveDataSource.postValue(mPhotoDataSource);
@@ -37,8 +41,13 @@ public class PhotoDataSourceFactory extends DataSource.Factory {
     }
 
     // getter for mPhotoLiveDataSource
-//    public MutableLiveData<PageKeyedDataSource<Integer, Photo>> getPhotoLiveDataSource() {
-//        return mPhotoLiveDataSource;
-//    }
 
+
+    public MutableLiveData<PhotoDataSource> getPhotoLiveDataSource() {
+        return mPhotoLiveDataSource;
+    }
+
+    public PhotoDataSource getPhotoDataSource() {
+        return mPhotoDataSource;
+    }
 }
