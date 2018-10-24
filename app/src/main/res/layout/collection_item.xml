@@ -19,7 +19,7 @@
             android:layout_height="match_parent"
             android:contentDescription="@string/image_placeholder_description"
             android:scaleType="centerCrop"
-            android:transitionName="demo_image"
+            android:transitionName="c_i_photo_item"
             android:src="@drawable/dude" />
 
         <View

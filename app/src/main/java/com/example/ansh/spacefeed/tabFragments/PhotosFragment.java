@@ -13,9 +13,13 @@ import android.support.v7.widget.LinearSnapHelper;
 import android.support.v7.widget.PagerSnapHelper;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.OnFlingListener;
+import android.support.v7.widget.SimpleItemAnimator;
 import android.support.v7.widget.SnapHelper;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
+import android.transition.Fade;
+import android.transition.TransitionInflater;
+import android.transition.TransitionSet;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -47,6 +51,9 @@ public class PhotosFragment extends Fragment {
     /**
      * Private member variables
      */
+    private static final long MOVE_DEFAULT_TIME = 1000;
+    private static final long FADE_DEFAULT_TIME = 300;
+
     public static final String TAG_PHOTO_FRAGMENT = PhotosFragment.class.getSimpleName();
 
     // Layout related instances.
@@ -120,6 +127,13 @@ public class PhotosFragment extends Fragment {
                 Bundle bundle = new Bundle();
                 bundle.putParcelable("Photo", splashResponse);
                 mPhotoDetailFragment.setArguments(bundle);
+
+                TransitionSet enterTransitionSet = new TransitionSet();
+                enterTransitionSet.addTransition(TransitionInflater.from(container.getContext()).inflateTransition(android.R.transition.move));
+                enterTransitionSet.setDuration(MOVE_DEFAULT_TIME);
+                enterTransitionSet.setStartDelay(FADE_DEFAULT_TIME);
+                mPhotoDetailFragment.setSharedElementEnterTransition(enterTransitionSet);
+
                 ((MainActivity)getActivity()).pushFragment(mPhotoDetailFragment);
             }
         };
@@ -146,17 +160,20 @@ public class PhotosFragment extends Fragment {
         });
 
         // Setting the adapter
+        mPhotoPagedListAdapter.setHasStableIds(true);
         mRecyclerView.setAdapter(mPhotoPagedListAdapter);
 
         return view;
     }
 
     private void setUpRecyclerView(Context context) {
-        mRecyclerView.onScrolled(0, 1);
+//        mRecyclerView.onScrolled(0, 1);
         mStaggeredGridLayoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
         mStaggeredGridLayoutManager.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_MOVE_ITEMS_BETWEEN_SPANS);
         ItemOffsetDecoration itemDecoration = new ItemOffsetDecoration(context, R.dimen.item_offset);
         mRecyclerView.addItemDecoration(itemDecoration);
+        SimpleItemAnimator simpleItemAnimator = (SimpleItemAnimator) mRecyclerView.getItemAnimator();
+        simpleItemAnimator.setSupportsChangeAnimations(false);
 
         mRecyclerView.setLayoutManager(mStaggeredGridLayoutManager);
         mRecyclerView.setItemAnimator(null);

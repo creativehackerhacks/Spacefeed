@@ -6,6 +6,7 @@
     android:layout_height="wrap_content"
     android:id="@+id/card_bg"
     android:minHeight="80dp"
+    android:animateLayoutChanges="false"
     app:cardCornerRadius="6dp">
 
     <LinearLayout
@@ -21,7 +22,7 @@
             android:contentDescription="@string/image_placeholder_description"
             android:scaleType="fitXY"
             android:adjustViewBounds="true"
-            android:transitionName="demo_image"
+            android:transitionName="r_i_photo_item"
             android:src="@drawable/dude" />
 
     </LinearLayout>

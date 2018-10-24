@@ -171,13 +171,13 @@ public class PhotoDetailFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-//        ((MainActivity) getActivity()).SetNavigationVisibiltity(false);
+//        ((MainActivity) getActivity()).SetNavigationVisibility(false);
     }
 
     @Override
     public void onStop() {
         super.onStop();
-//        ((MainActivity) getActivity()).SetNavigationVisibiltity(true);
+//        ((MainActivity) getActivity()).SetNavigationVisibility(true);
     }
 
 }

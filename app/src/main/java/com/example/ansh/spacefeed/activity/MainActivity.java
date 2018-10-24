@@ -2,17 +2,14 @@ package com.example.ansh.spacefeed.activity;
 
 import android.os.PersistableBundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.BottomNavigationView.OnNavigationItemReselectedListener;
 import android.support.design.widget.BottomNavigationView.OnNavigationItemSelectedListener;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentManager.OnBackStackChangedListener;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.util.Pair;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -25,15 +22,11 @@ import com.example.ansh.spacefeed.tabFragments.PhotosFragment;
 import com.example.ansh.spacefeed.tabFragments.TrendingsFragment;
 import com.example.ansh.spacefeed.R;
 import com.ncapdevi.fragnav.FragNavController;
-import com.ncapdevi.fragnav.FragNavController.TransactionType;
 import com.ncapdevi.fragnav.FragNavSwitchController;
 import com.ncapdevi.fragnav.FragNavTransactionOptions;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.xml.transform.TransformerFactoryConfigurationError;
 
 /**
  * I WILL CHANGE THIS CLASS LATER
@@ -51,8 +44,10 @@ public class MainActivity extends AppCompatActivity {
 //    private static final int INDEX_COLLECTIONS = 3;
 //    private static final int INDEX_FAVOURITES = 4;
 
-    private String mPhotoSortOrder;
+    private static final long MOVE_DEFAULT_TIME = 1000;
+    private static final long FADE_DEFAULT_TIME = 300;
 
+    private String mPhotoSortOrder;
 
     private List<Fragment> mFragmentList;
     private FragNavController.Builder mBuilder;
@@ -80,9 +75,9 @@ public class MainActivity extends AppCompatActivity {
         initializeFragmentList();
 
         mFragNavController = mBuilder
-                .defaultTransactionOptions(FragNavTransactionOptions.newBuilder()
-                        .transition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                        .build())
+//                .defaultTransactionOptions(FragNavTransactionOptions.newBuilder()
+//                        .transition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN) // for all transitions
+//                        .build())
                 .build();
 
 
@@ -105,16 +100,16 @@ public class MainActivity extends AppCompatActivity {
                 public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
                     switch (menuItem.getItemId()) {
                         case R.id.navigation_photos:
-                            mFragNavController.switchTab(FragNavController.TAB1, FragNavTransactionOptions.newBuilder().transition(FragmentTransaction.TRANSIT_NONE).build());
+                            mFragNavController.switchTab(FragNavController.TAB1);
                             return true;
                         case R.id.navigation_trendings:
-                            mFragNavController.switchTab(FragNavController.TAB2, FragNavTransactionOptions.newBuilder().transition(FragmentTransaction.TRANSIT_NONE).build());
+                            mFragNavController.switchTab(FragNavController.TAB2);
                             return true;
                         case R.id.navigation_collections:
-                            mFragNavController.switchTab(FragNavController.TAB3, FragNavTransactionOptions.newBuilder().transition(FragmentTransaction.TRANSIT_NONE).build());
+                            mFragNavController.switchTab(FragNavController.TAB3);
                             return true;
                         case R.id.navigation_likes:
-                            mFragNavController.switchTab(FragNavController.TAB4, FragNavTransactionOptions.newBuilder().transition(FragmentTransaction.TRANSIT_NONE).build());
+                            mFragNavController.switchTab(FragNavController.TAB4);
                             return true;
                         default:
                             return false;
@@ -158,11 +153,20 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void pushFragment(Fragment fragment) {
-        mFragNavController.pushFragment(fragment);
+        FragNavTransactionOptions options = FragNavTransactionOptions.newBuilder()
+                .transition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+//                .customAnimations(R.anim.enter_from_right,
+//                        R.anim.exit_to_left
+//                )
+                .build();
+        mFragNavController.pushFragment(fragment, options);
     }
 
-    public void pushFragment(Fragment fragment, FragNavTransactionOptions fragNavTransactionOptions) {
-        mFragNavController.pushFragment(fragment, fragNavTransactionOptions);
+    public void pushFragment(Fragment fragment, View view, String name) {
+        FragNavTransactionOptions d = FragNavTransactionOptions.newBuilder()
+                .addSharedElement(new Pair<View, String>(view, name))
+                .build();
+        mFragNavController.pushFragment(fragment, d);
     }
 
     @Override
@@ -170,7 +174,10 @@ public class MainActivity extends AppCompatActivity {
         if (mFragNavController.getCurrentStack().size() > 1) {
             mFragNavController.popFragment(
                     FragNavTransactionOptions.newBuilder()
-                            .transition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE).build()
+                            .transition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE)
+//                            .customAnimations(R.anim.enter_from_left,
+//                                    R.anim.exit_to_right)
+                            .build()
             );
         } else {
             super.onBackPressed();
@@ -221,7 +228,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void SetNavigationVisibiltity (boolean opt) {
+    public void SetNavigationVisibility(boolean opt) {
         if (opt) {
             mBottomNavigationView.setVisibility(View.VISIBLE);
         } else {
