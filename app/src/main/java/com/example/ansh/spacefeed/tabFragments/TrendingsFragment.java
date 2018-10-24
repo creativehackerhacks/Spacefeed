@@ -15,8 +15,11 @@ import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
 import com.example.ansh.spacefeed.R;
 import com.example.ansh.spacefeed.activity.MainActivity;
@@ -58,14 +61,19 @@ public class TrendingsFragment extends Fragment {
 
     private Fragment mPhotoDetailFragment;
 
+    private String mTrendingsSortOrder;
+
     private Unbinder mUnbinder;
 
     public TrendingsFragment() {
         // Required empty public constructor
     }
 
-    public static TrendingsFragment newInstance() {
+    public static TrendingsFragment newInstance(String sort) {
         TrendingsFragment fragment = new TrendingsFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString("sort", sort);
+        fragment.setArguments(bundle);
         return fragment;
     }
 
@@ -74,8 +82,13 @@ public class TrendingsFragment extends Fragment {
         super.onCreate(savedInstanceState);
         mPhotoDetailFragment = new PhotoDetailFragment();
 
+        mTrendingsSortOrder = getArguments().getString("sort");
+
         // getting our CustomViewModel
         mPhotoViewModel = ViewModelProviders.of(this).get(CustomViewModel.class);
+        mPhotoViewModel.setTrendingsSortOrder(mTrendingsSortOrder);
+
+        setHasOptionsMenu(true);
 
         Log.i(TAG_TRENDINGS_FRAGMENT, "onCreate: called");
     }
@@ -150,4 +163,5 @@ public class TrendingsFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         Log.i(TAG_TRENDINGS_FRAGMENT, "onActivityCreated: called");
     }
+
 }

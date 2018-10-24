@@ -1,5 +1,6 @@
 package com.example.ansh.spacefeed.dataSource;
 
+import android.arch.lifecycle.MutableLiveData;
 import android.arch.paging.PageKeyedDataSource;
 import android.support.annotation.NonNull;
 import android.util.Log;
@@ -8,6 +9,7 @@ import com.example.ansh.spacefeed.client.ApiClient;
 import com.example.ansh.spacefeed.pojos.Photo;
 
 import java.util.List;
+import java.util.concurrent.Executor;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -22,10 +24,28 @@ public class TrendingDataSource extends PageKeyedDataSource<Integer, Photo> {
     public static final int ITEM_PER_PAGE = 10;
     private static int FIRST_PAGE = 1;
 
+    private LoadInitialParams mLoadInitialParams;
+    private LoadParams mLoadAfterParams;
+
+    private MutableLiveData mNetworkState;
+    private MutableLiveData mInitialLoading;
+    private Executor mRetryExecutor;
+
+
+    private String mTrendingsSortOrder;
+
+    public TrendingDataSource(Executor retryExecutor, String trendingsSortOrder) {
+        this.mRetryExecutor = retryExecutor;
+        this.mNetworkState = new MutableLiveData();
+        this.mInitialLoading = new MutableLiveData();
+
+        this.mTrendingsSortOrder = trendingsSortOrder;
+    }
+
 
     @Override
     public void loadInitial(@NonNull PageKeyedDataSource.LoadInitialParams<Integer> params, @NonNull LoadInitialCallback<Integer, Photo> callback) {
-        ApiClient.getInstance().getApi().getTrendingPhotos(CLIENT_ID, params.requestedLoadSize, FIRST_PAGE)
+        ApiClient.getInstance().getApi().getTrendingPhotos(CLIENT_ID, params.requestedLoadSize, FIRST_PAGE, mTrendingsSortOrder)
                 .enqueue(new Callback<List<Photo>>() {
                     @Override
                     public void onResponse(Call<List<Photo>> call, Response<List<Photo>> response) {
@@ -54,7 +74,7 @@ public class TrendingDataSource extends PageKeyedDataSource<Integer, Photo> {
 
     @Override
     public void loadAfter(@NonNull LoadParams<Integer> params, @NonNull LoadCallback<Integer, Photo> callback) {
-        ApiClient.getInstance().getApi().getTrendingPhotos(CLIENT_ID, params.requestedLoadSize, params.key)
+        ApiClient.getInstance().getApi().getTrendingPhotos(CLIENT_ID, params.requestedLoadSize, params.key, mTrendingsSortOrder)
                 .enqueue(new Callback<List<Photo>>() {
                     @Override
                     public void onResponse(Call<List<Photo>> call, Response<List<Photo>> response) {

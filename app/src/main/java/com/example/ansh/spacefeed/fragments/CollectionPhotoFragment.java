@@ -19,6 +19,7 @@ import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -92,6 +93,8 @@ public class CollectionPhotoFragment extends Fragment {
         if (getArguments() != null) {
             mCollectionPhoto = getArguments().getParcelable("collections");
         }
+
+        setHasOptionsMenu(true);
 
         // getting our CustomViewModel
         mPhotoViewModel = ViewModelProviders.of(this).get(CustomViewModel.class);
@@ -190,4 +193,12 @@ public class CollectionPhotoFragment extends Fragment {
         super.onDestroyView();
         mUnbinder.unbind();
     }
+
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+        getActivity().invalidateOptionsMenu();
+        menu.clear();
+    }
+
 }

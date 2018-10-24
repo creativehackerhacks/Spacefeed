@@ -6,7 +6,7 @@
     android:layout_height="wrap_content"
     android:id="@+id/card_bg"
     android:minHeight="80dp"
-    android:animateLayoutChanges="false"
+    android:animateLayoutChanges="true"
     app:cardCornerRadius="6dp">
 
     <LinearLayout

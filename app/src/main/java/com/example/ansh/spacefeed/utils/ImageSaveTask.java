@@ -2,6 +2,7 @@ package com.example.ansh.spacefeed.utils;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.Target;
@@ -71,6 +72,7 @@ public class ImageSaveTask extends AsyncTask<String, Void, Void> {
                         in.close();
                     } catch (IOException e1) {
                         e1.printStackTrace();
+                        Log.i("IMAGE SAVE", "doInBackground: --- File: " + file + " --- Dest: " + dst + " --- DestFile: " + dstFile);
                     }
                 }
 

@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -53,6 +54,8 @@ public class UserProfileFragment extends Fragment {
         if (getArguments() != null) {
             mPhoto = getArguments().getParcelable("photoProfile");
         }
+
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -85,6 +88,13 @@ public class UserProfileFragment extends Fragment {
         viewPagerTab.setViewPager(viewPager);
 
         return view;
+    }
+
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+        getActivity().invalidateOptionsMenu();
+        menu.clear();
     }
 
 }

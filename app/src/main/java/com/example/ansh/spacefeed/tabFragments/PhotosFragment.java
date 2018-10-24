@@ -9,23 +9,19 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearSnapHelper;
-import android.support.v7.widget.PagerSnapHelper;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.RecyclerView.OnFlingListener;
 import android.support.v7.widget.SimpleItemAnimator;
 import android.support.v7.widget.SnapHelper;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
-import android.transition.Fade;
 import android.transition.TransitionInflater;
 import android.transition.TransitionSet;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.example.ansh.spacefeed.R;
 import com.example.ansh.spacefeed.activity.MainActivity;
@@ -70,7 +66,7 @@ public class PhotosFragment extends Fragment {
 
     private Fragment mPhotoDetailFragment;
 
-    private String mSort;
+    private String mPhotoSortOrder;
 
     private Unbinder mUnbinder;
 
@@ -91,12 +87,12 @@ public class PhotosFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mPhotoDetailFragment = new PhotoDetailFragment();
-        mSort = getArguments().getString("sort", "latest");
+        mPhotoSortOrder = getArguments().getString("sort");
         setHasOptionsMenu(true);
 
         // getting our CustomViewModel
         mPhotoViewModel = ViewModelProviders.of(this).get(CustomViewModel.class);
-        mPhotoViewModel.setPhotoSortOrder(mSort);
+        mPhotoViewModel.setPhotoSortOrder(mPhotoSortOrder);
 
         Log.i(TAG_PHOTO_FRAGMENT, "onCreate: called");
     }
@@ -151,7 +147,7 @@ public class PhotosFragment extends Fragment {
             }
         });
 
-        mPhotoViewModel.mNetworkStateLiveData.observe(this, new Observer<NetworkState>() {
+        mPhotoViewModel.mPhotoNetworkStateLiveData.observe(this, new Observer<NetworkState>() {
             @Override
             public void onChanged(@Nullable NetworkState networkState) {
                 mPhotoPagedListAdapter.setNetworkState(networkState);
@@ -178,11 +174,11 @@ public class PhotosFragment extends Fragment {
         mRecyclerView.setItemAnimator(null);
     }
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.photo_toolbar_menu, menu);
-        super.onCreateOptionsMenu(menu, inflater);
-    }
+//    @Override
+//    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+//        inflater.inflate(R.menu.main_toolbar_menu, menu);
+//        super.onCreateOptionsMenu(menu, inflater);
+//    }
 
     @Override
     public void onDestroyView() {
@@ -194,6 +190,19 @@ public class PhotosFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         Log.i(TAG_PHOTO_FRAGMENT, "onActivityCreated: called");
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(item.getItemId() == R.id.menu_trending_latest) {
+//            mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+//            ItemOffsetDecoration itemDecoration = new ItemOffsetDecoration(getContext(), R.dimen.linear_item_offset);
+//            mRecyclerView.addItemDecoration(itemDecoration);
+//            mRecyclerView.setAdapter(mPhotoPagedListAdapter);
+            Toast.makeText(getContext(), "LOLA", Toast.LENGTH_SHORT).show();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
 

@@ -54,14 +54,19 @@ public class CollectionsFragment extends Fragment {
 
     private Fragment mCollectionPhotoFragment;
 
+    private String mCollectionsSortOrder;
+
     private Unbinder mUnbinder;
 
     public CollectionsFragment() {
         // Required empty public constructor
     }
 
-    public static CollectionsFragment newInstance() {
+    public static CollectionsFragment newInstance(String sort) {
         CollectionsFragment fragment = new CollectionsFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString("sort", sort);
+        fragment.setArguments(bundle);
         return fragment;
     }
 
@@ -69,8 +74,11 @@ public class CollectionsFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        mCollectionsSortOrder = getArguments().getString("sort");
+
         // getting our CollectionViewModel
         mCollectionViewModel = ViewModelProviders.of(this).get(CustomViewModel.class);
+        mCollectionViewModel.setCollectionSortOrder(mCollectionsSortOrder);
 
         Log.i(TAG_COLLECTION_FRAGMENT, "onCreate: called");
     }
@@ -79,6 +87,7 @@ public class CollectionsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_collections, container, false);
+        setHasOptionsMenu(true);
 
         mUnbinder = ButterKnife.bind(this, view);
 

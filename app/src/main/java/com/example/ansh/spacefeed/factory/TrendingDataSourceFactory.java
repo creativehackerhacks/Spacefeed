@@ -8,21 +8,26 @@ import com.example.ansh.spacefeed.dataSource.PhotoDataSource;
 import com.example.ansh.spacefeed.dataSource.TrendingDataSource;
 import com.example.ansh.spacefeed.pojos.Photo;
 
-public class TrendingDataSourceFactory extends DataSource.Factory {
+import java.util.concurrent.Executor;
+
+public class TrendingDataSourceFactory extends DataSource.Factory<Integer, Photo> {
 
     // Create the mutable live data
-    public MutableLiveData<PageKeyedDataSource<Integer, Photo>> mTrendingLiveDataSource;
+    public MutableLiveData<TrendingDataSource> mTrendingLiveDataSource;
     private TrendingDataSource mTrendingDataSource;
+    private Executor mExecutor;
+    private String mTrendingsSortOrder;
 
     // Constructor
-    public TrendingDataSourceFactory() {
-        mTrendingLiveDataSource = new MutableLiveData<>();
+    public TrendingDataSourceFactory(Executor executor) {
+        this.mExecutor = executor;
+        this.mTrendingLiveDataSource = new MutableLiveData<>();
     }
 
     @Override
     public DataSource<Integer, Photo> create() {
         // getting our data source object
-        mTrendingDataSource = new TrendingDataSource();
+        mTrendingDataSource = new TrendingDataSource(mExecutor, mTrendingsSortOrder);
 
         // posting the datasource to get the values
         mTrendingLiveDataSource.postValue(mTrendingDataSource);
@@ -32,8 +37,16 @@ public class TrendingDataSourceFactory extends DataSource.Factory {
     }
 
     // getter for mPhotoLiveDataSource
-//    public MutableLiveData<PageKeyedDataSource<Integer, Photo>> getPhotoLiveDataSource() {
-//        return mPhotoLiveDataSource;
-//    }
+    public MutableLiveData<TrendingDataSource> getTrendingLiveDataSource() {
+        return mTrendingLiveDataSource;
+    }
+
+    public TrendingDataSource getTrendingDataSource() {
+        return mTrendingDataSource;
+    }
+    public void setTrendingsSortOrder(String trendingsSortOrder) {
+        mTrendingsSortOrder = trendingsSortOrder;
+    }
+
 
 }

@@ -26,8 +26,8 @@
                     android:id="@+id/detail_fragment_photo"
                     android:contentDescription="@string/full_image"
                     android:layout_width="match_parent"
-                    android:layout_height="460dp"
-                    android:scaleType="centerCrop"
+                    android:layout_height="wrap_content"
+                    android:scaleType="fitXY"
                     android:transitionName="r_i_photo_item"
                     android:src="@color/colorAccent"/>
 
@@ -45,6 +45,7 @@
     <include layout="@layout/transparent_toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:id="@+id/f_d_p_toolbar"
         android:layout_alignParentTop="true"
         android:layout_alignParentStart="true"/>
 

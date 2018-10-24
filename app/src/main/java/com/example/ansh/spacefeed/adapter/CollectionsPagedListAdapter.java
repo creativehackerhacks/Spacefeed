@@ -84,12 +84,11 @@ public class CollectionsPagedListAdapter extends PagedListAdapter<CollectionPhot
         @BindView(R.id.collection_image) ImageView mCollectionImage;
         @BindView(R.id.collection_user_image) CircleImageView mCollectionUserImage;
         @BindView(R.id.collection_user_name) TextView mUserName;
-//        private TextView mNumOfPhotos;
+        @BindView(R.id.collection_numOfPhotos) TextView mNumOfPhotos;
 
         public CollectionViewHolder(@NonNull View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
-//            mNumOfPhotos = itemView.findViewById(R.id.collection_numOfPhotos);
         }
 
         @OnClick(R.id.collection_image)
@@ -107,7 +106,7 @@ public class CollectionsPagedListAdapter extends PagedListAdapter<CollectionPhot
                     .into(collectionViewHolder.mCollectionImage);
             Glide.with(mContext).load(collectionPhoto.getUser().getProfileImage().getMedium()).into(mCollectionUserImage);
             mUserName.setText(collectionPhoto.getUser().getName());
-//            mNumOfPhotos.setText(collectionPhoto.getTotalPhotos());
+            mNumOfPhotos.setText(String.valueOf(collectionPhoto.getTotalPhotos()));
         }
     }
 }

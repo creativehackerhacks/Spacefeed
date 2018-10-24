@@ -1,16 +1,11 @@
 package com.example.ansh.spacefeed.modal;
 
 import android.arch.lifecycle.LiveData;
-import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.Transformations;
 import android.arch.lifecycle.ViewModel;
 import android.arch.paging.LivePagedListBuilder;
-import android.arch.paging.PageKeyedDataSource;
 import android.arch.paging.PagedList;
-import android.content.ClipData.Item;
 
-import com.example.ansh.spacefeed.dataSource.CollectionDataSource;
-import com.example.ansh.spacefeed.dataSource.PhotoDataSource;
 import com.example.ansh.spacefeed.factory.CollectionDataSourceFactory;
 import com.example.ansh.spacefeed.factory.CollectionPhotoDataSourceFactory;
 import com.example.ansh.spacefeed.factory.PhotoDataSourceFactory;
@@ -21,11 +16,13 @@ import com.example.ansh.spacefeed.utils.NetworkState;
 
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
-import java.util.function.Function;
 
 public class CustomViewModel extends ViewModel {
 
-    public LiveData<NetworkState> mNetworkStateLiveData;
+    public LiveData<NetworkState> mPhotoNetworkStateLiveData;
+    public LiveData<NetworkState> mTrendingNetworkStateLiveData;
+    public LiveData<NetworkState> mCollectionNetworkStateLiveData;
+    public LiveData<NetworkState> mCollectionPhotoNetworkStateLiveData;
     private Executor mExecutor;
 
     // For Collections.
@@ -49,12 +46,12 @@ public class CustomViewModel extends ViewModel {
         this.mExecutor = Executors.newFixedThreadPool(5);
 
         //getting our data source factory
-        mCollectionsDataSourceFactory = new CollectionDataSourceFactory();
+        mCollectionsDataSourceFactory = new CollectionDataSourceFactory(mExecutor);
         mPhotoDataSourceFactory = new PhotoDataSourceFactory(mExecutor);
-        mTrendingDataSourceFactory = new TrendingDataSourceFactory();
+        mTrendingDataSourceFactory = new TrendingDataSourceFactory(mExecutor);
         mCollectionPhotoDataSourceFactory = new CollectionPhotoDataSourceFactory();
 
-        mNetworkStateLiveData = Transformations.switchMap(
+        mPhotoNetworkStateLiveData = Transformations.switchMap(
                 mPhotoDataSourceFactory.getPhotoLiveDataSource(),
                 dataSource -> mPhotoDataSourceFactory.getPhotoDataSource().getNetworkState());
 
@@ -90,6 +87,7 @@ public class CustomViewModel extends ViewModel {
         mTrendingPagedList = (new LivePagedListBuilder(mTrendingDataSourceFactory, photoListConfig))
                 .build();
         mCollectionsPagedList = (new LivePagedListBuilder(mCollectionsDataSourceFactory, collectionListConfig))
+                .setFetchExecutor(mExecutor)
                 .build();
         mCollectionPhotoPagedList = (new LivePagedListBuilder(mCollectionPhotoDataSourceFactory, collectionPhotoListConfig))
                 .build();
@@ -107,14 +105,25 @@ public class CustomViewModel extends ViewModel {
         return mTrendingPagedList;
     }
 
+    // Setters
     public void setPhotoSortOrder(String photoSortOrder) {
         mPhotoDataSourceFactory.setPhotoSortOrder(photoSortOrder);
+    }
+
+    public void setTrendingsSortOrder(String trendingSortOrder) {
+        mTrendingDataSourceFactory.setTrendingsSortOrder(trendingSortOrder);
+    }
+
+    public void setCollectionSortOrder(String collectionSortOrder) {
+        mCollectionsDataSourceFactory.setCollectionSortOrder(collectionSortOrder);
     }
 
     public void setCollectionId(int collectionId) {
         mCollectionPhotoDataSourceFactory.setCollectionId(collectionId);
     }
 
+
+    // On Refresh
     public void onPhotoDataSourceRefresh() {
         mPhotoDataSourceFactory.mPhotoLiveDataSource.getValue().invalidate();
     }

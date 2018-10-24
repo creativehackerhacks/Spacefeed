@@ -1,5 +1,7 @@
 package com.example.ansh.spacefeed.apis;
 
+import android.support.annotation.Nullable;
+
 import com.example.ansh.spacefeed.pojos.CollectionPhoto;
 import com.example.ansh.spacefeed.pojos.Photo;
 
@@ -29,19 +31,27 @@ public interface ApiInterface {
 
     @GET("photos/{id}/download")
     Call<ResponseBody> getDownload(
-            @Path("id") String id
+            @Path("id") String id,
+            @Query("client_id") String api_key
     );
 
+    /**
+     * For Trending
+     */
     @GET("photos/curated")
     Call<List<Photo>> getTrendingPhotos(
             @Query("client_id") String apiKey,
             @Query("per_page") int itemCount,
-            @Query("page") int pageCount
-//            @Query("order_by") String order
+            @Query("page") int pageCount,
+            @Query("order_by") String order
     );
 
-    @GET("collections")
+    /**
+     * FOR COLLECTIONS
+     * */
+    @GET("collections/{sorting}")
     Call<List<CollectionPhoto>> getCollections(
+            @Path("sorting") String sorting,
             @Query("client_id") String apiKey, // api_key
             @Query("per_page") int itemCount, // Number of items to show per page.(Max : 30)
             @Query("page") int pageCount

@@ -39,15 +39,17 @@ import java.util.List;
  */
 public class MainActivity extends AppCompatActivity {
 
-//    private static final int INDEX_PHOTOS = 1;
-//    private static final int INDEX_TRENDINGS = 2;
-//    private static final int INDEX_COLLECTIONS = 3;
-//    private static final int INDEX_FAVOURITES = 4;
+    private static final int INDEX_PHOTOS = 1;
+    private static final int INDEX_TRENDINGS = 2;
+    private static final int INDEX_COLLECTIONS = 3;
+    private static final int INDEX_FAVOURITES = 4;
 
     private static final long MOVE_DEFAULT_TIME = 1000;
     private static final long FADE_DEFAULT_TIME = 300;
 
     private String mPhotoSortOrder;
+    private String mCollectionsSortOrder;
+    private String mTrendingsSortOrder;
 
     private List<Fragment> mFragmentList;
     private FragNavController.Builder mBuilder;
@@ -55,6 +57,12 @@ public class MainActivity extends AppCompatActivity {
 
     private BottomNavigationView mBottomNavigationView;
     private Toolbar mToolbar;
+
+    private Menu mMenu;
+    private MenuItem mMenuPhotoSearch,
+            mMenuPhotoLatest, mMenuPhotoOldest, mMenuPhotoPopular,
+            mMenuTrendingLatest, mMenuTrendingOldest, mMenuTrendingPopular,
+            mMenuCollectionAll, mMenuCollectionCurated, mMenuCollectionFeatured;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +73,8 @@ public class MainActivity extends AppCompatActivity {
 
         mBottomNavigationView = findViewById(R.id.main_navigation);
         mPhotoSortOrder = "latest";
+        mCollectionsSortOrder = "";
+        mTrendingsSortOrder = "latest";
 
         mBuilder = FragNavController
                 .newBuilder(savedInstanceState, getSupportFragmentManager(), R.id.main_frame_layout);
@@ -117,6 +127,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             };
 
+
     private BottomNavigationView.OnNavigationItemReselectedListener bottomNavItemReselected =
             new OnNavigationItemReselectedListener() {
                 @Override
@@ -137,8 +148,8 @@ public class MainActivity extends AppCompatActivity {
 
     private void initializeFragmentList() {
         mFragmentList.add(PhotosFragment.newInstance(mPhotoSortOrder));
-        mFragmentList.add(TrendingsFragment.newInstance());
-        mFragmentList.add(CollectionsFragment.newInstance());
+        mFragmentList.add(TrendingsFragment.newInstance(mTrendingsSortOrder));
+        mFragmentList.add(CollectionsFragment.newInstance(mCollectionsSortOrder));
         mFragmentList.add(FavouritesFragment.newInstance());
 
         mBuilder.rootFragments(mFragmentList);
@@ -201,27 +212,110 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        return super.onCreateOptionsMenu(menu);
+        this.mMenu = menu;
+
+        getMenuInflater().inflate(R.menu.main_toolbar_menu, menu);
+
+        mMenuPhotoSearch = menu.findItem(R.id.menu_search_by);
+        mMenuPhotoLatest = menu.findItem(R.id.menu_photo_latest);
+        mMenuPhotoOldest = menu.findItem(R.id.menu_photo_oldest);
+        mMenuPhotoPopular = menu.findItem(R.id.menu_photo_popular);
+        mMenuTrendingLatest = menu.findItem(R.id.menu_trending_latest);
+        mMenuTrendingOldest = menu.findItem(R.id.menu_trending_oldest);
+        mMenuTrendingPopular = menu.findItem(R.id.menu_trending_popular);
+        mMenuCollectionAll = menu.findItem(R.id.menu_collection_all);
+        mMenuCollectionCurated = menu.findItem(R.id.menu_collection_curated);
+        mMenuCollectionFeatured = menu.findItem(R.id.menu_collection_featured);
+
+        return true;
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+        Fragment fragment = mFragNavController.getCurrentFrag();
+        if(fragment instanceof PhotosFragment) {
+            mMenuPhotoLatest.setVisible(true);
+            mMenuPhotoOldest.setVisible(true);
+            mMenuPhotoPopular.setVisible(true);
+            mMenuTrendingLatest.setVisible(false);
+            mMenuTrendingOldest.setVisible(false);
+            mMenuTrendingPopular.setVisible(false);
+            mMenuCollectionAll.setVisible(false);
+            mMenuCollectionCurated.setVisible(false);
+            mMenuCollectionFeatured.setVisible(false);
+        } else if(fragment instanceof TrendingsFragment) {
+            mMenuPhotoLatest.setVisible(false);
+            mMenuPhotoOldest.setVisible(false);
+            mMenuPhotoPopular.setVisible(false);
+            mMenuTrendingLatest.setVisible(true);
+            mMenuTrendingOldest.setVisible(true);
+            mMenuTrendingPopular.setVisible(true);
+            mMenuCollectionAll.setVisible(false);
+            mMenuCollectionCurated.setVisible(false);
+            mMenuCollectionFeatured.setVisible(false);
+        } else if(fragment instanceof CollectionsFragment) {
+            mMenuPhotoLatest.setVisible(false);
+            mMenuPhotoOldest.setVisible(false);
+            mMenuPhotoPopular.setVisible(false);
+            mMenuTrendingLatest.setVisible(false);
+            mMenuTrendingOldest.setVisible(false);
+            mMenuTrendingPopular.setVisible(false);
+            mMenuCollectionAll.setVisible(true);
+            mMenuCollectionCurated.setVisible(true);
+            mMenuCollectionFeatured.setVisible(true);
+        }
+
+        return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         switch (item.getItemId()) {
-            case R.id.latest:
+            case R.id.menu_photo_latest:
                 Toast.makeText(this, "Latest Clicked", Toast.LENGTH_SHORT).show();
                 mPhotoSortOrder = "latest";
                 mFragNavController.replaceFragment(PhotosFragment.newInstance(mPhotoSortOrder));
                 return true;
-            case R.id.oldest:
+            case R.id.menu_photo_oldest:
                 Toast.makeText(this, "Oldest Clicked", Toast.LENGTH_SHORT).show();
                 mPhotoSortOrder = "oldest";
                 mFragNavController.replaceFragment(PhotosFragment.newInstance(mPhotoSortOrder));
                 return true;
-            case R.id.popular:
+            case R.id.menu_photo_popular:
                 Toast.makeText(this, "Popular Clicked", Toast.LENGTH_SHORT).show();
                 mPhotoSortOrder = "popular";
                 mFragNavController.replaceFragment(PhotosFragment.newInstance(mPhotoSortOrder));
+                return true;
+            case R.id.menu_trending_latest:
+                Toast.makeText(this, "Latest Clicked", Toast.LENGTH_SHORT).show();
+                mTrendingsSortOrder = "latest";
+                mFragNavController.replaceFragment(TrendingsFragment.newInstance(mTrendingsSortOrder));
+                return true;
+            case R.id.menu_trending_oldest:
+                Toast.makeText(this, "Oldest Clicked", Toast.LENGTH_SHORT).show();
+                mTrendingsSortOrder = "oldest";
+                mFragNavController.replaceFragment(TrendingsFragment.newInstance(mTrendingsSortOrder));
+                return true;
+            case R.id.menu_trending_popular:
+                Toast.makeText(this, "Popular Clicked", Toast.LENGTH_SHORT).show();
+                mTrendingsSortOrder = "popular";
+                mFragNavController.replaceFragment(TrendingsFragment.newInstance(mTrendingsSortOrder));
+                return true;
+            case R.id.menu_collection_all:
+                Toast.makeText(this, "All Clicked", Toast.LENGTH_SHORT).show();
+                mCollectionsSortOrder = "";
+                mFragNavController.replaceFragment(CollectionsFragment.newInstance(mCollectionsSortOrder));
+                return true;
+            case R.id.menu_collection_curated:
+                Toast.makeText(this, "Curated Clicked", Toast.LENGTH_SHORT).show();
+                mCollectionsSortOrder = "curated";
+                mFragNavController.replaceFragment(CollectionsFragment.newInstance(mCollectionsSortOrder));
+                return true;
+            case R.id.menu_collection_featured:
+                Toast.makeText(this, "Featured Clicked", Toast.LENGTH_SHORT).show();
+                mCollectionsSortOrder = "featured";
+                mFragNavController.replaceFragment(CollectionsFragment.newInstance(mCollectionsSortOrder));
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -234,6 +328,13 @@ public class MainActivity extends AppCompatActivity {
         } else {
             mBottomNavigationView.setVisibility(View.GONE);
         }
+    }
+
+    public void showOverFlowMenu(boolean menuState) {
+        if(mMenu == null) {
+            return;
+        }
+        mMenu.setGroupVisible(R.id.all_menu, menuState);
     }
 
 

@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".PhotosFragment">
+
+    <group android:id="@+id/all_menu">
+        <item
+            android:id="@+id/menu_search_by"
+            android:icon="@drawable/ic_search_white_24dp"
+            android:title="@string/menu_search_by"
+            app:showAsAction="ifRoom" />
+
+        <item
+            android:id="@+id/menu_sort_by"
+            android:icon="@drawable/ic_sort_white_24dp"
+            android:title="@string/menu_sort_by"
+            app:showAsAction="ifRoom">
+            <menu>
+                <group
+                    android:checkableBehavior="none">
+                    <item
+                        android:id="@+id/menu_photo_latest"
+                        android:icon="@drawable/ic_latest_black_24dp"
+                        android:title="@string/menu_photo_latest"
+                        app:showAsAction="never" />
+                    <item
+                        android:id="@+id/menu_photo_oldest"
+                        android:icon="@drawable/ic_oldest_black_24dp"
+                        android:title="@string/menu_photo_oldest"
+                        app:showAsAction="never" />
+                    <item
+                        android:id="@+id/menu_photo_popular"
+                        android:icon="@drawable/ic_popular_black_24dp"
+                        android:title="@string/menu_photo_popular"
+                        app:showAsAction="never" />
+                    <item
+                        android:id="@+id/menu_trending_latest"
+                        android:icon="@drawable/ic_latest_black_24dp"
+                        android:title="@string/menu_trending_latest"
+                        app:showAsAction="never" />
+                    <item
+                        android:id="@+id/menu_trending_oldest"
+                        android:icon="@drawable/ic_oldest_black_24dp"
+                        android:title="@string/menu_trending_oldest"
+                        app:showAsAction="never" />
+                    <item
+                        android:id="@+id/menu_trending_popular"
+                        android:icon="@drawable/ic_popular_black_24dp"
+                        android:title="@string/menu_trending_popular"
+                        app:showAsAction="never" />
+                    <item
+                        android:id="@+id/menu_collection_all"
+                        android:icon="@drawable/ic_latest_black_24dp"
+                        android:title="@string/menu_collection_all"
+                        app:showAsAction="never" />
+                    <item
+                        android:id="@+id/menu_collection_curated"
+                        android:icon="@drawable/ic_oldest_black_24dp"
+                        android:title="@string/menu_collection_curated"
+                        app:showAsAction="never" />
+                    <item
+                        android:id="@+id/menu_collection_featured"
+                        android:icon="@drawable/ic_popular_black_24dp"
+                        android:title="@string/menu_collection_featured"
+                        app:showAsAction="never" />
+                </group>
+            </menu>
+        </item>
+    </group>
+
+</menu>
