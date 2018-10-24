@@ -160,7 +160,6 @@ public class PhotosFragment extends Fragment {
         });
 
         // Setting the adapter
-        mPhotoPagedListAdapter.setHasStableIds(true);
         mRecyclerView.setAdapter(mPhotoPagedListAdapter);
 
         return view;
