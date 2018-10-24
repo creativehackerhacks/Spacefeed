@@ -23,4 +23,5 @@
     <string name="menu_collection_featured">Featured</string>
     <string name="menu_sort_by">Sort by</string>
     <string name="menu_search_by">Search by</string>
+    <string name="f_f_empty_text">LALALALA... Kuch na mil rha.</string>
 </resources>
