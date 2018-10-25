@@ -134,10 +134,10 @@ public class PhotoDetailFragment extends Fragment {
 //            mCoverImageView.setTransitionName(mTrans);
 //        }
 
-        Bundle detailPhoto = new Bundle();
+//        Bundle detailPhoto = new Bundle();
         mUserProfileFragment = new UserProfileFragment();
-        detailPhoto.putParcelable("photoProfile", mPhoto);
-        mUserProfileFragment.setArguments(detailPhoto);
+//        detailPhoto.putParcelable("photoProfile", mPhoto);
+//        mUserProfileFragment.setArguments(detailPhoto);
 
         mDetailProfileFollowButton = view.findViewById(R.id.detail_profile_follow_button);
 
@@ -168,6 +168,11 @@ public class PhotoDetailFragment extends Fragment {
 
 
         mMergeProPicLayout.setOnClickListener(v -> {
+            Bundle bundle = new Bundle();
+            bundle.putParcelable("photoProfile", mPhoto);
+            bundle.putString("username", mPhoto.getUser().getUsername());
+            bundle.putString("userPhotoSortOrder", "latest");
+            mUserProfileFragment.setArguments(bundle);
             ((MainActivity) getActivity()).pushFragment(mUserProfileFragment);
         });
 
@@ -242,6 +247,7 @@ public class PhotoDetailFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        mUnbinder.unbind();
         Log.i(TAG, "onDestroyView: called.");
     }
 
@@ -249,7 +255,6 @@ public class PhotoDetailFragment extends Fragment {
     public void onDestroy() {
         super.onDestroy();
         Log.i(TAG, "onDestroy: called.");
-        mUnbinder.unbind();
     }
 
     @Override

@@ -5,15 +5,18 @@ import android.arch.lifecycle.Transformations;
 import android.arch.lifecycle.ViewModel;
 import android.arch.paging.LivePagedListBuilder;
 import android.arch.paging.PagedList;
+import android.util.Log;
 
 import com.example.ansh.spacefeed.factory.CollectionDataSourceFactory;
 import com.example.ansh.spacefeed.factory.CollectionPhotoDataSourceFactory;
 import com.example.ansh.spacefeed.factory.PhotoDataSourceFactory;
 import com.example.ansh.spacefeed.factory.TrendingDataSourceFactory;
+import com.example.ansh.spacefeed.factory.UserPhotoDataSourceFactory;
 import com.example.ansh.spacefeed.pojos.CollectionPhoto;
 import com.example.ansh.spacefeed.pojos.Photo;
 import com.example.ansh.spacefeed.utils.NetworkState;
 
+import java.util.Collection;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
@@ -23,6 +26,7 @@ public class CustomViewModel extends ViewModel {
     public LiveData<NetworkState> mTrendingNetworkStateLiveData;
     public LiveData<NetworkState> mCollectionNetworkStateLiveData;
     public LiveData<NetworkState> mCollectionPhotoNetworkStateLiveData;
+    public LiveData<NetworkState> mUserPhotoNetworkStateLiveData;
     private Executor mExecutor;
 
     // For Collections.
@@ -41,6 +45,10 @@ public class CustomViewModel extends ViewModel {
     public LiveData<PagedList<Photo>> mCollectionPhotoPagedList;
     private CollectionPhotoDataSourceFactory mCollectionPhotoDataSourceFactory;
 
+    // For UserPhoto
+    public LiveData<PagedList<Photo>> mUserPhotoPagedList;
+    private UserPhotoDataSourceFactory mUserPhotoDataSourceFactory;
+
     //constructor
     public CustomViewModel() {
         this.mExecutor = Executors.newFixedThreadPool(5);
@@ -50,6 +58,7 @@ public class CustomViewModel extends ViewModel {
         mPhotoDataSourceFactory = new PhotoDataSourceFactory(mExecutor);
         mTrendingDataSourceFactory = new TrendingDataSourceFactory(mExecutor);
         mCollectionPhotoDataSourceFactory = new CollectionPhotoDataSourceFactory();
+        mUserPhotoDataSourceFactory = new UserPhotoDataSourceFactory(mExecutor);
 
         mPhotoNetworkStateLiveData = Transformations.switchMap(
                 mPhotoDataSourceFactory.getPhotoLiveDataSource(),
@@ -74,9 +83,16 @@ public class CustomViewModel extends ViewModel {
 
         PagedList.Config collectionPhotoListConfig =
                 (new PagedList.Config.Builder())
-//                        .setInitialLoadSizeHint(10)
-//                        .setPrefetchDistance(10)
+                        .setInitialLoadSizeHint(10)
+                        .setPrefetchDistance(10)
                         .setEnablePlaceholders(false)
+                        .setPageSize(10)
+                        .build();
+
+        PagedList.Config userPhotoListConfig =
+                (new PagedList.Config.Builder())
+                        .setInitialLoadSizeHint(30)
+                        .setPrefetchDistance(10)
                         .setPageSize(10)
                         .build();
 
@@ -91,10 +107,18 @@ public class CustomViewModel extends ViewModel {
                 .build();
         mCollectionPhotoPagedList = (new LivePagedListBuilder(mCollectionPhotoDataSourceFactory, collectionPhotoListConfig))
                 .build();
+
+        mUserPhotoPagedList = (new LivePagedListBuilder(mUserPhotoDataSourceFactory, userPhotoListConfig))
+                .setFetchExecutor(mExecutor)
+                .build();
     }
 
     public LiveData<PagedList<CollectionPhoto>> getCollectionsPagedList() {
         return mCollectionsPagedList;
+    }
+
+    public LiveData<PagedList<Photo>> getCollectionPhotoPagedList() {
+        return mCollectionPhotoPagedList;
     }
 
     public LiveData<PagedList<Photo>> getPhotoPagedList() {
@@ -103,6 +127,10 @@ public class CustomViewModel extends ViewModel {
 
     public LiveData<PagedList<Photo>> getTrendingPagedList() {
         return mTrendingPagedList;
+    }
+
+    public LiveData<PagedList<Photo>> getUserPhotoPagedList() {
+        return mUserPhotoPagedList;
     }
 
     // Setters
@@ -120,6 +148,10 @@ public class CustomViewModel extends ViewModel {
 
     public void setCollectionId(int collectionId) {
         mCollectionPhotoDataSourceFactory.setCollectionId(collectionId);
+    }
+
+    public void setUserPhotoOptions(String username, String userPhotoSortOrder) {
+        mUserPhotoDataSourceFactory.setUserOptions(username, userPhotoSortOrder);
     }
 
 

@@ -64,4 +64,32 @@ public interface ApiInterface {
             @Query("page") int pageCount
     );
 
+    /**
+     * FOR USERS
+     */
+    @GET("users/{username}/photos")
+    Call<List<Photo>> getUserPhotos(
+            @Path("username") String username,
+            @Query("client_id") String apiKey,
+            @Query("per_page") int itemCount,
+            @Query("page") int pageCount,
+            @Query("order_by") String order
+    );
+
+    @GET("users/{username}/likes")
+    Call<List<Photo>> getUserLikes(
+            @Path("username") String username,
+            @Query("client_id") String apiKey,
+            @Query("per_page") int itemCount,
+            @Query("page") int pageCount
+    );
+
+    @GET("users/{username}/collections")
+    Call<List<Photo>> getUserCollections(
+            @Path("username") String username,
+            @Query("client_id") String apiKey,
+            @Query("per_page") int itemCount,
+            @Query("page") int pageCount
+    );
+
 }

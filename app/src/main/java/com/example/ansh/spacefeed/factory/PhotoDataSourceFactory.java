@@ -41,8 +41,6 @@ public class PhotoDataSourceFactory extends DataSource.Factory<Integer, Photo> {
     }
 
     // getter for mPhotoLiveDataSource
-
-
     public MutableLiveData<PhotoDataSource> getPhotoLiveDataSource() {
         return mPhotoLiveDataSource;
     }

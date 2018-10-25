@@ -39,6 +39,8 @@ public class CollectionDataSource extends PageKeyedDataSource<Integer, Collectio
         this.mInitialLoading = new MutableLiveData();
 
         this.mCollectionsSortOrder = collectionsSortOrder;
+
+        Log.i("ANYWAY", "CollectionDataSource: ");
     }
 
 

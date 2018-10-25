@@ -16,6 +16,7 @@ public class TrendingDataSourceFactory extends DataSource.Factory<Integer, Photo
     public MutableLiveData<TrendingDataSource> mTrendingLiveDataSource;
     private TrendingDataSource mTrendingDataSource;
     private Executor mExecutor;
+
     private String mTrendingsSortOrder;
 
     // Constructor

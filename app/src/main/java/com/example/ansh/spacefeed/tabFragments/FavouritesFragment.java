@@ -4,6 +4,7 @@ package com.example.ansh.spacefeed.tabFragments;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -39,10 +40,11 @@ public class FavouritesFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_favourites, container, false);
+        setHasOptionsMenu(true);
 
         mLottieAnimationView = view.findViewById(R.id.f_f_lottie_empty_list);
 
-        mLottieAnimationView.setAnimation("funky_chicken.json");
+        mLottieAnimationView.setAnimation("empty_list.json");
         mLottieAnimationView.playAnimation();
 
         return view;
@@ -52,5 +54,12 @@ public class FavouritesFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         mLottieAnimationView.pauseAnimation();
+    }
+
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+        getActivity().invalidateOptionsMenu();
+        menu.clear();
     }
 }
