@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <transitionSet xmlns:android="http://schemas.android.com/apk/res/android"
     android:duration="1000"
-    android:transitionOrdering="sequential">
-    <slide android:interpolator="@android:interpolator/decelerate_cubic" />
+    android:transitionOrdering="together">
+    <slide android:interpolator="@android:interpolator/linear_out_slow_in" />
     <changeBounds android:interpolator="@android:interpolator/bounce" />
 </transitionSet>

@@ -65,10 +65,9 @@ public class PhotosFragment extends Fragment {
     private CustomViewModel mPhotoViewModel;
 
     private Fragment mPhotoDetailFragment;
-
     private String mPhotoSortOrder;
-
     private Unbinder mUnbinder;
+    private View mView;
 
 
     public PhotosFragment() {
@@ -100,65 +99,68 @@ public class PhotosFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_photos, container, false);
 
-        mUnbinder = ButterKnife.bind(this, view);
+            mView = inflater.inflate(R.layout.fragment_photos, container, false);
 
-        ((AppCompatActivity)getActivity()).setSupportActionBar(mToolbar);
-        ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayShowTitleEnabled(true);
-        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("Photos");
+            mUnbinder = ButterKnife.bind(this, mView);
 
-        Log.i(TAG_PHOTO_FRAGMENT, "onCreateView: called");
+            ((AppCompatActivity) getActivity()).setSupportActionBar(mToolbar);
+            ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowTitleEnabled(true);
+            ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Photos");
 
-        // SetUp RecyclerView
-        setUpRecyclerView(container.getContext());
+            Log.i(TAG_PHOTO_FRAGMENT, "onCreateView: called");
 
-        //OnClickImplementation
-        final SimpleOnItemClickListener simpleOnItemClickListener = new SimpleOnItemClickListener() {
-            @Override
-            public void onClick(View v, int pos) {
-                Photo splashResponse = mPhotoViewModel.getPhotoPagedList().getValue().get(pos);
-                Log.i(TAG_PHOTO_FRAGMENT, "onClick: " + splashResponse);
+            // SetUp RecyclerView
+            setUpRecyclerView(container.getContext());
 
-                Bundle bundle = new Bundle();
-                bundle.putParcelable("Photo", splashResponse);
-                mPhotoDetailFragment.setArguments(bundle);
+            //OnClickImplementation
+            final SimpleOnItemClickListener simpleOnItemClickListener = new SimpleOnItemClickListener() {
+                @Override
+                public void onClick(View v, int pos) {
+                    Photo splashResponse = mPhotoViewModel.getPhotoPagedList().getValue().get(pos);
+                    Log.i(TAG_PHOTO_FRAGMENT, "onClick: " + splashResponse);
 
-                TransitionSet enterTransitionSet = new TransitionSet();
-                enterTransitionSet.addTransition(TransitionInflater.from(container.getContext()).inflateTransition(android.R.transition.move));
-                enterTransitionSet.setDuration(MOVE_DEFAULT_TIME);
-                enterTransitionSet.setStartDelay(FADE_DEFAULT_TIME);
-                mPhotoDetailFragment.setSharedElementEnterTransition(enterTransitionSet);
+                    Bundle bundle = new Bundle();
+                    bundle.putParcelable("Photo", splashResponse);
+                    bundle.putString("Transition", "trans"+pos);
+                    mPhotoDetailFragment.setArguments(bundle);
 
-                ((MainActivity)getActivity()).pushFragment(mPhotoDetailFragment);
-            }
-        };
+//                    TransitionSet enterTransitionSet = new TransitionSet();
+//                    enterTransitionSet.addTransition(TransitionInflater.from(container.getContext()).inflateTransition(android.R.transition.move));
+//                    enterTransitionSet.setDuration(MOVE_DEFAULT_TIME);
+//                    enterTransitionSet.setStartDelay(FADE_DEFAULT_TIME);
+//                    mPhotoDetailFragment.setSharedElementEnterTransition(enterTransitionSet);
 
-        // Creating the Adapter
-        mPhotoPagedListAdapter = new PhotoPagedListAdapter(simpleOnItemClickListener);
 
-        // observing the mCollectionsPagedList from view model
-        mPhotoViewModel.mPhotoPagedList.observe(this, new Observer<PagedList<Photo>>() {
-            @Override
-            public void onChanged(@Nullable PagedList<Photo> unSplashResponse) {
-                // in case of any changes submitting the items to adapter
-                mPhotoPagedListAdapter.submitList(unSplashResponse);
-                Log.i(TAG_PHOTO_FRAGMENT, "onChanged: called " + unSplashResponse.size());
-            }
-        });
+                    ((MainActivity) getActivity()).pushFragment(mPhotoDetailFragment);
+                }
+            };
 
-        mPhotoViewModel.mPhotoNetworkStateLiveData.observe(this, new Observer<NetworkState>() {
-            @Override
-            public void onChanged(@Nullable NetworkState networkState) {
-                mPhotoPagedListAdapter.setNetworkState(networkState);
-                Log.i(TAG_PHOTO_FRAGMENT, "onChanged: " + "Network State Changed");
-            }
-        });
+            // Creating the Adapter
+            mPhotoPagedListAdapter = new PhotoPagedListAdapter(simpleOnItemClickListener);
 
-        // Setting the adapter
-        mRecyclerView.setAdapter(mPhotoPagedListAdapter);
+            // observing the mCollectionsPagedList from view model
+            mPhotoViewModel.mPhotoPagedList.observe(this, new Observer<PagedList<Photo>>() {
+                @Override
+                public void onChanged(@Nullable PagedList<Photo> unSplashResponse) {
+                    // in case of any changes submitting the items to adapter
+                    mPhotoPagedListAdapter.submitList(unSplashResponse);
+                    Log.i(TAG_PHOTO_FRAGMENT, "onChanged: called " + unSplashResponse.size());
+                }
+            });
 
-        return view;
+            mPhotoViewModel.mPhotoNetworkStateLiveData.observe(this, new Observer<NetworkState>() {
+                @Override
+                public void onChanged(@Nullable NetworkState networkState) {
+                    mPhotoPagedListAdapter.setNetworkState(networkState);
+                    Log.i(TAG_PHOTO_FRAGMENT, "onChanged: " + "Network State Changed");
+                }
+            });
+
+            // Setting the adapter
+            mRecyclerView.setAdapter(mPhotoPagedListAdapter);
+
+        return mView;
     }
 
     private void setUpRecyclerView(Context context) {
@@ -184,6 +186,7 @@ public class PhotosFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         mUnbinder.unbind();
+        Log.i(TAG_PHOTO_FRAGMENT, "onDestroyView: called.");
     }
 
     @Override
@@ -205,5 +208,9 @@ public class PhotosFragment extends Fragment {
         return super.onOptionsItemSelected(item);
     }
 
-
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.i(TAG_PHOTO_FRAGMENT, "onDestroy: called.");
+    }
 }

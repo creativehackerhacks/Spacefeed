@@ -1,5 +1,6 @@
 package com.example.ansh.spacefeed.activity;
 
+import android.os.Build;
 import android.os.PersistableBundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -11,11 +12,13 @@ import android.support.v4.util.Pair;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.transition.TransitionInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.example.ansh.spacefeed.DetailsTransition;
 import com.example.ansh.spacefeed.tabFragments.CollectionsFragment;
 import com.example.ansh.spacefeed.tabFragments.FavouritesFragment;
 import com.example.ansh.spacefeed.tabFragments.PhotosFragment;
@@ -85,9 +88,15 @@ public class MainActivity extends AppCompatActivity {
         initializeFragmentList();
 
         mFragNavController = mBuilder
-//                .defaultTransactionOptions(FragNavTransactionOptions.newBuilder()
-//                        .transition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN) // for all transitions
-//                        .build())
+                .defaultTransactionOptions(FragNavTransactionOptions.newBuilder()
+//                        .customAnimations(
+//                                R.anim.enter_from_right,
+//                                R.anim.exit_to_left,
+//                                R.anim.enter_from_left,
+//                                R.anim.exit_to_right
+//                        )
+                        .transition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN) // for all transitions
+                        .build())
                 .build();
 
 
@@ -110,16 +119,16 @@ public class MainActivity extends AppCompatActivity {
                 public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
                     switch (menuItem.getItemId()) {
                         case R.id.navigation_photos:
-                            mFragNavController.switchTab(FragNavController.TAB1);
+                            mFragNavController.switchTab(FragNavController.TAB1, FragNavTransactionOptions.newBuilder().transition(FragmentTransaction.TRANSIT_NONE).build());
                             return true;
                         case R.id.navigation_trendings:
-                            mFragNavController.switchTab(FragNavController.TAB2);
+                            mFragNavController.switchTab(FragNavController.TAB2, FragNavTransactionOptions.newBuilder().transition(FragmentTransaction.TRANSIT_NONE).build());
                             return true;
                         case R.id.navigation_collections:
-                            mFragNavController.switchTab(FragNavController.TAB3);
+                            mFragNavController.switchTab(FragNavController.TAB3, FragNavTransactionOptions.newBuilder().transition(FragmentTransaction.TRANSIT_NONE).build());
                             return true;
                         case R.id.navigation_likes:
-                            mFragNavController.switchTab(FragNavController.TAB4);
+                            mFragNavController.switchTab(FragNavController.TAB4, FragNavTransactionOptions.newBuilder().transition(FragmentTransaction.TRANSIT_NONE).build());
                             return true;
                         default:
                             return false;
@@ -164,20 +173,29 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void pushFragment(Fragment fragment) {
-        FragNavTransactionOptions options = FragNavTransactionOptions.newBuilder()
-                .transition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-//                .customAnimations(R.anim.enter_from_right,
-//                        R.anim.exit_to_left
-//                )
-                .build();
-        mFragNavController.pushFragment(fragment, options);
+        mFragNavController.pushFragment(fragment);
     }
 
-    public void pushFragment(Fragment fragment, View view, String name) {
-        FragNavTransactionOptions d = FragNavTransactionOptions.newBuilder()
+    public void pushFragment(Fragment newFragment, View view, String name) {
+
+        Fragment currentFrag = mFragNavController.getCurrentFrag();
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            currentFrag.setSharedElementReturnTransition(TransitionInflater.from(this).inflateTransition(R.transition.photo_transition));
+            currentFrag.setExitTransition(TransitionInflater.from(this).inflateTransition(android.R.transition.no_transition));
+
+            newFragment.setSharedElementEnterTransition(TransitionInflater.from(this).inflateTransition(R.transition.photo_transition));
+            newFragment.setEnterTransition(TransitionInflater.from(this).inflateTransition(android.R.transition.no_transition));
+        }
+
+        FragNavTransactionOptions options = FragNavTransactionOptions.newBuilder()
                 .addSharedElement(new Pair<View, String>(view, name))
                 .build();
-        mFragNavController.pushFragment(fragment, d);
+
+        newFragment.setSharedElementEnterTransition(TransitionInflater.from(this).inflateTransition(R.transition.photo_transition));
+        newFragment.setSharedElementReturnTransition(TransitionInflater.from(this).inflateTransition(R.transition.photo_transition));
+
+        mFragNavController.pushFragment(newFragment, options);
     }
 
     @Override
@@ -186,8 +204,6 @@ public class MainActivity extends AppCompatActivity {
             mFragNavController.popFragment(
                     FragNavTransactionOptions.newBuilder()
                             .transition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE)
-//                            .customAnimations(R.anim.enter_from_left,
-//                                    R.anim.exit_to_right)
                             .build()
             );
         } else {

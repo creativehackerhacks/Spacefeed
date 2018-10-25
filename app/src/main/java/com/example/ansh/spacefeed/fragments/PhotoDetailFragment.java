@@ -2,6 +2,7 @@ package com.example.ansh.spacefeed.fragments;
 
 
 import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.Nullable;
@@ -9,6 +10,8 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.transition.Fade;
+import android.transition.TransitionInflater;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -72,6 +75,7 @@ public class PhotoDetailFragment extends Fragment {
     private String mFilePath = Environment.getExternalStorageDirectory() + "/SpaceFeed";
 
     private Photo mPhoto;
+    private String mTrans;
 
     public PhotoDetailFragment() {
         // Required empty public constructor
@@ -87,6 +91,7 @@ public class PhotoDetailFragment extends Fragment {
         PhotoDetailFragment photoDetailFragment = new PhotoDetailFragment();
         Bundle args = new Bundle();
         photoDetailFragment.setArguments(args);
+
         return photoDetailFragment;
     }
 
@@ -98,10 +103,19 @@ public class PhotoDetailFragment extends Fragment {
 
         if (getArguments() != null) {
             mPhoto = getArguments().getParcelable("Photo");
+//            mTrans = getArguments().getString("r_i_photo_item");
             Log.i(TAG, "onCreate: Photo--- " + mPhoto);
         }
         setHasOptionsMenu(true);
 //        ((MainActivity) getActivity()).showOverFlowMenu(false);
+
+//        postponeEnterTransition();
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+//            setSharedElementEnterTransition(TransitionInflater.from(getContext()).inflateTransition(R.transition.photo_transition));
+//            setEnterTransition(new Fade());
+//            setExitTransition(new Fade());
+//            setSharedElementReturnTransition(TransitionInflater.from(getContext()).inflateTransition(R.transition.photo_transition));
+//        }
 
     }
 
@@ -115,6 +129,10 @@ public class PhotoDetailFragment extends Fragment {
         mUnbinder = ButterKnife.bind(this, view);
 
         Log.i(TAG, "onCreateView: called--- " + this);
+
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+//            mCoverImageView.setTransitionName(mTrans);
+//        }
 
         Bundle detailPhoto = new Bundle();
         mUserProfileFragment = new UserProfileFragment();
