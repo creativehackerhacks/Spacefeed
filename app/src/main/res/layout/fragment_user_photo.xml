@@ -11,6 +11,17 @@
         android:layout_height="match_parent"
         android:clipToPadding="false"
         android:fitsSystemWindows="true"
+        android:layout_marginBottom="44dp"
         android:padding="@dimen/item_offset" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/f_u_p_p_empty_text"
+        android:text="User does not have any images yet."
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="60dp"
+        android:textSize="16sp"
+        android:visibility="gone"/>
 
 </FrameLayout>

@@ -18,4 +18,7 @@
 
     <color name="bottomColor">#80e4e4e4</color>
 
+    <color name="tab_line_color">#ededed</color>
+    <color name="color_text_bio">#434256</color>
+
 </resources>

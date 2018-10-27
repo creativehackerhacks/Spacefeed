@@ -12,13 +12,15 @@
             android:id="@+id/merge_proPic_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="16dp"
+            android:paddingLeft="16dp"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
             android:background="@color/linearLayoutBG">
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/merge_pro_pic"
-                android:layout_width="56dp"
-                android:layout_height="56dp"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
                 android:layout_centerVertical="true"
                 android:layout_alignParentStart="true"/>
 
@@ -26,51 +28,27 @@
                 android:id="@+id/merge_pro_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="16dp"
+                android:layout_marginLeft="16dp"
                 android:text="Name"
                 android:textSize="16sp"
                 android:textStyle="bold"
                 android:layout_centerVertical="true"
                 android:layout_toEndOf="@id/merge_pro_pic"/>
 
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="38dp"
-                android:minHeight="0dp"
-                android:layout_alignParentEnd="true"
-                android:id="@+id/detail_profile_follow_button"
-                android:text="Follow"
-                android:layout_marginEnd="16dp"
-                android:layout_centerVertical="true"
-                android:background="@drawable/custom_follow_button"/>
-
         </RelativeLayout>
 
-        <!-- Bio -->
         <LinearLayout
-            android:id="@+id/merge_bio_layout"
+            android:id="@+id/merge_detail_stats_linear_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="16dp"
-            android:orientation="horizontal">
+            android:layout_marginTop="8dp"
+            android:background="@color/colorAccent">
 
             <TextView
-                android:id="@+id/merge_bio_lbl"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:padding="8dp"
-                android:text="Bio:"
-                android:textSize="16sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/merge_bio_desc"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="8dp"
-                android:text="Description"
-                android:textSize="16sp"
-                android:textStyle="normal" />
+                android:text="LOL"/>
 
         </LinearLayout>
 

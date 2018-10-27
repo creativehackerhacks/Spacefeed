@@ -4,6 +4,7 @@ import android.support.annotation.Nullable;
 
 import com.example.ansh.spacefeed.pojos.CollectionPhoto;
 import com.example.ansh.spacefeed.pojos.Photo;
+import com.example.ansh.spacefeed.pojos.User;
 
 import java.util.List;
 
@@ -67,6 +68,12 @@ public interface ApiInterface {
     /**
      * FOR USERS
      */
+    @GET("users/{username}")
+    Call<User> getUser(
+      @Path("username") String username,
+      @Query("client_id") String apiKey
+    );
+
     @GET("users/{username}/photos")
     Call<List<Photo>> getUserPhotos(
             @Path("username") String username,
@@ -81,11 +88,12 @@ public interface ApiInterface {
             @Path("username") String username,
             @Query("client_id") String apiKey,
             @Query("per_page") int itemCount,
-            @Query("page") int pageCount
+            @Query("page") int pageCount,
+            @Query("order_by") String order
     );
 
     @GET("users/{username}/collections")
-    Call<List<Photo>> getUserCollections(
+    Call<List<CollectionPhoto>> getUserCollections(
             @Path("username") String username,
             @Query("client_id") String apiKey,
             @Query("per_page") int itemCount,

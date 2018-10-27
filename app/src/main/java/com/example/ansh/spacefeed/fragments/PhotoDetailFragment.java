@@ -2,6 +2,9 @@ package com.example.ansh.spacefeed.fragments;
 
 
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -19,6 +22,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -60,8 +64,7 @@ public class PhotoDetailFragment extends Fragment {
     @BindView(R.id.detail_fragment_photo) ImageView mCoverImageView;
     @BindView(R.id.merge_pro_pic) CircleImageView mProImageView;
     @BindView(R.id.merge_pro_name) TextView mName;
-    @BindView(R.id.merge_bio_desc) TextView mDesc;
-    @BindView(R.id.detail_profile_follow_button) Button mDetailProfileFollowButton;
+    @BindView(R.id.merge_detail_stats_linear_layout) LinearLayout mMergeDetailLinearLayout;
 
     private FloatingActionButton mFloatingActionButton;
     private Fragment mUserProfileFragment;
@@ -130,6 +133,8 @@ public class PhotoDetailFragment extends Fragment {
 
         Log.i(TAG, "onCreateView: called--- " + this);
 
+        mMergeDetailLinearLayout.setBackground(new ColorDrawable(Color.parseColor(mPhoto.getColor())));
+
 //        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 //            mCoverImageView.setTransitionName(mTrans);
 //        }
@@ -139,7 +144,6 @@ public class PhotoDetailFragment extends Fragment {
 //        detailPhoto.putParcelable("photoProfile", mPhoto);
 //        mUserProfileFragment.setArguments(detailPhoto);
 
-        mDetailProfileFollowButton = view.findViewById(R.id.detail_profile_follow_button);
 
         mApiClient = ApiClient.getInstance();
 
@@ -151,7 +155,6 @@ public class PhotoDetailFragment extends Fragment {
         String coverImageUrl = mPhoto.getUrls().getRegularUrl();
         String profileImageUrl = mPhoto.getUser().getProfileImage().getMedium();
         String name = mPhoto.getUser().getName();
-        String description = mPhoto.getUser().getBio();
 
         Glide.with(container.getContext()).load(coverImageUrl)
                 .apply(new RequestOptions()
@@ -164,7 +167,6 @@ public class PhotoDetailFragment extends Fragment {
                         .diskCacheStrategy(DiskCacheStrategy.ALL))
                 .into(mProImageView);
         mName.setText(name);
-        mDesc.setText(description);
 
 
         mMergeProPicLayout.setOnClickListener(v -> {
@@ -185,26 +187,6 @@ public class PhotoDetailFragment extends Fragment {
         return view;
     }
 
-    @OnClick(R.id.detail_profile_follow_button)
-    public void onProfileFollowButton(View view) {
-        Log.i(TAG, "onCreateView: Profile-- " + mPhoto.getId());
-        mApiClient.getApi().getDownload(mPhoto.getId(), CLIENT_ID)
-                .enqueue(new Callback<ResponseBody>() {
-                    @Override
-                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                        Log.i(TAG, "onResponse: Download " + response);
-                        String imageUri = response.toString();
-                        Log.i(TAG, "onResponse: sss " + mFilePath);
-//                        ImageSaveTask imageSaveTask = new ImageSaveTask(getContext());
-//                        imageSaveTask.execute(imageUri, mFilePath);
-                    }
-
-                    @Override
-                    public void onFailure(Call<ResponseBody> call, Throwable t) {
-
-                    }
-                });
-    }
 
     @Override
     public void onAttach(Context context) {

@@ -5,10 +5,22 @@
     android:layout_height="match_parent"
     tools:context=".childFragments.UserCollectionsFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/f_u_p_c_recyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:clipToPadding="false"
+        android:fitsSystemWindows="true"
+        android:padding="@dimen/item_offset" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/f_u_p_c_empty_text"
+        android:text="User does not have any images yet."
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="60dp"
+        android:textSize="16sp"
+        android:visibility="gone"/>
 
 </FrameLayout>

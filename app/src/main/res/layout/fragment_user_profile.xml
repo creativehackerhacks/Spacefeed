@@ -12,34 +12,107 @@
         android:id="@+id/f_u_p_app_bar_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorOneDark">
+        android:background="@android:color/white">
 
-        <android.support.design.widget.CollapsingToolbarLayout
-            android:id="@+id/f_u_p_collapsing_toolbar"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="320dp"
-            app:contentScrim="@color/colorOneDark"
-            android:background="@color/colorPrimary"
-            app:layout_scrollFlags="scroll|snap|enterAlwaysCollapsed"
-            android:theme="@style/ThemeOverlay.AppCompat.Dark"
-            app:titleEnabled="false">
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_scrollFlags="scroll|enterAlwaysCollapsed">
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="260dp"
+                android:background="@android:color/white">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="centerCrop"
+                    android:id="@+id/f_u_p_blur_bg"/>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/f_u_p_overlay_layer_dark"/>
 
             <android.support.v7.widget.Toolbar
-                android:id="@+id/collection_photo_toolbar"
+                android:id="@+id/f_u_p_toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
-                android:minHeight="?attr/actionBarSize"
-                app:layout_collapseMode="pin"
-                android:theme="@style/ToolbarTheme"/>
+                android:theme="@style/ThemeOverlay.AppCompat.Dark"/>
 
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:id="@+id/f_u_p_circleImageView"
-                android:layout_gravity="center"
-                android:scaleType="centerCrop"/>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
 
-        </android.support.design.widget.CollapsingToolbarLayout>
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:layout_width="120dp"
+                        android:layout_height="120dp"
+                        android:id="@+id/f_u_p_circleImageView"
+                        android:layout_gravity="center"
+                        android:scaleType="centerCrop"
+                        android:layout_marginTop="72dp"
+                        android:layout_marginBottom="16dp"
+                        app:civ_border_color="@color/tab_line_color"
+                        app:civ_border_width="2dp"/>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/f_u_p_name"
+                        android:textStyle="bold"
+                        android:textColor="@android:color/white"
+                        android:gravity="center_horizontal"
+                        tools:text="NAME"
+                        android:layout_marginBottom="16dp"
+                        android:textSize="16sp"/>
+
+                </LinearLayout>
+            </FrameLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/white"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/f_u_p_desc"
+                    android:textStyle="normal"
+                    android:visibility="gone"
+                    android:padding="16dp"
+                    android:textAlignment="textStart"
+                    android:gravity="start"
+                    tools:text="Desc"
+                    android:textSize="16sp"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/f_u_p_user_portfolio"
+                android:gravity="start"
+                android:visibility="gone"
+                android:padding="16dp"
+                android:orientation="horizontal">
+
+                <ImageButton
+                    android:id="@+id/f_u_p_user_portfolio_insta"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    android:padding="4dp"
+                    android:background="@drawable/user_links_image_view"
+                    android:src="@drawable/ic_public_black_24dp"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
 
         <com.ogaclejapan.smarttablayout.SmartTabLayout
             android:id="@+id/f_u_p_smartTabLayout"
@@ -55,9 +128,9 @@
             app:stl_indicatorThickness="4dp"
             app:stl_indicatorWidth="auto"
             app:stl_indicatorCornerRadius="2dp"
-            app:stl_overlineColor="#4D000000"
-            app:stl_overlineThickness="0dp"
-            app:stl_underlineColor="#4D000000"
+            app:stl_overlineColor="@color/tab_line_color"
+            app:stl_overlineThickness="1dp"
+            app:stl_underlineColor="@color/tab_line_color"
             app:stl_underlineThickness="1dp"
             app:stl_dividerColor="#4D000000"
             app:stl_dividerThickness="0dp"
